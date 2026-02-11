@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "getmentis.ai" }],
+      "destination": "https://dominusos.ai/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.getmentis.ai" }],
+      "destination": "https://dominusos.ai/$1",
+      "permanent": true
+    }
+  ]
+}
