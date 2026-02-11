@@ -272,21 +272,23 @@ a {
 
 .hero-mark {
   justify-self: end;
+  align-self: center;
 }
 
 .mark-frame {
-  background: rgba(247, 246, 244, 0.12);
-  border: 1px solid rgba(216, 203, 184, 0.4);
-  border-radius: 16px;
-  padding: 18px;
+  background: rgba(247, 246, 244, 0.08);
+  border: 1px solid rgba(216, 203, 184, 0.3);
+  border-radius: 20px;
+  padding: 28px;
   backdrop-filter: blur(4px);
-  max-width: 320px;
+  max-width: 380px;
   text-align: center;
 }
 
 .hero-logo {
-  width: 220px;
-  margin: 0 auto 10px;
+  width: 300px;
+  margin: 0 auto;
+  border-radius: 12px;
 }
 
 .section {
