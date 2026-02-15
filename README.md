@@ -16,11 +16,11 @@ The objective is not more automation, but trustworthy automation: systems that r
 
 ## What's Running Today
 
-- **Execution kernel** — 150+ API endpoints, real-time WebSocket events, multi-tenant isolation
-- **Seven virtual employees** — CRM operations, email management, document processing, compliance, operational intelligence
+- **Execution kernel** — hundreds of API endpoints, real-time WebSocket events, multi-tenant isolation
+- **Multiple virtual employees** — CRM operations, email management, document processing, compliance, operational intelligence
 - **Native macOS + iOS operator apps** — Swift, Forge design system, live process visibility, halt authority
 - **Governed CRM** — lead management, composite scoring, email attribution, signal intelligence, compliance truth-checking
-- **40+ governed scheduled jobs** — lead scoring, follow-up enforcement, stale detection, briefing generation
+- **Dozens of governed scheduled jobs** — lead scoring, follow-up enforcement, stale detection, briefing generation
 - **Immutable activity ledger** — full attribution chains from action to authorization
 
 ## Documentation
