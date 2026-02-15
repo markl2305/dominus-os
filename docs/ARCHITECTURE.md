@@ -15,11 +15,11 @@ Routes objectives to agents and tools under scoped permissions. The orchestrator
 ### Tooling
 Adapters for communication, data, and operations — email, calendar, CRM, databases, web services, GitHub, and integrations. Each adapter operates within a governed envelope that limits scope and records side effects.
 
-### Governed CRM
-A purpose-built CRM integrated with the governance kernel. Lead management, composite scoring, email attribution, signal intelligence, and compliance truth-checking — all subject to the same authority gates as every other system action. Automated jobs handle lead scoring, follow-up enforcement, stale detection, and performance analytics under governed schedules.
+### Governed Business Workflows
+Business-domain workflows (including CRM-class operations) integrated with the governance kernel. All record modifications and external actions pass through the same authority gates as every other system action. Automated operations handle enforcement, intelligence generation, and compliance under governed schedules.
 
-### Forge Design System
-A unified design language — typography tokens, color tokens, spacing, and component patterns — shared across macOS and iOS operator applications. Forge ensures the operator experience is consistent and structurally tied to the governance layer.
+### Operator Design System
+A unified design language shared across desktop and mobile operator applications. The design system ensures the operator experience is consistent and structurally tied to the governance layer.
 
 ### Memory
 Bounded session context plus durable knowledge, both with provenance. Memory writes include source, timestamp, and scope. The system distinguishes between agent-generated memory and human-verified knowledge.
