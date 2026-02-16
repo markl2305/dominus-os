@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dominus OS is organized around a **governance plane** and an **execution plane**, connected by **structured memory** and anchored by **observability**.
+Dominus OS is organized around a **governance plane** and an **execution plane**, connected by a **structured knowledge layer** and anchored by **observability**.
 
 ## Core Components
 
@@ -21,8 +21,11 @@ Business-domain workflows (including CRM-class operations) integrated with the g
 ### Operator Design System
 A unified design language shared across desktop and mobile operator applications. The design system ensures the operator experience is consistent and structurally tied to the governance layer.
 
-### Memory
-Bounded session context plus durable knowledge, both with provenance. Memory writes include source, timestamp, and scope. The system distinguishes between agent-generated memory and human-verified knowledge.
+### Structured Knowledge Layer
+A graph of versioned, typed objects — decisions, projects, doctrine, entities, tasks, and operational knowledge — connected by directional relationships. Every object carries provenance: who created it, when, how sourced, and whether human-verified or agent-generated. Three tiers: working memory (ephemeral task context), operational memory (persistent organizational knowledge), and archival memory (immutable historical record).
+
+### Operator Assembly Surface
+A structured editing environment for direct human interaction with the knowledge graph. Block-based editing with progressive typing: freeform drafts can be promoted to structured types (decisions, projects, doctrine) with required fields and lifecycle states. Familiar on the surface, structured underneath.
 
 ### Observability
 Run logs, status indicators, and error surfacing that refuses to hide failure. Every run has a unique identity and timestamps. Failures surface immediately. Data freshness is measurable.

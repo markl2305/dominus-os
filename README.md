@@ -19,6 +19,8 @@ The objective is not more automation, but trustworthy automation: systems that r
 - **Execution kernel** — production-scale endpoints, real-time event distribution, multi-tenant isolation
 - **Multiple virtual employees** — governed business workflows, email management, document processing, compliance, operational intelligence
 - **Native desktop + mobile operator apps** — live process visibility, intervention, and halt authority
+- **Structured knowledge layer** — versioned, graph-connected nodes for decisions, projects, doctrine, and operational knowledge with full provenance
+- **Operator assembly surface** — structured editing environment for decision modeling, doctrine management, and progressive knowledge typing
 - **Governed business workflows** — including CRM-class operations under the same authority model as all system actions
 - **Numerous governed scheduled operations** — automated enforcement, intelligence generation, system maintenance
 - **Immutable activity ledger** — full attribution chains from action to authorization
