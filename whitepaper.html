@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White Paper &mdash; Dominus OS</title>
+  <meta name="description" content="Dominus OS Public Thesis: A Human-Governed Operating System for AI Workforces. The structural gap in the current AI stack, and the governed cognitive substrate required to close it.">
+  <meta property="og:title" content="Dominus OS &mdash; Public Thesis White Paper">
+  <meta property="og:description" content="A Human-Governed Operating System for AI Workforces. The next abstraction layer is not another tool. It is a substrate.">
+  <meta property="og:url" content="https://dominusos.ai/whitepaper">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .wp-section { padding: 80px 0; background: var(--tan-200); }
+    .wp-section.alt { background: var(--tan-100); }
+    .wp-hero { padding: 70px 0 60px; }
+    .wp-hero h1 { font-size: clamp(2rem, 3.5vw, 3rem); margin: 0 0 12px; }
+    .wp-hero .subtitle { font-size: 1.2rem; color: var(--tan-100); margin-bottom: 20px; }
+    .wp-hero .meta { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+    .wp-abstract { max-width: 780px; }
+    .wp-abstract p { color: var(--navy-800); margin-bottom: 18px; line-height: 1.7; }
+    .wp-abstract h2 { font-family: var(--font-serif); font-size: 1.3rem; color: var(--navy-900); margin: 0 0 12px; }
+    .wp-keywords { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .wp-keywords span { background: rgba(255,255,255,0.7); border: 1px solid var(--bronze-300); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--navy-700); }
+    .evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 24px; }
+    .evidence-card { background: #fff; border: 2px solid var(--forge-500); border-bottom: 4px solid var(--forge-700); border-radius: 16px; padding: 22px; }
+    .evidence-card h3 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--navy-900); margin: 0 0 8px; }
+    .evidence-card p { margin: 0 0 12px; color: var(--navy-700); font-size: 0.95rem; }
+    .evidence-card a { color: var(--forge-600); font-weight: 600; text-decoration: underline; }
+    .evidence-card a:hover { color: var(--forge-800); }
+    .invariants-list { list-style: none; padding: 0; margin: 24px 0 0; }
+    .invariants-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: #fff; border-radius: 12px; border: 1px solid var(--bronze-300); }
+    .invariants-list li strong { color: var(--navy-900); min-width: 160px; display: inline-block; }
+    .invariants-list li span { color: var(--navy-700); }
+    .wp-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+    .convergence-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .convergence-table th, .convergence-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--bronze-300); font-size: 0.95rem; color: var(--navy-700); }
+    .convergence-table th { font-weight: 600; color: var(--navy-900); background: rgba(255,255,255,0.5); }
+    .convergence-table tr:last-child td { border-bottom: 2px solid var(--forge-600); font-weight: 500; color: var(--navy-900); }
+    .constraint-list { list-style: none; padding: 0; margin: 24px 0 0; }
+    .constraint-list li { margin-bottom: 14px; padding: 14px 18px; background: #fff; border-radius: 12px; border: 1px solid var(--bronze-300); color: var(--navy-700); font-size: 0.95rem; }
+    .constraint-list li strong { color: var(--navy-900); }
+    @media (max-width: 640px) {
+      .evidence-grid { grid-template-columns: 1fr; }
+      .invariants-list li { flex-direction: column; gap: 4px; }
+      .invariants-list li strong { min-width: auto; }
+      .wp-cta { flex-direction: column; align-items: stretch; }
+      .convergence-table { font-size: 0.85rem; }
+      .convergence-table th, .convergence-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-bar">
+      <div class="brand">
+        <img src="assets/dominus-d.png" class="brand-mark" alt="Dominus OS crest">
+        <div class="brand-text">
+          <span class="brand-name">Dominus OS</span>
+          <span class="brand-subline">Human-Governed Operating System</span>
+        </div>
+      </div>
+      <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="main-nav" aria-label="Primary">
+        <a href="/#problem">The Problem</a>
+        <a href="/#the-os">The OS</a>
+        <a href="/#control-plane">Control Plane</a>
+        <a href="/whitepaper" style="color: var(--orange-200);">White Paper</a>
+        <a class="nav-cta" href="/#founding">Founding Deployments</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wp-hero" id="top">
+      <div class="hero-overlay"></div>
+      <div class="container" style="position: relative;">
+        <p class="eyebrow">Public Thesis</p>
+        <h1>Dominus OS: A Human-Governed Operating System for AI Workforces</h1>
+        <p class="subtitle">The next abstraction layer is not another tool. It is a substrate &mdash; a governed foundation for authority, structured memory, observability, and operator sovereignty.</p>
+        <p class="meta">Mark Lord, Dominus Foundry &mdash; February 2026 &mdash; Version 0.3</p>
+        <div class="wp-cta">
+          <a class="button primary" href="https://github.com/markl2305/dominus-os/blob/main/docs/Dominus_OS_Public_Thesis_White_Paper_v0_3.pdf" target="_blank" rel="noopener">Download PDF</a>
+          <a class="button ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container wp-abstract">
+        <h2>Abstract</h2>
+        <p>AI tools are accelerating, but most organizations still lack durable governance for automated work: authority is unclear, audit trails are incomplete, context is fragmented, and workflows fail quietly. These gaps turn capability into operational risk.</p>
+        <p>Dominus OS is a human-governed operating system for AI workforces. It provides a consistent structure for orchestrating agents and automated workflows under explicit authority controls, structured memory, and verifiable observability. The system is in production today &mdash; multiple virtual employees, a structured knowledge layer unifying decisions and doctrine across domains, governed business workflows including CRM-class operations, an operator assembly surface for structured cognition, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all running under governance.</p>
+        <div class="wp-keywords">
+          <span>AI governance</span>
+          <span>Agent orchestration</span>
+          <span>Human-in-the-loop</span>
+          <span>Auditability</span>
+          <span>Observability</span>
+          <span>Workflow integrity</span>
+          <span>Memory architecture</span>
+          <span>Authority control</span>
+          <span>Governed workflows</span>
+          <span>Structured cognition</span>
+          <span>Knowledge graphs</span>
+          <span>Cognitive substrate</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section alt">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">The Convergence Problem</p>
+          <h2>Each era of software solved one problem and created the next.</h2>
+        </div>
+        <table class="convergence-table">
+          <thead>
+            <tr><th>Era</th><th>Abstraction</th><th>What It Solved</th><th>What It Left Unsolved</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Monolith</td><td>Centralized control</td><td>Integration</td><td>Scalability</td></tr>
+            <tr><td>SaaS</td><td>Specialization</td><td>Scalability</td><td>Data fragmentation</td></tr>
+            <tr><td>API economy</td><td>Composability</td><td>Cross-vendor integration</td><td>Dependency complexity</td></tr>
+            <tr><td>AI copilots</td><td>Local reasoning</td><td>Per-task intelligence</td><td>Session-scoped memory</td></tr>
+            <tr><td>Agents</td><td>Distributed execution</td><td>Task automation at scale</td><td>Authority, coherence</td></tr>
+            <tr><td>Tool sprawl</td><td>Surface coverage</td><td>Feature access</td><td>Cognitive fragmentation</td></tr>
+          </tbody>
+        </table>
+        <div class="section-heading center" style="margin-top: 32px;">
+          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The absence of a structured, governed cognitive substrate is the next limiting factor in system evolution. The next abstraction layer is not another tool. It is a substrate.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Core Invariants</p>
+          <h2>Five structural guarantees that define a governed OS.</h2>
+        </div>
+        <ul class="invariants-list">
+          <li><strong>Authority is explicit</strong> <span>Actions are bounded by roles, permissions, and approval gates. The system cannot exceed approved scope. Authority is structural, not behavioral.</span></li>
+          <li><strong>Execution is observable</strong> <span>Failures surface. Work is measurable. Outcomes are inspectable. Every run has a unique identity and an unbroken attribution chain.</span></li>
+          <li><strong>Side effects are controlled</strong> <span>Writes and external actions pass through graduated approval gates. The system tracks what it changed. Planning is unconstrained. Execution is governed.</span></li>
+          <li><strong>Memory is structured</strong> <span>Short-term context and long-term knowledge are distinct, versioned, queryable, and attributable. The system accumulates intelligence, not just data.</span></li>
+          <li><strong>Operators remain sovereign</strong> <span>Humans can halt, constrain, and review the system at any time. No automated process can outrun the operator's ability to intervene.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wp-section alt">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">The Structural Argument</p>
+          <h2>Constraint is what makes intelligent systems stable.</h2>
+        </div>
+        <ul class="constraint-list">
+          <li><strong>Autonomy without constraint</strong> produces entropy. Systems that act without boundaries eventually act in ways that conflict with organizational intent.</li>
+          <li><strong>Learning without versioning</strong> produces corruption. Systems that overwrite previous state cannot distinguish between current belief and prior understanding.</li>
+          <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated.</li>
+          <li><strong>Tool proliferation without substrate</strong> produces incoherence. Each new tool creates a new data silo, a new failure surface, and a new governance gap.</li>
+        </ul>
+        <div class="section-heading center" style="margin-top: 24px;">
+          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The stability of intelligent systems depends on constraint, structure, and non-destructive evolution.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Verification</p>
+          <h2>Evidence anchors.</h2>
+        </div>
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <h3>White Paper (PDF)</h3>
+            <p>The full public thesis with convergence analysis, architecture, constraint argument, use cases, and current state.</p>
+            <a href="https://github.com/markl2305/dominus-os/blob/main/docs/Dominus_OS_Public_Thesis_White_Paper_v0_3.pdf" target="_blank" rel="noopener">Download from GitHub &rarr;</a>
+          </article>
+          <article class="evidence-card">
+            <h3>Specification Repository</h3>
+            <p>Public repo with architecture overview, conceptual documentation, and project information.</p>
+            <a href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">View on GitHub &rarr;</a>
+          </article>
+          <article class="evidence-card">
+            <h3>Dominus Foundry</h3>
+            <p>The company behind Dominus OS. Operator-grade AI systems for service businesses.</p>
+            <a href="https://dominusfoundry.com" target="_blank" rel="noopener">dominusfoundry.com &rarr;</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container split engagement">
+        <div class="section-heading">
+          <p class="eyebrow">Get Involved</p>
+          <h2>Shape how AI governance gets built.</h2>
+        </div>
+        <div class="body">
+          <p>Dominus OS is deploying with a small number of organizations. Founding partners get hands-on deployment, direct architectural input, and favorable terms.</p>
+          <div class="contact-actions">
+            <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=Dominus%20OS%20%E2%80%94%20White%20Paper%20Inquiry">Start a Conversation</a>
+            <a class="button ghost" href="/">Back to Dominus OS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <img src="assets/dominus-d.png" class="footer-mark" alt="Dominus OS crest">
+        <div>
+          <p class="brand-name">Dominus OS</p>
+          <p class="brand-subline">Originator of the Human-Governed Intelligence standard.</p>
+        </div>
+      </div>
+      <p class="footer-note">Dominus OS is the originator of the Human-Governed Intelligence standard. A Dominus Foundry venture.</p>
+    </div>
+  </footer>
+
+  <script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const mainNav = document.querySelector('.main-nav');
+    if (navToggle && mainNav) {
+      const closeNav = () => { mainNav.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); };
+      navToggle.addEventListener('click', () => { const isOpen = mainNav.classList.toggle('open'); navToggle.setAttribute('aria-expanded', String(isOpen)); });
+      mainNav.querySelectorAll('a').forEach((link) => { link.addEventListener('click', closeNav); });
+    }
+  </script>
+</body>
+</html>

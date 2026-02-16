@@ -2,6 +2,12 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "framework": null,
+  "rewrites": [
+    {
+      "source": "/whitepaper",
+      "destination": "/whitepaper.html"
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",
