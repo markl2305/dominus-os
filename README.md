@@ -1,3 +1,9 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18654921.svg)](https://doi.org/10.5281/zenodo.18654921)
+
+# Dominus OS
+
+A Human-Governed Cognitive Operating System (HGOS)
+
 # Dominus OS
 
 **A Human-Governed Operating System for AI Workforces**
