@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>White Paper &mdash; Dominus OS</title>
-  <meta name="description" content="Dominus OS Public Thesis: A Human-Governed Operating System for AI Workforces. The structural gap in the current AI stack, and the governed cognitive substrate required to close it.">
-  <meta property="og:title" content="Dominus OS &mdash; Public Thesis White Paper">
-  <meta property="og:description" content="A Human-Governed Operating System for AI Workforces. The next abstraction layer is not another tool. It is a substrate.">
+  <title>Technical White Paper &mdash; Dominus OS</title>
+  <meta name="description" content="Dominus OS Technical White Paper: The Human-Governed AI Hypervisor. A structural governance layer beneath AI execution enforcing deterministic execution, capability-based authority, and architectural accountability.">
+  <meta property="og:title" content="Dominus OS &mdash; Technical White Paper">
+  <meta property="og:description" content="The Human-Governed AI Hypervisor. A structural governance layer beneath AI execution. Deterministic. Capability-bound. Verifiable.">
   <meta property="og:url" content="https://dominusos.ai/whitepaper">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +43,16 @@
     .constraint-list { list-style: none; padding: 0; margin: 24px 0 0; }
     .constraint-list li { margin-bottom: 14px; padding: 14px 18px; background: #fff; border-radius: 12px; border: 1px solid var(--bronze-300); color: var(--navy-700); font-size: 0.95rem; }
     .constraint-list li strong { color: var(--navy-900); }
+    .arch-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 24px; }
+    .arch-item { padding: 18px 22px; background: #fff; border-radius: 12px; border: 1px solid var(--bronze-300); border-left: 4px solid var(--forge-600); }
+    .arch-item h3 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--navy-900); margin: 0 0 8px; }
+    .arch-item p { margin: 0; color: var(--navy-700); font-size: 0.95rem; line-height: 1.65; }
+    .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; }
+    .roadmap-card { background: #fff; border: 2px solid var(--bronze-300); border-radius: 16px; padding: 22px; }
+    .roadmap-card.future { border-style: dashed; }
+    .roadmap-card h3 { font-family: var(--font-serif); font-size: 1.05rem; color: var(--navy-900); margin: 0 0 4px; }
+    .roadmap-card .phase { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--forge-600); font-weight: 600; margin-bottom: 10px; }
+    .roadmap-card p { margin: 0; color: var(--navy-700); font-size: 0.95rem; line-height: 1.6; }
     @media (max-width: 640px) {
       .evidence-grid { grid-template-columns: 1fr; }
       .invariants-list li { flex-direction: column; gap: 4px; }
@@ -50,6 +60,7 @@
       .wp-cta { flex-direction: column; align-items: stretch; }
       .convergence-table { font-size: 0.85rem; }
       .convergence-table th, .convergence-table td { padding: 8px 10px; }
+      .roadmap-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -60,7 +71,7 @@
         <img src="assets/dominus-d.png" class="brand-mark" alt="Dominus OS crest">
         <div class="brand-text">
           <span class="brand-name">Dominus OS</span>
-          <span class="brand-subline">Human-Governed Operating System</span>
+          <span class="brand-subline">Human-Governed AI Hypervisor</span>
         </div>
       </div>
       <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
@@ -70,7 +81,7 @@
       </button>
       <nav class="main-nav" aria-label="Primary">
         <a href="/#problem">The Problem</a>
-        <a href="/#the-os">The OS</a>
+        <a href="/#architecture">Architecture</a>
         <a href="/#control-plane">Control Plane</a>
         <a href="/whitepaper" style="color: var(--orange-200);">White Paper</a>
         <a class="nav-cta" href="/#founding">Founding Deployments</a>
@@ -82,13 +93,13 @@
     <section class="hero wp-hero" id="top">
       <div class="hero-overlay"></div>
       <div class="container" style="position: relative;">
-        <p class="eyebrow">Public Thesis</p>
-        <h1>Dominus OS: A Human-Governed Operating System for AI Workforces</h1>
-        <p class="subtitle">The next abstraction layer is not another tool. It is a substrate &mdash; a governed foundation for authority, structured memory, observability, and operator sovereignty.</p>
-        <p class="meta">Mark Lord, Dominus Foundry &mdash; February 2026 &mdash; Version 0.3</p>
+        <p class="eyebrow">Technical White Paper</p>
+        <h1>Dominus OS: The Human-Governed AI Hypervisor</h1>
+        <p class="subtitle">A structural governance layer beneath AI execution. Deterministic. Capability-bound. Verifiable.</p>
+        <p class="meta">Mark Lord, Dominus Foundry &mdash; February 2026 &mdash; Version 1.0</p>
         <div class="wp-cta">
-          <a class="button primary" href="https://github.com/markl2305/dominus-os/blob/main/docs/Dominus_OS_Public_Thesis_White_Paper_v0_3.pdf" target="_blank" rel="noopener">Download PDF</a>
-          <a class="button ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
+          <a class="button primary" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
+          <a class="button ghost" href="/">Back to Dominus OS</a>
         </div>
       </div>
     </section>
@@ -96,21 +107,22 @@
     <section class="wp-section">
       <div class="container wp-abstract">
         <h2>Abstract</h2>
-        <p>AI tools are accelerating, but most organizations still lack durable governance for automated work: authority is unclear, audit trails are incomplete, context is fragmented, and workflows fail quietly. These gaps turn capability into operational risk.</p>
-        <p>Dominus OS is a human-governed operating system for AI workforces. It provides a consistent structure for orchestrating agents and automated workflows under explicit authority controls, structured memory, and verifiable observability. The system is in production today &mdash; multiple virtual employees, a structured knowledge layer unifying decisions and doctrine across domains, governed business workflows including CRM-class operations, an operator assembly surface for structured cognition, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all running under governance.</p>
+        <p>AI systems increasingly execute consequential actions within production infrastructure &mdash; managing workflows, processing data, communicating with stakeholders, and allocating resources. Yet governance of these systems remains structurally decoupled from execution: reactive, policy-based, and dependent on configuration rather than architecture. The gap between capability and accountability widens with each new agent framework, each new integration, each new autonomous process.</p>
+        <p>Dominus OS introduces a human-governed AI hypervisor: a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, and tenant isolation, the system enforces structural guarantees that monitoring and policy alone cannot provide. The system is in production today &mdash; orchestrating multiple virtual employees, governed business workflows including CRM-class operations, a structured knowledge layer unifying decisions and doctrine across domains, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all under explicit human authority.</p>
+        <p>This paper presents the architectural thesis, core components, structural guarantees, production evidence, and roadmap for Dominus OS &mdash; including planned extension to IoT and autonomous edge environments.</p>
         <div class="wp-keywords">
-          <span>AI governance</span>
+          <span>AI hypervisor</span>
+          <span>Syscall gate</span>
+          <span>Capability-based authority</span>
+          <span>Deterministic execution</span>
           <span>Agent orchestration</span>
-          <span>Human-in-the-loop</span>
           <span>Auditability</span>
           <span>Observability</span>
-          <span>Workflow integrity</span>
-          <span>Memory architecture</span>
-          <span>Authority control</span>
-          <span>Governed workflows</span>
+          <span>Tenant isolation</span>
+          <span>Microkernel</span>
           <span>Structured cognition</span>
           <span>Knowledge graphs</span>
-          <span>Cognitive substrate</span>
+          <span>IoT governance</span>
         </div>
       </div>
     </section>
@@ -128,14 +140,56 @@
           <tbody>
             <tr><td>Monolith</td><td>Centralized control</td><td>Integration</td><td>Scalability</td></tr>
             <tr><td>SaaS</td><td>Specialization</td><td>Scalability</td><td>Data fragmentation</td></tr>
-            <tr><td>API economy</td><td>Composability</td><td>Cross-vendor integration</td><td>Dependency complexity</td></tr>
-            <tr><td>AI copilots</td><td>Local reasoning</td><td>Per-task intelligence</td><td>Session-scoped memory</td></tr>
+            <tr><td>API Economy</td><td>Composability</td><td>Cross-vendor integration</td><td>Dependency complexity</td></tr>
+            <tr><td>AI Copilots</td><td>Local reasoning</td><td>Per-task intelligence</td><td>Session-scoped memory</td></tr>
             <tr><td>Agents</td><td>Distributed execution</td><td>Task automation at scale</td><td>Authority, coherence</td></tr>
-            <tr><td>Tool sprawl</td><td>Surface coverage</td><td>Feature access</td><td>Cognitive fragmentation</td></tr>
+            <tr><td>Tool Sprawl</td><td>Surface coverage</td><td>Feature access</td><td>Cognitive fragmentation, governance</td></tr>
           </tbody>
         </table>
         <div class="section-heading center" style="margin-top: 32px;">
-          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The absence of a structured, governed cognitive substrate is the next limiting factor in system evolution. The next abstraction layer is not another tool. It is a substrate.</p>
+          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The absence of a governed execution substrate is the limiting factor in the current AI stack. The next abstraction layer is not another tool. It is a hypervisor.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container wp-abstract">
+        <h2>Architectural Thesis</h2>
+        <p>The structural gap in the current AI stack is not a missing tool &mdash; it is a missing layer.</p>
+        <p>AI systems operate with growing autonomy but without a substrate that enforces governance at the point of execution. Current approaches attempt to govern after the fact: monitoring dashboards observe what happened; policy engines advise what should happen; audit logs record what did happen. None intervene architecturally where execution occurs.</p>
+        <p>Dominus OS advances a thesis: <strong>governance must move beneath runtime.</strong> Rather than wrapping AI systems in external policy, Dominus OS positions a hypervisor layer between AI processes and the infrastructure they act upon. Every action &mdash; every write, every communication, every resource commitment &mdash; passes through a syscall gate that enforces scoped, revocable capabilities before execution proceeds.</p>
+        <p>Authority is not assumed. It is granted, bounded, time-limited, and auditable. No process inherits ambient authority from its environment.</p>
+        <p>This is the distinction between a governed system and a monitored one. Monitoring records what happened. A hypervisor determines what is permitted to happen.</p>
+      </div>
+    </section>
+
+    <section class="wp-section alt">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Core Architecture</p>
+          <h2>Five structural components of a governed hypervisor.</h2>
+        </div>
+        <div class="arch-grid">
+          <div class="arch-item">
+            <h3>Syscall Gate</h3>
+            <p>The mandatory mediation point for all AI execution. No process writes, communicates, deploys, or commits resources without passing through the gate. The gate enforces authority checks against the process&rsquo;s capability set, logs the action to an immutable event ledger, and applies governance rules before permitting execution. The gate is not optional and cannot be bypassed &mdash; it is the only path from intent to action.</p>
+          </div>
+          <div class="arch-item">
+            <h3>Capability-Based Authority</h3>
+            <p>Every process operates within an explicit capability envelope. Capabilities define what a process may do (scope), for how long (time-bound), and under whose authority (attribution). Capabilities are granted by human operators, are transitively revocable, and follow the principle of least authority. A process cannot access any resource or perform any action for which it does not hold an explicit, unexpired capability token.</p>
+          </div>
+          <div class="arch-item">
+            <h3>Event-Sourced Determinism</h3>
+            <p>Every state change in the system is captured as an immutable, sequenced event. The complete system state can be reconstructed by replaying the event log from any point. This provides replay determinism: any execution sequence can be audited, verified, and reproduced. There are no silent state mutations, no unrecorded side effects, no gaps in the attribution chain.</p>
+          </div>
+          <div class="arch-item">
+            <h3>Tenant Isolation</h3>
+            <p>Organizational domains &mdash; CRM, compliance, operations, intelligence &mdash; execute within isolated boundaries. No process in one domain can access another domain&rsquo;s data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.</p>
+          </div>
+          <div class="arch-item">
+            <h3>Microkernel Architecture</h3>
+            <p>The kernel is minimal by design. It manages process scheduling, capability enforcement, the syscall gate, and the event ledger. All domain logic, integrations, drivers, and services run in user space outside the kernel boundary. A fault in any driver or integration cannot crash the kernel or affect other subsystems. The design minimizes the trusted computing base and maximizes fault containment.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -143,15 +197,16 @@
     <section class="wp-section">
       <div class="container">
         <div class="section-heading center">
-          <p class="eyebrow">Core Invariants</p>
-          <h2>Five structural guarantees that define a governed OS.</h2>
+          <p class="eyebrow">Structural Guarantees</p>
+          <h2>Six invariants enforced by architecture, not by policy.</h2>
         </div>
         <ul class="invariants-list">
-          <li><strong>Authority is explicit</strong> <span>Actions are bounded by roles, permissions, and approval gates. The system cannot exceed approved scope. Authority is structural, not behavioral.</span></li>
-          <li><strong>Execution is observable</strong> <span>Failures surface. Work is measurable. Outcomes are inspectable. Every run has a unique identity and an unbroken attribution chain.</span></li>
-          <li><strong>Side effects are controlled</strong> <span>Writes and external actions pass through graduated approval gates. The system tracks what it changed. Planning is unconstrained. Execution is governed.</span></li>
-          <li><strong>Memory is structured</strong> <span>Short-term context and long-term knowledge are distinct, versioned, queryable, and attributable. The system accumulates intelligence, not just data.</span></li>
-          <li><strong>Operators remain sovereign</strong> <span>Humans can halt, constrain, and review the system at any time. No automated process can outrun the operator's ability to intervene.</span></li>
+          <li><strong>Replay Determinism</strong> <span>Any execution sequence can be replayed from the event log and will produce identical, verifiable results. Full audit reconstruction from any point in system history.</span></li>
+          <li><strong>Capability Enforcement Integrity</strong> <span>No process can exceed its granted capabilities. Enforcement is mandatory and architectural. Scope violations are structurally impossible, not merely detectable.</span></li>
+          <li><strong>Tenant Isolation Integrity</strong> <span>No cross-tenant data access, capability escalation, or execution context leakage is structurally possible. Domain boundaries are enforced at the kernel level.</span></li>
+          <li><strong>Revocation Cascades</strong> <span>When a capability is revoked, all capabilities derived from it are transitively and immediately revoked. Authority cannot persist after withdrawal. The operator&rsquo;s ability to halt always outpaces the system&rsquo;s ability to act.</span></li>
+          <li><strong>Driver Fault Containment</strong> <span>A failure in any driver, integration, or user-space service cannot propagate to the kernel or affect unrelated subsystems. The system fails safe by design.</span></li>
+          <li><strong>Canon Immutability</strong> <span>The system&rsquo;s constitutional governance rules cannot be modified by any process, including privileged ones. The governance framework is fixed at the architectural level and can only be amended through a formal, auditable process requiring human authority.</span></li>
         </ul>
       </div>
     </section>
@@ -165,11 +220,56 @@
         <ul class="constraint-list">
           <li><strong>Autonomy without constraint</strong> produces entropy. Systems that act without boundaries eventually act in ways that conflict with organizational intent.</li>
           <li><strong>Learning without versioning</strong> produces corruption. Systems that overwrite previous state cannot distinguish between current belief and prior understanding.</li>
-          <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated.</li>
+          <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated. Each interaction starts from zero.</li>
           <li><strong>Tool proliferation without substrate</strong> produces incoherence. Each new tool creates a new data silo, a new failure surface, and a new governance gap.</li>
+          <li><strong>Monitoring without mediation</strong> produces the illusion of control. Observability tells you what happened. Only a governance layer can determine what is permitted to happen.</li>
         </ul>
         <div class="section-heading center" style="margin-top: 24px;">
-          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The stability of intelligent systems depends on constraint, structure, and non-destructive evolution.</p>
+          <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The stability of intelligent systems depends on structural constraint, governed memory, and non-destructive evolution. These properties must be enforced beneath runtime, not applied above it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container wp-abstract">
+        <h2>Current State</h2>
+        <p>Dominus OS is not a proposal or a prototype. The system is deployed and running in production, orchestrating governed AI operations for a multi-domain service business:</p>
+        <ul class="constraint-list">
+          <li><strong>Multiple Virtual Employees</strong> executing governed workflows daily across email, CRM, document processing, compliance enforcement, and operational intelligence.</li>
+          <li><strong>Structured Knowledge Layer</strong> unifying decisions, projects, doctrine, contacts, and operational insights as versioned, graph-connected nodes with full provenance.</li>
+          <li><strong>Governed CRM Operations</strong> with full-funnel attribution, composite engagement scoring, automated follow-up enforcement, and stale data detection.</li>
+          <li><strong>Operator Assembly Surface</strong> for structured cognition &mdash; decision modeling, project lifecycle management, and version-controlled doctrine.</li>
+          <li><strong>Native Operator Applications</strong> on macOS (Swift) and iOS with live process visibility, tab-based task management, and direct kill authority.</li>
+          <li><strong>Autonomous Scheduled Operations</strong> running under governance with full attribution chains and immutable activity ledger.</li>
+          <li><strong>Governed Learning Engine</strong> improving system intelligence weekly under explicit human authority. Evolution inside governance, not outside it.</li>
+          <li><strong>System-Level Kill Switch</strong> tested regularly. One action halts all AI execution across every subsystem, instantly and visibly.</li>
+        </ul>
+        <p style="margin-top: 24px;">The architecture &mdash; syscall gate, capability-based authority, event-sourced determinism, tenant isolation, microkernel &mdash; is a deployable pattern. Any multi-domain operation that requires accountability, structured cognition, and governed AI execution can run a version of this system.</p>
+      </div>
+    </section>
+
+    <section class="wp-section alt">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Roadmap</p>
+          <h2>AI governance today. Autonomous infrastructure tomorrow.</h2>
+        </div>
+        <div class="roadmap-grid">
+          <div class="roadmap-card">
+            <div class="phase">Current</div>
+            <h3>Enterprise AI Governance</h3>
+            <p>Founding deployments with organizations that require governed AI operations, structured accountability, and auditable execution across multiple domains. The system is live and proving the pattern in production.</p>
+          </div>
+          <div class="roadmap-card">
+            <div class="phase">Near-Term</div>
+            <h3>Multi-Tenant Platform</h3>
+            <p>Scaling the hypervisor to support multiple organizations, each operating within isolated tenant boundaries with independent governance configurations, authority structures, and knowledge layers.</p>
+          </div>
+          <div class="roadmap-card future">
+            <div class="phase">Long-Term</div>
+            <h3>Autonomous Infrastructure &amp; IoT</h3>
+            <p>The capability-based authority model, syscall gate, and tenant isolation architecture are designed to extend to IoT and autonomous edge environments. When autonomous systems execute actions in the physical world &mdash; controlling devices, managing facilities, operating equipment &mdash; the need for bounded authority, deterministic execution, and immediate halt capability becomes critical. The IoT extension layer is stubbed in the current architecture, with the syscall gate and capability model designed to accommodate device-level authority grants, edge-local governance enforcement, and physical-world action mediation.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -178,23 +278,23 @@
       <div class="container">
         <div class="section-heading center">
           <p class="eyebrow">Verification</p>
-          <h2>Evidence anchors.</h2>
+          <h2>Evidence Anchors</h2>
         </div>
         <div class="evidence-grid">
           <article class="evidence-card">
-            <h3>White Paper (PDF)</h3>
-            <p>The full public thesis with convergence analysis, architecture, constraint argument, use cases, and current state.</p>
-            <a href="https://github.com/markl2305/dominus-os/blob/main/docs/Dominus_OS_Public_Thesis_White_Paper_v0_3.pdf" target="_blank" rel="noopener">Download from GitHub &rarr;</a>
-          </article>
-          <article class="evidence-card">
             <h3>Specification Repository</h3>
-            <p>Public repo with architecture overview, conceptual documentation, and project information.</p>
+            <p>Public repository with architecture overview, conceptual documentation, and project specification.</p>
             <a href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">View on GitHub &rarr;</a>
           </article>
           <article class="evidence-card">
             <h3>Dominus Foundry</h3>
             <p>The company behind Dominus OS. Operator-grade AI systems for service businesses.</p>
             <a href="https://dominusfoundry.com" target="_blank" rel="noopener">dominusfoundry.com &rarr;</a>
+          </article>
+          <article class="evidence-card">
+            <h3>dominusos.ai</h3>
+            <p>The product site for Dominus OS. Architecture, control plane, authority structure, and founding deployment information.</p>
+            <a href="https://dominusos.ai" target="_blank" rel="noopener">dominusos.ai &rarr;</a>
           </article>
         </div>
       </div>
@@ -203,11 +303,11 @@
     <section class="section" id="contact">
       <div class="container split engagement">
         <div class="section-heading">
-          <p class="eyebrow">Get Involved</p>
+          <p class="eyebrow">Founding Deployments</p>
           <h2>Shape how AI governance gets built.</h2>
         </div>
         <div class="body">
-          <p>Dominus OS is deploying with a small number of organizations. Founding partners get hands-on deployment, direct architectural input, and favorable terms.</p>
+          <p>Dominus OS is deploying with a small number of organizations &mdash; not to pilot governance, but to prove the pattern at scale. Founding partners receive hands-on deployment, direct architectural input, and favorable terms. If your organization requires governed AI execution, structured accountability, and auditable operations, we should speak.</p>
           <div class="contact-actions">
             <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=Dominus%20OS%20%E2%80%94%20White%20Paper%20Inquiry">Start a Conversation</a>
             <a class="button ghost" href="/">Back to Dominus OS</a>
@@ -226,7 +326,7 @@
           <p class="brand-subline">Originator of the Human-Governed Intelligence standard.</p>
         </div>
       </div>
-      <p class="footer-note">Dominus OS is the originator of the Human-Governed Intelligence standard. A Dominus Foundry venture.</p>
+      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.</p>
     </div>
   </footer>
 
