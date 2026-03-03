@@ -60,10 +60,19 @@ The hypervisor architecture is designed for extension beyond cloud-based AI work
 
 AI governance today. Autonomous infrastructure tomorrow.
 
+## v1.1: From Governed Execution to Governed Learning
+
+Version 1.1 closes every learning loop in the system -- transforming passive telemetry into active, governed intelligence. Nineteen features across six implementation waves, zero breaking changes. All eight architectural invariants preserved.
+
+The six waves: Learning Loop Closure, Event Stream Intelligence, Dynamic Resource Feedback, Scheduler Intelligence, Advanced Governance, and Architectural Frontier. The system now observes, enforces, learns, and adapts -- while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral feedback.
+
+See the [v1.1 Addendum](docs/Dominus_OS_White_Paper_v1_1_Addendum.md) for full details.
+
 ## Documentation
 
 - [Technical White Paper v1.0 (Markdown)](docs/Dominus_OS_Technical_White_Paper_v1_0.md) -- the canonical thesis document
-- [Technical White Paper v1.0 (Web)](https://dominusos.ai/whitepaper) -- the live web version
+- [White Paper v1.1 Addendum (Markdown)](docs/Dominus_OS_White_Paper_v1_1_Addendum.md) -- architectural evolution: closing the loops
+- [Technical White Paper v1.1 (Web)](https://dominusos.ai/whitepaper) -- the live web version
 - [Architecture Overview](docs/ARCHITECTURE.md) -- core components and design principles
 
 ## Links
