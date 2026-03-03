@@ -53,6 +53,30 @@
     .roadmap-card h3 { font-family: var(--font-serif); font-size: 1.05rem; color: var(--navy-900); margin: 0 0 4px; }
     .roadmap-card .phase { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--forge-600); font-weight: 600; margin-bottom: 10px; }
     .roadmap-card p { margin: 0; color: var(--navy-700); font-size: 0.95rem; line-height: 1.6; }
+    /* v1.1 Addendum styles */
+    .addendum-banner { background: linear-gradient(145deg, var(--navy-900), var(--forge-900)); color: #fff; padding: 60px 0; border-top: 4px solid var(--forge-600); }
+    .addendum-banner h2 { font-family: var(--font-serif); font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0 0 8px; }
+    .addendum-banner .meta { font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+    .addendum-banner p { color: rgba(255,255,255,0.85); max-width: 720px; line-height: 1.7; margin-top: 16px; }
+    .wave-section { padding: 48px 0; border-bottom: 1px solid var(--bronze-300); }
+    .wave-section:last-child { border-bottom: none; }
+    .wave-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--forge-600); font-weight: 600; margin-bottom: 8px; }
+    .wave-title { font-family: var(--font-serif); font-size: 1.3rem; color: var(--navy-900); margin: 0 0 16px; }
+    .wave-intro { color: var(--navy-700); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.65; }
+    .feature-item { padding: 14px 18px; background: #fff; border-radius: 12px; border: 1px solid var(--bronze-300); border-left: 3px solid var(--forge-600); margin-bottom: 12px; }
+    .feature-item h4 { font-family: var(--font-serif); font-size: 1rem; color: var(--navy-900); margin: 0 0 6px; }
+    .feature-item p { margin: 0; color: var(--navy-700); font-size: 0.9rem; line-height: 1.65; }
+    .invariants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 20px; }
+    .invariant-card { padding: 14px 16px; background: #fff; border-radius: 10px; border: 1px solid var(--bronze-300); font-size: 0.9rem; }
+    .invariant-card strong { color: var(--navy-900); }
+    .invariant-card span { color: var(--navy-700); }
+    .addendum-summary { background: linear-gradient(135deg, var(--forge-50), #fff); border: 2px solid var(--forge-500); border-bottom: 4px solid var(--forge-700); border-radius: 16px; padding: 28px; margin-top: 32px; }
+    .addendum-summary p { color: var(--navy-800); line-height: 1.7; margin-bottom: 14px; }
+    .addendum-summary p:last-child { margin-bottom: 0; }
+    .addendum-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--bronze-300); }
+    .addendum-stat { text-align: center; }
+    .addendum-stat .num { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700; color: var(--navy-900); }
+    .addendum-stat .label { font-size: 0.75rem; color: var(--navy-700); text-transform: uppercase; letter-spacing: 0.1em; }
     @media (max-width: 640px) {
       .evidence-grid { grid-template-columns: 1fr; }
       .invariants-list li { flex-direction: column; gap: 4px; }
@@ -84,6 +108,7 @@
         <a href="/#architecture">Architecture</a>
         <a href="/#control-plane">Control Plane</a>
         <a href="/whitepaper" style="color: var(--orange-200);">White Paper</a>
+        <a href="/whitepaper#v1-1" style="color: var(--orange-200);">v1.1 Addendum</a>
         <a class="nav-cta" href="/#founding">Founding Deployments</a>
       </nav>
     </div>
@@ -96,9 +121,10 @@
         <p class="eyebrow">Technical White Paper</p>
         <h1>Dominus OS: The Human-Governed AI Hypervisor</h1>
         <p class="subtitle">A structural governance layer beneath AI execution. Deterministic. Capability-bound. Verifiable.</p>
-        <p class="meta">Mark Lord, Dominus Foundry &mdash; February 2026 &mdash; Version 1.0</p>
+        <p class="meta">Mark Lord, Dominus Foundry &mdash; March 2026 &mdash; Version 1.1</p>
         <div class="wp-cta">
-          <a class="button primary" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
+          <a class="button primary" href="/Dominus_OS_White_Paper_v1.pdf" download>Download White Paper (PDF)</a>
+          <a class="button ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
           <a class="button ghost" href="/">Back to Dominus OS</a>
         </div>
       </div>
@@ -123,6 +149,10 @@
           <span>Structured cognition</span>
           <span>Knowledge graphs</span>
           <span>IoT governance</span>
+          <span>Learning loops</span>
+          <span>Autonomic computing</span>
+          <span>Formal verification</span>
+          <span>Dynamic trust</span>
         </div>
       </div>
     </section>
@@ -296,6 +326,198 @@
             <p>The product site for Dominus OS. Architecture, control plane, authority structure, and founding deployment information.</p>
             <a href="https://dominusos.ai" target="_blank" rel="noopener">dominusos.ai &rarr;</a>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- v1.1 ADDENDUM -->
+    <section class="addendum-banner" id="v1-1">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--bronze-300);">v1.1 Addendum</p>
+        <h2>Architectural Evolution: Closing the Loops</h2>
+        <p class="meta">Added: March 2026</p>
+        <p>The v1.0 architecture established five structural components: syscall gate, capability-based authority, event-sourced determinism, tenant isolation, and microkernel design. Version 1.1 closes every learning loop in the system &mdash; transforming passive telemetry into active, governed intelligence. All changes are additive. No existing syscall contracts are modified. No structural guarantees are weakened.</p>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container wp-abstract">
+        <h2>From Observation to Active Intelligence</h2>
+        <p>What v1.0 did not fully address was the compounding problem: subsystems observed, recorded, and enforced &mdash; but did not learn from each other. The Metis Knowledge Layer accumulated signals but never fed them back into governance decisions. Metering tracked costs but never triggered trust investigations. Audit recorded violations but never informed behavioral scoring.</p>
+        <p>The architecture was structurally sound. Its subsystems were structurally isolated from each other&rsquo;s intelligence. Version 1.1 closes every learning loop &mdash; while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral feedback.</p>
+        <p>The v1.1 additions are organized into six implementation waves, ordered by compounding leverage and ascending blast radius. Earlier waves amplify the value of later waves. All waves preserve the eight architectural invariants.</p>
+      </div>
+    </section>
+
+    <section class="wp-section alt">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Implementation Waves</p>
+          <h2>Six waves. Zero breaking changes.</h2>
+        </div>
+
+        <!-- Wave 1 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 1</div>
+          <h3 class="wave-title">Learning Loop Closure</h3>
+          <p class="wave-intro">The highest-leverage change in the system. Four integrations, zero blast radius, additive wiring only.</p>
+          <div class="feature-item">
+            <h4>Observed Preferences Tier</h4>
+            <p>Activates the fourth tier of the policy server&rsquo;s evaluation hierarchy by wiring the knowledge layer into policy evaluation. High-confidence learned patterns can add risk signals to policy metadata or recommend denial. Advisory by default &mdash; informs governance without overriding it.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Audit-to-Trust Bridge</h4>
+            <p>Audit recording is no longer write-only. A periodic bridge queries recent audit data for violation patterns, computes rolling anomaly scores against historical baselines, and emits compound trust signals. Fifty small errors in five minutes carry different weight than fifty errors over three months.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Metering-to-Trust Bridge</h4>
+            <p>Cost accumulators now feed trust evaluation. When spending exceeds historical baselines by a configurable multiple, the metering subsystem emits a cost anomaly trust signal. A sudden 50x token spend no longer passes invisibly.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Knowledge Confidence Decay</h4>
+            <p>Learned patterns carry confidence scores that decay over time. Recent, reinforced patterns retain high confidence. Stale patterns degrade and eventually fall below the query threshold. The system forgets what is no longer relevant &mdash; structural protection against knowledge corruption.</p>
+          </div>
+        </div>
+
+        <!-- Wave 2 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 2</div>
+          <h3 class="wave-title">Event Stream Intelligence</h3>
+          <p class="wave-intro">A new consumer layer over the existing event stream. Zero blast radius &mdash; no existing event producers are modified.</p>
+          <div class="feature-item">
+            <h4>Sliding Window Aggregation</h4>
+            <p>Configurable time-window aggregation over the event stream enables real-time operational metrics without polling or batch queries.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Sequence Pattern Detection</h4>
+            <p>Identifies recurring sequences of syscall patterns &mdash; enabling detection of behavioral signatures that individual event monitoring cannot see.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Anomaly Scoring Engine</h4>
+            <p>Statistical anomaly detection over windowed aggregates. Scores are published to the knowledge layer and made available to the policy server, creating a feedback loop from operational behavior to governance.</p>
+          </div>
+        </div>
+
+        <!-- Wave 3 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 3</div>
+          <h3 class="wave-title">Dynamic Resource Feedback</h3>
+          <p class="wave-intro">Trust and metering data reshape runtime resource allocation. Low blast radius &mdash; changes confined to the VMM and resource pool.</p>
+          <div class="feature-item">
+            <h4>Trust-Reactive Resources</h4>
+            <p>Entity resource allocations adjust dynamically based on trust scores. High-trust entities earn expanded operational headroom. Low-trust entities operate under tighter constraints.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Metering-Reactive Quotas</h4>
+            <p>Cost budgets become dynamic. Efficient entities earn budget headroom. Entities exhibiting cost anomalies face automatic budget contraction &mdash; before human intervention is required.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Per-Entity Enforcement Modes</h4>
+            <p>Entities operate in advisory, enforcing, or strict mode. Mode transitions are governed by trust score thresholds.</p>
+          </div>
+        </div>
+
+        <!-- Wave 4 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 4</div>
+          <h3 class="wave-title">Scheduler Intelligence</h3>
+          <p class="wave-intro">The task scheduler evolves from static priority queuing to cost-aware, knowledge-informed scheduling.</p>
+          <div class="feature-item">
+            <h4>Cost-Aware Task Admission</h4>
+            <p>The scheduler evaluates estimated task cost against remaining budgets before admitting work. Tasks that would exceed budgets are deferred or denied.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Head-of-Line Blocking Resolution</h4>
+            <p>Priority-aware queue partitioning resolves a known limitation where a single high-cost task could block lower-priority work.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Predictive Priority from MKL</h4>
+            <p>Task priority draws on historical execution patterns from the knowledge layer. Tasks with historically high value-to-cost ratios are prioritized.</p>
+          </div>
+        </div>
+
+        <!-- Wave 5 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 5</div>
+          <h3 class="wave-title">Advanced Governance</h3>
+          <p class="wave-intro">Extensions to the policy engine for temporal reasoning, backtesting, and programmable filtering. Medium blast radius.</p>
+          <div class="feature-item">
+            <h4>Temporal Policy Evaluation</h4>
+            <p>Policies can reference historical state: &ldquo;deny if this entity has exceeded its error budget in the last 24 hours&rdquo; or &ldquo;require escalation if three policy-violation signals have fired this week.&rdquo; Governance gains memory.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Shadow Execution (Backtesting)</h4>
+            <p>Proposed policy changes can be evaluated against the historical event log before deployment. The system shows what would have been denied, permitted, or flagged under the proposed policy.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Programmable Tenant Filters</h4>
+            <p>Tenants define custom event stream filters that trigger governance actions &mdash; enabling domain-specific governance logic without modifying the kernel.</p>
+          </div>
+        </div>
+
+        <!-- Wave 6 -->
+        <div class="wave-section">
+          <div class="wave-label">Wave 6</div>
+          <h3 class="wave-title">Architectural Frontier</h3>
+          <p class="wave-intro">Longer-horizon extensions that push the architecture toward autonomic operation and formal verification. Medium blast radius.</p>
+          <div class="feature-item">
+            <h4>MAPE-K Autonomic Planner</h4>
+            <p>A Monitor-Analyze-Plan-Execute loop that proposes system-level optimizations. All proposed actions require human approval above a configurable risk threshold. The system recommends. Humans authorize.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Stability Governor</h4>
+            <p>PID-style dampening prevents feedback oscillation when multiple reactive subsystems adjust simultaneously. Ensures dynamic feedback does not produce instability.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Capability Quorum Amplification</h4>
+            <p>High-risk operations require multiple independent capability grants before execution proceeds. No single authority can unilaterally authorize sensitive actions.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Speculative Execution</h4>
+            <p>Low-risk operations can be executed speculatively pending governance approval. If approved, results commit instantly. If denied, no side effects persist.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Intent-Based Orchestration</h4>
+            <p>An abstraction layer that translates high-level operational goals into governed syscall sequences. Intent is parsed, validated against capabilities, decomposed, and submitted through the standard gate.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Federated Learning Across Tenants</h4>
+            <p>Aggregated, anonymized operational intelligence shared across tenant boundaries. Only statistical aggregates are shared &mdash; with differential privacy guarantees and per-tenant opt-out. Isolation guarantees remain structurally intact.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Formal Verification</h4>
+            <p>TLA+ specifications that mathematically prove four properties: no syscall sequence can violate God Canon immutability, no capability derivation chain can produce escalated authority, no policy evaluation path can bypass God Canon checks, and the kill switch is reachable from every possible system state.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container">
+        <div class="section-heading center">
+          <p class="eyebrow">Architectural Invariants</p>
+          <h2>Eight invariants preserved across all v1.1 additions.</h2>
+        </div>
+        <div class="invariants-grid">
+          <div class="invariant-card"><strong>Single Gate.</strong> <span>Every operation passes through the syscall gate. No wave introduces bypass paths.</span></div>
+          <div class="invariant-card"><strong>God Canon First.</strong> <span>God Canon evaluation is always the first policy check. Nothing inserts before it.</span></div>
+          <div class="invariant-card"><strong>Event Sourcing.</strong> <span>Every syscall emits an event. New features emit new events. No existing events are suppressed.</span></div>
+          <div class="invariant-card"><strong>Capability Security.</strong> <span>No feature grants capabilities without proper minting or derivation.</span></div>
+          <div class="invariant-card"><strong>Tenant Isolation.</strong> <span>No cross-tenant data leakage. Federation uses aggregated metrics only.</span></div>
+          <div class="invariant-card"><strong>Article 1 Sovereignty.</strong> <span>Autonomic recommendations require human approval for high-risk actions. Kill switch always requires an operator.</span></div>
+          <div class="invariant-card"><strong>Fail-Safe Defaults.</strong> <span>Non-security paths fail open. Security paths fail closed.</span></div>
+          <div class="invariant-card"><strong>Registration Lock.</strong> <span>No syscall handlers registered after boot. All handlers register during kernel initialization.</span></div>
+        </div>
+
+        <div class="addendum-summary">
+          <p><strong>Version 1.1 transforms Dominus OS from a governed execution platform into a governed learning platform.</strong> The system now observes, enforces, learns, and adapts &mdash; while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral intelligence.</p>
+          <p>The six original guarantees (replay determinism, capability enforcement integrity, tenant isolation integrity, revocation cascades, driver fault containment, and canon immutability) are unchanged. What changes is that the system now compounds intelligence under governance, rather than merely executing under governance.</p>
+          <div class="addendum-stats">
+            <div class="addendum-stat"><div class="num">19</div><div class="label">Features</div></div>
+            <div class="addendum-stat"><div class="num">6</div><div class="label">Waves</div></div>
+            <div class="addendum-stat"><div class="num">0</div><div class="label">Breaking Changes</div></div>
+            <div class="addendum-stat"><div class="num">8</div><div class="label">Invariants Preserved</div></div>
+          </div>
         </div>
       </div>
     </section>
