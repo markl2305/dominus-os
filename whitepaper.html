@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical White Paper &mdash; Dominus OS</title>
-  <meta name="description" content="Dominus OS Technical White Paper: The Human-Governed AI Hypervisor. A structural governance layer beneath AI execution enforcing deterministic execution, capability-based authority, and architectural accountability.">
-  <meta property="og:title" content="Dominus OS &mdash; Technical White Paper">
-  <meta property="og:description" content="The Human-Governed AI Hypervisor. A structural governance layer beneath AI execution. Deterministic. Capability-bound. Verifiable.">
+  <title>Technical White Paper &mdash; DominusOS</title>
+  <meta name="description" content="DominusOS Technical White Paper: The Governed Intelligence Hypervisor. A mandatory control layer beneath AI execution that enforces structural authority, compounding organizational intelligence, and deterministic accountability. White paper by Mark Lord, Dominus Foundry.">
+  <meta name="keywords" content="governed intelligence, AI hypervisor, compounding organizational intelligence, syscall gate, capability envelope, instructable virtual employees, governed AI workforce, human-governed AI, AI governance architecture, deterministic accountability, organizational intelligence platform">
+  <meta property="og:title" content="DominusOS &mdash; Technical White Paper">
+  <meta property="og:description" content="The Governed Intelligence Hypervisor. Instructable virtual employees, compounding organizational intelligence, and structural authority beneath AI execution. Deterministic. Capability-bound. Verifiable.">
   <meta property="og:url" content="https://dominusos.ai/whitepaper">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,9 +93,9 @@
   <header class="site-header">
     <div class="container header-bar">
       <div class="brand">
-        <img src="assets/dominus-d.png" class="brand-mark" alt="Dominus OS crest">
+        <img src="assets/dominus-d.png" class="brand-mark" alt="DominusOS crest">
         <div class="brand-text">
-          <span class="brand-name">Dominus OS</span>
+          <span class="brand-name">DominusOS</span>
           <span class="brand-subline">Human-Governed AI Hypervisor</span>
         </div>
       </div>
@@ -119,13 +120,13 @@
       <div class="hero-overlay"></div>
       <div class="container" style="position: relative;">
         <p class="eyebrow">Technical White Paper</p>
-        <h1>Dominus OS: The Human-Governed AI Hypervisor</h1>
-        <p class="subtitle">A structural governance layer beneath AI execution. Deterministic. Capability-bound. Verifiable.</p>
-        <p class="meta">Mark Lord, Dominus Foundry &mdash; March 2026 &mdash; Version 1.1</p>
+        <h1>DominusOS: The Human-Governed AI Hypervisor</h1>
+        <p class="subtitle">A control layer beneath AI execution. Federated multi-kernel governance, constitutional authority, and structural accountability.</p>
+        <p class="meta">Mark Lord, Dominus Foundry &mdash; March 2026 &mdash; Version 2.0</p>
         <div class="wp-cta">
-          <a class="button primary" href="/Dominus_OS_White_Paper_v1.pdf" download>Download White Paper (PDF)</a>
+          <a class="button primary" href="/DominusOS_White_Paper_v2.pdf" download>Download White Paper (PDF)</a>
           <a class="button ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
-          <a class="button ghost" href="/">Back to Dominus OS</a>
+          <a class="button ghost" href="/">Back to DominusOS</a>
         </div>
       </div>
     </section>
@@ -134,19 +135,21 @@
       <div class="container wp-abstract">
         <h2>Abstract</h2>
         <p>AI systems increasingly execute consequential actions within production infrastructure &mdash; managing workflows, processing data, communicating with stakeholders, and allocating resources. Yet governance of these systems remains structurally decoupled from execution: reactive, policy-based, and dependent on configuration rather than architecture. The gap between capability and accountability widens with each new agent framework, each new integration, each new autonomous process.</p>
-        <p>Dominus OS introduces a human-governed AI hypervisor: a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, and tenant isolation, the system enforces structural guarantees that monitoring and policy alone cannot provide. The system is in production today &mdash; orchestrating multiple virtual employees, governed business workflows including CRM-class operations, a structured knowledge layer unifying decisions and doctrine across domains, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all under explicit human authority.</p>
-        <p>This paper presents the architectural thesis, core components, structural guarantees, production evidence, and roadmap for Dominus OS &mdash; including planned extension to IoT and autonomous edge environments.</p>
+        <p>DominusOS introduces a human-governed AI hypervisor: a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, tenant isolation, and federated multi-kernel orchestration, the system enforces structural guarantees that monitoring and policy alone cannot provide. The system is in production today &mdash; orchestrating multiple virtual employees across federated domain kernels, governed business workflows, a structured knowledge layer unifying decisions and doctrine across domains, native desktop and mobile operator applications, cryptographically sealed constitutional governance, autonomous intelligence that learns and proposes within governance constraints, and autonomous scheduled operations &mdash; all under explicit human authority with split-key governance.</p>
+        <p>This paper presents the architectural thesis, core components, structural guarantees, production evidence, and roadmap for DominusOS &mdash; including planned extension to IoT and autonomous edge environments.</p>
         <div class="wp-keywords">
+          <span>Governed intelligence</span>
           <span>AI hypervisor</span>
           <span>Syscall gate</span>
-          <span>Capability-based authority</span>
+          <span>Capability envelopes</span>
+          <span>Compounding organizational intelligence</span>
+          <span>Instructable virtual employees</span>
           <span>Deterministic execution</span>
-          <span>Agent orchestration</span>
           <span>Auditability</span>
           <span>Observability</span>
           <span>Tenant isolation</span>
           <span>Microkernel</span>
-          <span>Structured cognition</span>
+          <span>Doctrine</span>
           <span>Knowledge graphs</span>
           <span>IoT governance</span>
           <span>Learning loops</span>
@@ -186,8 +189,8 @@
       <div class="container wp-abstract">
         <h2>Architectural Thesis</h2>
         <p>The structural gap in the current AI stack is not a missing tool &mdash; it is a missing layer.</p>
-        <p>AI systems operate with growing autonomy but without a substrate that enforces governance at the point of execution. Current approaches attempt to govern after the fact: monitoring dashboards observe what happened; policy engines advise what should happen; audit logs record what did happen. None intervene architecturally where execution occurs.</p>
-        <p>Dominus OS advances a thesis: <strong>governance must move beneath runtime.</strong> Rather than wrapping AI systems in external policy, Dominus OS positions a hypervisor layer between AI processes and the infrastructure they act upon. Every action &mdash; every write, every communication, every resource commitment &mdash; passes through a syscall gate that enforces scoped, revocable capabilities before execution proceeds.</p>
+        <p>AI systems operate with growing autonomy but without a substrate that enforces governance at the point of execution. Current approaches attempt to govern after the fact: observability dashboards record what happened; policy engines advise what should happen; audit logs capture what did happen. None intervene architecturally where execution occurs.</p>
+        <p>DominusOS advances a thesis: <strong>governance must move beneath runtime.</strong> Rather than wrapping AI systems in external policy, DominusOS positions a hypervisor layer between AI processes and the infrastructure they act upon. Every action &mdash; every write, every communication, every resource commitment &mdash; passes through a syscall gate that enforces capability envelopes &mdash; scoped, time-limited, and revocable &mdash; before execution proceeds.</p>
         <p>Authority is not assumed. It is granted, bounded, time-limited, and auditable. No process inherits ambient authority from its environment.</p>
         <p>This is the distinction between a governed system and a monitored one. Monitoring records what happened. A hypervisor determines what is permitted to happen.</p>
       </div>
@@ -205,8 +208,8 @@
             <p>The mandatory mediation point for all AI execution. No process writes, communicates, deploys, or commits resources without passing through the gate. The gate enforces authority checks against the process&rsquo;s capability set, logs the action to an immutable event ledger, and applies governance rules before permitting execution. The gate is not optional and cannot be bypassed &mdash; it is the only path from intent to action.</p>
           </div>
           <div class="arch-item">
-            <h3>Capability-Based Authority</h3>
-            <p>Every process operates within an explicit capability envelope. Capabilities define what a process may do (scope), for how long (time-bound), and under whose authority (attribution). Capabilities are granted by human operators, are transitively revocable, and follow the principle of least authority. A process cannot access any resource or perform any action for which it does not hold an explicit, unexpired capability token.</p>
+            <h3>Capability Envelopes</h3>
+            <p>Every process operates within an explicit capability envelope. Envelopes define what a process may do (scope), for how long (time-limited), and under whose authority (attribution). Capability envelopes are granted by human operators, are transitively revocable, and follow the principle of least authority. A process cannot access any resource or perform any action for which it does not hold an explicit, unexpired capability grant.</p>
           </div>
           <div class="arch-item">
             <h3>Event-Sourced Determinism</h3>
@@ -214,7 +217,7 @@
           </div>
           <div class="arch-item">
             <h3>Tenant Isolation</h3>
-            <p>Organizational domains &mdash; CRM, compliance, operations, intelligence &mdash; execute within isolated boundaries. No process in one domain can access another domain&rsquo;s data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.</p>
+            <p>Organizational domains execute within isolated boundaries. No process in one domain can access another domain&rsquo;s data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.</p>
           </div>
           <div class="arch-item">
             <h3>Microkernel Architecture</h3>
@@ -232,7 +235,7 @@
         </div>
         <ul class="invariants-list">
           <li><strong>Replay Determinism</strong> <span>Any execution sequence can be replayed from the event log and will produce identical, verifiable results. Full audit reconstruction from any point in system history.</span></li>
-          <li><strong>Capability Enforcement Integrity</strong> <span>No process can exceed its granted capabilities. Enforcement is mandatory and architectural. Scope violations are structurally impossible, not merely detectable.</span></li>
+          <li><strong>Capability Enforcement Integrity</strong> <span>No process can exceed its granted capabilities. Enforcement is mandatory and architectural. Scope violations are structurally difficult by design, not merely detectable.</span></li>
           <li><strong>Tenant Isolation Integrity</strong> <span>No cross-tenant data access, capability escalation, or execution context leakage is structurally possible. Domain boundaries are enforced at the kernel level.</span></li>
           <li><strong>Revocation Cascades</strong> <span>When a capability is revoked, all capabilities derived from it are transitively and immediately revoked. Authority cannot persist after withdrawal. The operator&rsquo;s ability to halt always outpaces the system&rsquo;s ability to act.</span></li>
           <li><strong>Driver Fault Containment</strong> <span>A failure in any driver, integration, or user-space service cannot propagate to the kernel or affect unrelated subsystems. The system fails safe by design.</span></li>
@@ -252,7 +255,7 @@
           <li><strong>Learning without versioning</strong> produces corruption. Systems that overwrite previous state cannot distinguish between current belief and prior understanding.</li>
           <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated. Each interaction starts from zero.</li>
           <li><strong>Tool proliferation without substrate</strong> produces incoherence. Each new tool creates a new data silo, a new failure surface, and a new governance gap.</li>
-          <li><strong>Monitoring without mediation</strong> produces the illusion of control. Observability tells you what happened. Only a governance layer can determine what is permitted to happen.</li>
+          <li><strong>Observability without mediation</strong> produces the illusion of control. Observability tells you what happened. Only a hypervisor layer can determine what is permitted to happen.</li>
         </ul>
         <div class="section-heading center" style="margin-top: 24px;">
           <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The stability of intelligent systems depends on structural constraint, governed memory, and non-destructive evolution. These properties must be enforced beneath runtime, not applied above it.</p>
@@ -263,18 +266,18 @@
     <section class="wp-section">
       <div class="container wp-abstract">
         <h2>Current State</h2>
-        <p>Dominus OS is not a proposal or a prototype. The system is deployed and running in production, orchestrating governed AI operations for a multi-domain service business:</p>
+        <p>DominusOS is not a proposal or a prototype. The system is deployed and running in production, orchestrating governed AI operations for a multi-domain service business:</p>
         <ul class="constraint-list">
-          <li><strong>Multiple Virtual Employees</strong> executing governed workflows daily across email, CRM, document processing, compliance enforcement, and operational intelligence.</li>
-          <li><strong>Structured Knowledge Layer</strong> unifying decisions, projects, doctrine, contacts, and operational insights as versioned, graph-connected nodes with full provenance.</li>
-          <li><strong>Governed CRM Operations</strong> with full-funnel attribution, composite engagement scoring, automated follow-up enforcement, and stale data detection.</li>
+          <li><strong>Multiple Virtual Employees</strong> executing governed workflows daily across email, document processing, compliance enforcement, and operational intelligence.</li>
+          <li><strong>Organizational Intelligence Substrate</strong> unifying decisions, projects, doctrine, contacts, and operational insights as versioned, graph-connected nodes with full provenance.</li>
+          <li><strong>Governed Business Operations</strong> with full-funnel attribution, composite engagement scoring, automated follow-up enforcement, and stale data detection.</li>
           <li><strong>Operator Assembly Surface</strong> for structured cognition &mdash; decision modeling, project lifecycle management, and version-controlled doctrine.</li>
-          <li><strong>Native Operator Applications</strong> on macOS (Swift) and iOS with live process visibility, tab-based task management, and direct kill authority.</li>
+          <li><strong>Native Operator Applications</strong> on desktop and mobile with live process visibility, tab-based task management, and direct kill authority.</li>
           <li><strong>Autonomous Scheduled Operations</strong> running under governance with full attribution chains and immutable activity ledger.</li>
-          <li><strong>Governed Learning Engine</strong> improving system intelligence weekly under explicit human authority. Evolution inside governance, not outside it.</li>
+          <li><strong>Compounding Intelligence Layer</strong> improving organizational intelligence weekly under explicit human authority. Evolution inside governance, not outside it.</li>
           <li><strong>System-Level Kill Switch</strong> tested regularly. One action halts all AI execution across every subsystem, instantly and visibly.</li>
         </ul>
-        <p style="margin-top: 24px;">The architecture &mdash; syscall gate, capability-based authority, event-sourced determinism, tenant isolation, microkernel &mdash; is a deployable pattern. Any multi-domain operation that requires accountability, structured cognition, and governed AI execution can run a version of this system.</p>
+        <p style="margin-top: 24px;">The architecture &mdash; syscall gate, capability envelopes, event-sourced determinism, tenant isolation, microkernel &mdash; is a deployable pattern. Any multi-domain operation that requires accountability, compounding organizational intelligence, and governed AI execution can run a version of this system.</p>
       </div>
     </section>
 
@@ -288,12 +291,12 @@
           <div class="roadmap-card">
             <div class="phase">Current</div>
             <h3>Enterprise AI Governance</h3>
-            <p>Founding deployments with organizations that require governed AI operations, structured accountability, and auditable execution across multiple domains. The system is live and proving the pattern in production.</p>
+            <p>Founding deployments with organizations that require governed organizational intelligence, structural accountability, and auditable execution across multiple domains. Instructable virtual employees compounding intelligence in production.</p>
           </div>
           <div class="roadmap-card">
             <div class="phase">Near-Term</div>
             <h3>Multi-Tenant Platform</h3>
-            <p>Scaling the hypervisor to support multiple organizations, each operating within isolated tenant boundaries with independent governance configurations, authority structures, and knowledge layers.</p>
+            <p>Scaling the hypervisor to support multiple organizations, each operating within isolated tenant boundaries with independent governance configurations, authority structures, and compounding intelligence layers.</p>
           </div>
           <div class="roadmap-card future">
             <div class="phase">Long-Term</div>
@@ -318,12 +321,12 @@
           </article>
           <article class="evidence-card">
             <h3>Dominus Foundry</h3>
-            <p>The company behind Dominus OS. Operator-grade AI systems for service businesses.</p>
+            <p>The company behind DominusOS. Operator-grade AI systems for service businesses.</p>
             <a href="https://dominusfoundry.com" target="_blank" rel="noopener">dominusfoundry.com &rarr;</a>
           </article>
           <article class="evidence-card">
             <h3>dominusos.ai</h3>
-            <p>The product site for Dominus OS. Architecture, control plane, authority structure, and founding deployment information.</p>
+            <p>The product site for DominusOS. Architecture, control plane, authority structure, and founding deployment information.</p>
             <a href="https://dominusos.ai" target="_blank" rel="noopener">dominusos.ai &rarr;</a>
           </article>
         </div>
@@ -343,7 +346,7 @@
     <section class="wp-section">
       <div class="container wp-abstract">
         <h2>From Observation to Active Intelligence</h2>
-        <p>What v1.0 did not fully address was the compounding problem: subsystems observed, recorded, and enforced &mdash; but did not learn from each other. The Metis Knowledge Layer accumulated signals but never fed them back into governance decisions. Metering tracked costs but never triggered trust investigations. Audit recorded violations but never informed behavioral scoring.</p>
+        <p>What v1.0 did not fully address was the compounding problem: subsystems observed, recorded, and enforced &mdash; but did not learn from each other. The organizational intelligence substrate accumulated signals but never fed them back into governance decisions. Metering tracked costs but never triggered trust investigations. Audit recorded violations but never informed behavioral scoring.</p>
         <p>The architecture was structurally sound. Its subsystems were structurally isolated from each other&rsquo;s intelligence. Version 1.1 closes every learning loop &mdash; while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral feedback.</p>
         <p>The v1.1 additions are organized into six implementation waves, ordered by compounding leverage and ascending blast radius. Earlier waves amplify the value of later waves. All waves preserve the eight architectural invariants.</p>
       </div>
@@ -363,7 +366,7 @@
           <p class="wave-intro">The highest-leverage change in the system. Four integrations, zero blast radius, additive wiring only.</p>
           <div class="feature-item">
             <h4>Observed Preferences Tier</h4>
-            <p>Activates the fourth tier of the policy server&rsquo;s evaluation hierarchy by wiring the knowledge layer into policy evaluation. High-confidence learned patterns can add risk signals to policy metadata or recommend denial. Advisory by default &mdash; informs governance without overriding it.</p>
+            <p>Activates the fourth tier of the policy server&rsquo;s evaluation hierarchy by wiring the organizational intelligence substrate into policy evaluation. High-confidence learned patterns can add risk signals to policy metadata or recommend denial. Advisory by default &mdash; informs governance without overriding it.</p>
           </div>
           <div class="feature-item">
             <h4>Audit-to-Trust Bridge</h4>
@@ -394,7 +397,7 @@
           </div>
           <div class="feature-item">
             <h4>Anomaly Scoring Engine</h4>
-            <p>Statistical anomaly detection over windowed aggregates. Scores are published to the knowledge layer and made available to the policy server, creating a feedback loop from operational behavior to governance.</p>
+            <p>Statistical anomaly detection over windowed aggregates. Scores are published to the organizational intelligence substrate and made available to the policy server, creating a feedback loop from operational behavior to governance.</p>
           </div>
         </div>
 
@@ -431,8 +434,8 @@
             <p>Priority-aware queue partitioning resolves a known limitation where a single high-cost task could block lower-priority work.</p>
           </div>
           <div class="feature-item">
-            <h4>Predictive Priority from MKL</h4>
-            <p>Task priority draws on historical execution patterns from the knowledge layer. Tasks with historically high value-to-cost ratios are prioritized.</p>
+            <h4>Predictive Priority from Intelligence Substrate</h4>
+            <p>Task priority draws on historical execution patterns from the organizational intelligence substrate. Tasks with historically high value-to-cost ratios are prioritized.</p>
           </div>
         </div>
 
@@ -510,8 +513,8 @@
         </div>
 
         <div class="addendum-summary">
-          <p><strong>Version 1.1 transforms Dominus OS from a governed execution platform into a governed learning platform.</strong> The system now observes, enforces, learns, and adapts &mdash; while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral intelligence.</p>
-          <p>The six original guarantees (replay determinism, capability enforcement integrity, tenant isolation integrity, revocation cascades, driver fault containment, and canon immutability) are unchanged. What changes is that the system now compounds intelligence under governance, rather than merely executing under governance.</p>
+          <p><strong>Version 1.1 transforms DominusOS from a governed execution platform into a governed organizational intelligence platform.</strong> The system now observes, enforces, learns, and adapts &mdash; while every structural guarantee from v1.0 remains intact and is reinforced by dynamic behavioral intelligence.</p>
+          <p>The six original guarantees (replay determinism, capability enforcement integrity, tenant isolation integrity, revocation cascades, driver fault containment, and canon immutability) are unchanged. What changes is that the system now compounds organizational intelligence under governance, rather than merely executing under governance.</p>
           <div class="addendum-stats">
             <div class="addendum-stat"><div class="num">19</div><div class="label">Features</div></div>
             <div class="addendum-stat"><div class="num">6</div><div class="label">Waves</div></div>
@@ -529,10 +532,10 @@
           <h2>Shape how AI governance gets built.</h2>
         </div>
         <div class="body">
-          <p>Dominus OS is deploying with a small number of organizations &mdash; not to pilot governance, but to prove the pattern at scale. Founding partners receive hands-on deployment, direct architectural input, and favorable terms. If your organization requires governed AI execution, structured accountability, and auditable operations, we should speak.</p>
+          <p>DominusOS is deploying with a limited number of organizations per year &mdash; not to pilot governance, but to prove the pattern at scale. Founding partners receive hands-on deployment, direct architectural input, and favorable terms. If your organization requires governed organizational intelligence, structural accountability, and auditable operations, we should speak.</p>
           <div class="contact-actions">
             <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=Dominus%20OS%20%E2%80%94%20White%20Paper%20Inquiry">Start a Conversation</a>
-            <a class="button ghost" href="/">Back to Dominus OS</a>
+            <a class="button ghost" href="/">Back to DominusOS</a>
           </div>
         </div>
       </div>
@@ -542,10 +545,10 @@
   <footer class="site-footer">
     <div class="container footer-content">
       <div class="footer-brand">
-        <img src="assets/dominus-d.png" class="footer-mark" alt="Dominus OS crest">
+        <img src="assets/dominus-d.png" class="footer-mark" alt="DominusOS crest">
         <div>
-          <p class="brand-name">Dominus OS</p>
-          <p class="brand-subline">Originator of the Human-Governed Intelligence standard.</p>
+          <p class="brand-name">DominusOS</p>
+          <p class="brand-subline">DominusOS advances the Human-Governed Intelligence standard.</p>
         </div>
       </div>
       <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.</p>
