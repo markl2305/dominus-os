@@ -10,7 +10,7 @@
 
 The v1.0 architecture established five structural components: syscall gate, capability-based authority, event-sourced determinism, tenant isolation, and microkernel design. These components enforce governance at the point of execution — a necessary and sufficient foundation.
 
-What v1.0 did not fully address was the compounding problem: subsystems observed, recorded, and enforced — but did not learn from each other. The Metis Knowledge Layer (MKL) accumulated signals but never fed them back into governance decisions. Metering tracked costs but never triggered trust investigations. Audit recorded violations but never informed behavioral scoring. The architecture was structurally sound. Its subsystems were structurally isolated from each other's intelligence.
+What v1.0 did not fully address was the compounding problem: subsystems observed, recorded, and enforced — but did not learn from each other. The DominusOS Knowledge Layer (DKL) accumulated signals but never fed them back into governance decisions. Metering tracked costs but never triggered trust investigations. Audit recorded violations but never informed behavioral scoring. The architecture was structurally sound. Its subsystems were structurally isolated from each other's intelligence.
 
 Version 1.1 closes every learning loop in the system — transforming passive telemetry into active, governed intelligence. All changes are additive. No existing syscall contracts are modified. No structural guarantees are weakened. The six original guarantees (§4) remain intact and are now reinforced by dynamic behavioral feedback.
 
