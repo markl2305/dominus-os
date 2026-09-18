@@ -13,7 +13,7 @@
 
 AI systems increasingly execute consequential actions within production infrastructure -- managing workflows, processing data, communicating with stakeholders, and allocating resources. Yet governance of these systems remains structurally decoupled from execution: reactive, policy-based, and dependent on configuration rather than architecture. The gap between capability and accountability widens with each new agent framework, each new integration, each new autonomous process.
 
-Dominus OS introduces a human-governed AI hypervisor: a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, and tenant isolation, the system enforces structural guarantees that monitoring and policy alone cannot provide. The system is in production today -- orchestrating multiple virtual employees, governed business workflows including CRM-class operations, a structured knowledge layer unifying decisions and doctrine across domains, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all under explicit human authority.
+Dominus OS introduces a human-governed AI hypervisor: a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, and tenant isolation, the system enforces structural guarantees that monitoring and policy alone cannot provide. The system is in production today -- orchestrating multiple virtual employees, governed business workflows, a structured knowledge layer unifying decisions and doctrine across domains, native desktop and mobile operator applications, and numerous autonomous scheduled operations, all under explicit human authority.
 
 This paper presents the architectural thesis, core components, structural guarantees, production evidence, and roadmap for Dominus OS -- including planned extension to IoT and autonomous edge environments.
 
@@ -84,7 +84,7 @@ Observability is not optional logging that can be disabled for performance. It i
 
 #### 3.4 Tenant Isolation
 
-Organizational domains -- CRM, compliance, operations, intelligence -- execute within isolated boundaries. No process in one domain can access another domain's data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.
+Organizational domains -- compliance, operations, intelligence -- execute within isolated boundaries. No process in one domain can access another domain's data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.
 
 #### 3.5 Microkernel Architecture
 
@@ -128,9 +128,8 @@ The stability of intelligent systems depends on structural constraint, governed 
 
 Dominus OS is not a proposal or a prototype. The system is deployed and running in production, orchestrating governed AI operations for a multi-domain service business:
 
-- **Multiple Virtual Employees** executing governed workflows daily across email, CRM, document processing, compliance enforcement, and operational intelligence.
+- **Multiple Virtual Employees** executing governed workflows daily across email, document processing, compliance enforcement, and operational intelligence.
 - **Structured Knowledge Layer** unifying decisions, projects, doctrine, contacts, and operational insights as versioned, graph-connected nodes with full provenance.
-- **Governed CRM Operations** with full-funnel attribution, composite engagement scoring, automated follow-up enforcement, and stale data detection.
 - **Operator Assembly Surface** for structured cognition -- decision modeling, project lifecycle management, and version-controlled doctrine.
 - **Native Operator Applications** on macOS (Swift) and iOS with live process visibility, tab-based task management, and direct kill authority.
 - **Autonomous Scheduled Operations** running under governance with full attribution chains and immutable activity ledger.

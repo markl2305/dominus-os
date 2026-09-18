@@ -41,9 +41,8 @@ Six invariants enforced by architecture, not by policy:
 
 ## What Is Running Today
 
-- **Multiple virtual employees** -- governed workflows across email, CRM, document processing, compliance enforcement, and operational intelligence
+- **Multiple virtual employees** -- governed workflows across email, document processing, compliance enforcement, and operational intelligence
 - **Structured knowledge layer** -- versioned, graph-connected nodes for decisions, projects, doctrine, and operational knowledge with full provenance
-- **Governed CRM operations** -- full-funnel attribution, composite engagement scoring, automated follow-up enforcement, stale data detection
 - **Operator assembly surface** -- structured editing environment for decision modeling, doctrine management, and progressive knowledge typing
 - **Native operator applications** -- macOS (Swift) and iOS with live process visibility, tab-based task management, and direct kill authority
 - **Autonomous scheduled operations** -- running under governance with full attribution chains and immutable activity ledger

@@ -55,7 +55,7 @@ Every state change in the system is captured as an immutable, sequenced event. T
 
 ### Tenant Isolation
 
-Organizational domains -- CRM, compliance, operations, intelligence -- execute within isolated boundaries. No process in one domain can access another domain's data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.
+Organizational domains -- compliance, operations, intelligence -- execute within isolated boundaries. No process in one domain can access another domain's data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.
 
 ### Microkernel Architecture
 
@@ -78,7 +78,7 @@ Six invariants enforced by architecture, not by policy:
 
 ### Virtual Employees
 
-Multiple governed agents executing real work with real tools -- email, CRM operations, document processing, compliance enforcement, operational intelligence -- all within governed capability envelopes.
+Multiple governed agents executing real work with real tools -- email, document processing, compliance enforcement, operational intelligence -- all within governed capability envelopes.
 
 ### Structured Knowledge Layer
 
@@ -90,7 +90,7 @@ A structured editing environment for direct human interaction with the knowledge
 
 ### Governed Business Workflows
 
-Business-domain workflows (including CRM-class operations) integrated with the governance kernel. All record modifications and external actions pass through the syscall gate. Automated operations handle enforcement, intelligence generation, and compliance under governed schedules.
+Business-domain workflows integrated with the governance kernel. All record modifications and external actions pass through the syscall gate. Automated operations handle enforcement, intelligence generation, and compliance under governed schedules.
 
 ### Native Operator Applications
 
