@@ -469,6 +469,13 @@ a {
   line-height: 1.5;
 }
 
+.footer-badge {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+  order: 3;
+}
+
 @media (max-width: 900px) {
   .hero-grid,
   .split {
