@@ -2,7 +2,7 @@
 
 ## Architectural Evolution: Closing the Loops
 
-**Added: March 2026**
+**Added: March 2026** · **Revised: 23 September 2026** — the Formal Verification paragraph now states exactly which properties the TLC model checker checks, and within what bounds.
 
 ---
 
@@ -88,7 +88,7 @@ Longer-horizon extensions that push the architecture toward autonomic operation 
 
 **Federated Learning Across Tenants.** Aggregated, anonymized operational intelligence shared across tenant boundaries. No raw events, no entity identifiers, no per-tenant data crosses isolation boundaries. Only statistical aggregates (means, distributions, anomaly baselines) are shared — with differential privacy guarantees and per-tenant opt-out. The result: every tenant benefits from the collective operational intelligence of the platform while isolation guarantees remain structurally intact.
 
-**Formal Verification.** TLA+ specifications that mathematically prove four properties of the governance architecture: (1) no sequence of syscalls can violate God Canon immutability, (2) no capability derivation chain can produce escalated authority, (3) no policy evaluation path can bypass God Canon checks, and (4) the kill switch is reachable from every possible system state. This is not runtime code. It is a mathematical proof that the architecture is correct.
+**Formal Verification.** Two TLA+ specifications of the governance architecture, `god-canon.tla` and `capability-model.tla`, declare thirteen properties, and all thirteen are model-checked with the TLC model checker. Among them are the four this section has always named: (1) no sequence of syscalls can violate God Canon immutability (`CanonImmutability`, `CanonModificationImpossible`); (2) no capability derivation chain can produce escalated authority (`CapabilityMonotonicity`, with `TenantIsolation`); (3) no policy evaluation path can bypass God Canon checks (`CanonAlwaysChecked`); and (4) the kill switch is reachable from every possible system state (`KillSwitchLiveness`, `FreezeAlwaysReachable`). The other six are `EventLogAppendOnly`, `SuspensionRequiresAction`, `RevocationCascade`, `QuorumRequiresOperator`, `NoSelfAttestation` and `ActiveCapabilityInvariant`. TLC explores every reachable state of bounded models — at most two capabilities and four audit entries in the capability model, and four event-log entries in the God Canon model — and on 23 September 2026 it found no violation in 3,861 distinct states of the first and 30,344 of the second. A model check covers the models, not the running code: it shows the design holds these properties within those bounds, and it is not a proof that the deployed implementation does.
 
 ---
 
