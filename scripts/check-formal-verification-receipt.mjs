@@ -17,6 +17,12 @@
 // deploy until the gate is run again and the new receipt is committed.
 //
 // Exit 0 = the receipt matches; 1 = it does not.
+//
+// LIMIT: this gate stops an ACCIDENTAL unchecked publish, not a DELIBERATE
+// one. `vercel deploy --prebuilt` skips the buildCommand; a hand-written
+// receipt passes, because this script checks the receipt's contents, not who
+// wrote it or that gate_commit exists; and a dashboard buildCommand override
+// bypasses vercel.json. It is a consistency check, not an authenticity check.
 
 import fs from 'node:fs';
 import path from 'node:path';

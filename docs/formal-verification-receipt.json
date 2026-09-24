@@ -3,17 +3,16 @@
   "verdict": "PASS",
   "published_file": "docs/Dominus_OS_White_Paper_v1_1_Addendum.md",
   "published_sha256": "fee82792fe1b30236c348304429d803f69a5b85bae65f5c80aaebc8a00b4801d",
-  "mirror_sha256": "271c17fcc0103cd29ce737f58c32e89f66b8015d074d189420c3e4c3dd403d84",
   "verify_specs_exit": 0,
   "tlc_version": "TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)",
   "tlc_distinct_states": {
     "CapabilityModel": 3861,
     "GodCanon": 30344
   },
-  "verify_output_sha256": "5785d83ff9c0fa9c0b4470e3a0e24f53b209d260b29850c040b697bbc08ac590",
+  "verify_output_sha256": "ab889ccdac56893dc59d23a12c83ed7abc6491e9ae3f1d804cf9479059807f54",
   "gate_repo": "os-evolution",
-  "gate_commit": "f70828db357b45f35216a72b412f4439e7b29ba5",
+  "gate_commit": "387ecf780d2c5fda3bd4757e1bc2289762f1a638",
   "gate_tree_clean": true,
   "command": "npm run verify:published -- <dominus-os checkout>",
-  "checked_at": "2026-09-24T02:51:20.581Z"
+  "checked_at": "2026-09-24T03:25:51.003Z"
 }
