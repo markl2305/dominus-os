@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DominusOS &mdash; The Governance Layer Sabina Runs On</title>
-  <meta name="description" content="DominusOS is the governance layer Dominus Foundry built for Sabina, its AI employee &mdash; a record written before every action, a signed permit for anything that reaches the outside world, and authority that only narrows by default. Built by Dominus Foundry.">
+  <meta name="description" content="DominusOS is the governance layer Dominus Foundry built for Sabina, your company&rsquo;s custom AI employee &mdash; a record written before every action, a signed permit for anything that reaches the outside world, and authority that only narrows by default. Built by Dominus Foundry.">
   <meta name="keywords" content="AI governance, capability-based authority, signed permits, revocable authority, restriction-only rules, AI employee governance, Dominus Foundry, Sabina">
   <meta property="og:title" content="DominusOS &mdash; The Governance Layer Sabina Runs On">
   <meta property="og:description" content="The governance layer Dominus Foundry built for Sabina: a record before every action, a signed permit for anything that reaches the outside world, and authority that narrows immediately and widens only on confirmation.">
@@ -37,7 +37,7 @@
         <a href="#kill-switch">Kill Switch</a>
         <a href="#audience">Who It&rsquo;s For</a>
         <a href="#production">In Production</a>
-        <a href="/whitepaper" style="color: var(--orange-200);">White Paper (March 2026)</a>
+        <a href="/whitepaper" style="color: var(--orange-200);">White Paper (March 2026, historical)</a>
         <a class="nav-cta" href="#contact">Contact</a>
       </nav>
     </div>
@@ -48,13 +48,14 @@
       <div class="hero-overlay"></div>
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">Dominus Foundry &rarr; Sabina &rarr; DominusOS</p>
-          <h1>Every action is recorded before it happens, checked against the authority granted, and permitted or refused &mdash; not guessed.</h1>
-          <p class="lede">Dominus Foundry builds Sabina, an AI employee. DominusOS is the governance layer she runs on. Every action she attempts is written to the record before it is carried out, and anything that reaches the outside world needs a signed, single-use permit bound to that company, that capability, and those exact details. Nothing she learns can widen what she is authorized to do. A restriction takes effect at once; more authority takes a deliberate confirmation. Rules carry who set them and when, and withdrawing one stops future actions without erasing the record of past ones.</p>
+          <p class="eyebrow">DominusOS · The governance layer behind Sabina</p>
+          <h1>Useful work needs permission before it needs a success message.</h1>
+          <p class="lede">DominusOS is the governance layer behind Sabina. It addresses what the AI is permitted to do, the conditions on that authority, and the record needed to distinguish a proposed action from a completed one.</p>
           <div class="hero-actions">
             <a class="button primary" href="#architecture">See How It Works</a>
-            <a class="button ghost" href="#direction">Read Where It&rsquo;s Going</a>
+            <a class="button ghost" href="https://hiresabina.ai/evaluate">Meet Sabina</a>
           </div>
+          <p class="lede">Start with a short readiness assessment of your business.</p>
         </div>
         <div class="hero-mark" aria-label="DominusOS crest">
           <div class="mark-frame">
@@ -106,10 +107,11 @@
           <h2>Not a policy. A record and a permit, on every action.</h2>
         </div>
         <div class="body">
+          <p>A customer-facing follow-up is prepared. The system checks the current authority for that company and responsibility. Where the approved scope requires approval, the action waits. Where it is permitted, the supported execution path carries it out and records the result. If it fails or remains uncertain, the system must not describe it as completed.</p>
           <p>Every action Sabina attempts is written to the record before it is carried out &mdash; a row that exists whether the action is committed, refused, or still waiting on a person. Anything that reaches the outside world needs a permit: a signed, single-use token bound to the tenant, the capability, the exact arguments, and a time window. The permit is minted once and consumed once; a verifier can check its signature, but only the authority service can mint one.</p>
           <p>The rules an owner writes are restrictions, not grants. There is no instruction in the rule grammar that widens what Sabina can do, spends money, or turns a suggestion into a standing rule &mdash; that term does not exist for the compiler to accept. A one-time approval is consumed and expires; it never becomes a standing permission.</p>
           <p>Her authority is also bounded by a signed attestation of what she is currently permitted to run. That attestation expires on a fixed schedule, and if it lapses &mdash; or the code it is pinned to changes &mdash; every capability demotes automatically to propose-only until it is re-signed.</p>
-          <p>Before anything becomes a spoken or written sentence, a check runs against the record: she cannot claim a booking, a payment, or a change that the system does not show as actually committed. On her deployed voice and text paths, her speech, transcription, and reasoning run on models Dominus Foundry operates.</p>
+          <p>Before anything becomes a spoken or written sentence, a check runs against the record: she cannot claim a booking, a payment, or a change that the system does not show as actually committed. How your information is processed depends on the service path in use. See the <a href="https://hiresabina.ai/trust">current processing and privacy disclosures</a> before sharing business material.</p>
           <p>None of this lives in an editable log. Grants, rule changes, revocations, and approval events are written once and never altered &mdash; a rule can be withdrawn, but the record that it existed, who wrote it, and when, stays.</p>
         </div>
       </div>
@@ -145,7 +147,8 @@
       <div class="container">
         <div class="section-heading center">
           <p class="eyebrow">Authority Structure</p>
-          <h2>A simple structure that scales.</h2>
+          <h2>Define the work. Confirm the scope. Preserve the record.</h2>
+          <p>The authorized business sets boundaries. Broader permission follows the approved confirmation process; it does not appear because the model learned something new or because one action was approved once. Revocation stops future work under the withdrawn authority. It does not erase the record or reverse an action already completed.</p>
         </div>
         <div class="authority-diagram">
           <div class="layer">
@@ -189,6 +192,7 @@
         <div class="body">
           <p>Every session carries a verified tenant claim, checked before it can act. Sabina&rsquo;s data and yours are meant to be reachable only through your own session &mdash; enforced today in application code, with database-level checks layered on top for the connections that carry the most risk. &ldquo;Difficult by design&rdquo; is the honest claim; enforcing isolation at the database layer for everything, not only the highest-risk paths, is ongoing work, not a finished guarantee.</p>
           <p>For people who must protect discretion, confidentiality, and fiduciary duty, this is not a feature. It is the reason to choose DominusOS.</p>
+          <p>Identity, data access, and AI processing are separate boundaries. Tenant-scoped access controls do not themselves establish where model processing occurs.</p>
         </div>
       </div>
     </section>
@@ -200,8 +204,9 @@
           <h2>Running today. Governing one AI employee, for real work.</h2>
         </div>
         <div class="body">
-          <p>DominusOS is not a proposal or a whitepaper exercise. It is the live governance layer behind Sabina: every action she attempts becomes a record before it is carried out; anything that reaches a customer needs a signed permit; on her deployed paths her voice, transcription, and text reasoning run on models Dominus Foundry operates; and a stop switch &mdash; with its limits stated plainly above &mdash; can halt her from starting anything new.</p>
-          <p>What is not yet true: there is no automated planner that proposes and ships its own changes to production traffic, no cross-company pattern-sharing running today, and no rehearsed kill-switch drill on the record. The kernel family described above is real and running for what it already does today, and it is the direction this layer is converging toward &mdash; not a claim about how Sabina is governed right now.</p>
+          <p>DominusOS is not a proposal or a whitepaper exercise. It is the live governance layer behind Sabina: every action she attempts becomes a record before it is carried out; anything that reaches a customer needs a signed permit; and a stop switch &mdash; with its limits stated plainly above &mdash; can halt her from starting anything new.</p>
+          <p>What is not yet true: there is no automated planner that proposes and ships its own changes to production traffic; cross-company pattern-sharing is not operating today; and there is no rehearsed kill-switch drill on the record. The kernel family described above is real and running for what it already does today, and it is the direction this layer is converging toward &mdash; not a claim about how Sabina is governed right now.</p>
+          <p>How your information is processed depends on the service path in use. See the <a href="https://hiresabina.ai/trust">current processing and privacy disclosures</a> before sharing business material.</p>
         </div>
       </div>
     </section>
@@ -213,11 +218,13 @@
           <h2>Talk to Dominus Foundry.</h2>
         </div>
         <div class="body">
-          <p>If you want to understand how DominusOS governs Sabina today, or how the kernel family it is converging toward works, we should talk.</p>
+          <p>For the people accountable for delegated work: bring a specific action, source, and authority question. We will distinguish the public operating model from the coverage demonstrated by the current work.</p>
           <div class="contact-actions">
             <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=DominusOS%20%E2%80%94%20Governance%20Question">Start a Conversation</a>
+            <a class="button ghost" href="https://hiresabina.ai/evaluate">Meet Sabina</a>
             <a class="button ghost" href="#top">Return to the top</a>
           </div>
+          <p>Start with a short readiness assessment of your business.</p>
         </div>
       </div>
     </section>
