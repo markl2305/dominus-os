@@ -38,6 +38,9 @@
     .invariants-list li span { color: var(--navy-700); }
     .wp-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
     .convergence-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .wp-table-scroll { max-width: 100%; overflow-x: auto; }
+    .wp-table-scroll:focus-visible { outline: 2px solid var(--forge-600); outline-offset: 3px; }
+    .wp-table-hint { display: none; }
     .convergence-table th, .convergence-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--bronze-300); font-size: 0.95rem; color: var(--navy-700); }
     .convergence-table th { font-weight: 600; color: var(--navy-900); background: rgba(255,255,255,0.5); }
     .convergence-table tr:last-child td { border-bottom: 2px solid var(--forge-600); font-weight: 500; color: var(--navy-900); }
@@ -73,9 +76,11 @@
       .invariants-list li { flex-direction: column; gap: 4px; }
       .invariants-list li strong { min-width: auto; }
       .wp-cta { flex-direction: column; align-items: stretch; }
-      .convergence-table { font-size: 0.85rem; }
+      .convergence-table { font-size: 0.85rem; min-width: 620px; }
+      .wp-table-hint { display: block; color: var(--navy-700); font-size: 0.85rem; }
       .convergence-table th, .convergence-table td { padding: 8px 10px; }
       .roadmap-grid { grid-template-columns: 1fr; }
+      .invariants-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -159,6 +164,8 @@
           <p class="eyebrow">The Convergence Problem</p>
           <h2>Each era of software solved one problem and created the next.</h2>
         </div>
+        <p class="wp-table-hint">Swipe across the table to compare all four columns.</p>
+        <div class="wp-table-scroll" tabindex="0" role="region" aria-label="Software eras comparison">
         <table class="convergence-table">
           <thead>
             <tr><th>Era</th><th>Abstraction</th><th>What It Solved</th><th>What It Left Unsolved</th></tr>
@@ -172,6 +179,7 @@
             <tr><td>Tool Sprawl</td><td>Surface coverage</td><td>Feature access</td><td>Cognitive fragmentation, governance</td></tr>
           </tbody>
         </table>
+        </div>
         <div class="section-heading center" style="margin-top: 32px;">
           <p style="color: var(--navy-800); font-size: 1.05rem; max-width: 680px; margin: 0 auto;">The absence of a governed execution substrate is the limiting factor in the current AI stack. The next abstraction layer is not another tool. It is a hypervisor.</p>
         </div>

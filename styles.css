@@ -535,3 +535,5 @@ a {
     padding: 12px 0;
   }
 }
+
+.footer-phone { display: inline-block; padding: 12px 0; color: inherit; }
