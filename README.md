@@ -2,7 +2,7 @@
 
 # Dominus OS
 
-> **Historical specification.** This repository documents the DominusOS architecture as published through March 2026 (white paper v1.0 through v3). It describes those versions and is not a statement of current production. For the current company-AI system and delivery plan, see Dominus Foundry's [technology overview](https://dominusfoundry.com/technology) and [investor case](https://dominusfoundry.com/pitch), and [dominusos.ai](https://dominusos.ai).
+> **Historical specification.** This repository records the DominusOS specification as published in 2026: white paper v1.0 (February 2026), the v1.1 addendum (added March 2026, revised 23 September 2026) and white paper v3 (March 2026). Each document describes the architecture as of its own date and is not a statement of current production. For the current company-AI system and delivery plan, see Dominus Foundry's [technology overview](https://dominusfoundry.com/technology) and [investor case](https://dominusfoundry.com/pitch), and [dominusos.ai](https://dominusos.ai).
 
 **The Human-Governed AI Hypervisor**
 
@@ -41,7 +41,9 @@ Six invariants enforced by architecture, not by policy:
 5. **Driver Fault Containment** -- a failure in any driver, integration, or user-space service cannot propagate to the kernel
 6. **Canon Immutability** -- the system's constitutional governance rules cannot be modified by any process, including privileged ones
 
-## What Is Running Today
+## What Was Running (as stated February–March 2026)
+
+The list below is the historical statement made when this README was written in February–March 2026. It is not a description of current production.
 
 - **Multiple virtual employees** -- governed workflows across email, CRM, document processing, compliance enforcement, and operational intelligence
 - **Structured knowledge layer** -- versioned, graph-connected nodes for decisions, projects, doctrine, and operational knowledge with full provenance
@@ -50,7 +52,7 @@ Six invariants enforced by architecture, not by policy:
 - **Native operator applications** -- macOS (Swift) and iOS with live process visibility, tab-based task management, and direct kill authority
 - **Autonomous scheduled operations** -- running under governance with full attribution chains and immutable activity ledger
 - **Governed learning engine** -- improving system intelligence weekly under explicit human authority
-- **System-level kill switch** -- tested regularly; one action halts all AI execution across every subsystem
+- **System-level kill switch** -- described at that time as tested regularly, with one action halting all AI execution across every subsystem. The current switch and its stated limits are described at [dominusos.ai](https://dominusos.ai/#kill-switch).
 
 ## Roadmap
 
@@ -74,7 +76,7 @@ See the [v1.1 Addendum](docs/Dominus_OS_White_Paper_v1_1_Addendum.md) for full d
 
 - [Technical White Paper v1.0 (Markdown)](docs/Dominus_OS_Technical_White_Paper_v1_0.md) -- the canonical thesis document
 - [White Paper v1.1 Addendum (Markdown)](docs/Dominus_OS_White_Paper_v1_1_Addendum.md) -- architectural evolution: closing the loops
-- [Technical White Paper v1.1 (Web)](https://dominusos.ai/whitepaper) -- the live web version
+- [Technical White Paper v3 (Web)](https://dominusos.ai/whitepaper) -- the March 2026 web version, marked historical
 - [Architecture Overview](docs/ARCHITECTURE.md) -- core components and design principles
 
 ## Links
