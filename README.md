@@ -2,6 +2,8 @@
 
 # Dominus OS
 
+> **Historical specification.** This repository documents the DominusOS architecture as published through March 2026 (white paper v1.0 through v3). It describes those versions and is not a statement of current production. For the current company-AI system and delivery plan, see Dominus Foundry's [technology overview](https://dominusfoundry.com/technology) and [investor case](https://dominusfoundry.com/pitch), and [dominusos.ai](https://dominusos.ai).
+
 **The Human-Governed AI Hypervisor**
 
 Dominus OS is a human-governed AI hypervisor -- a control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a microkernel with a mandatory syscall gate, capability-based authority model, event-sourced determinism, and tenant isolation, the system enforces structural guarantees that monitoring and policy alone cannot provide.
