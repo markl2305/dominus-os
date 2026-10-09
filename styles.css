@@ -108,7 +108,7 @@ a {
   text-decoration: none;
 }
 
-.body a,
+.body a:not(.button),
 .prose-link {
   color: var(--ink);
   text-decoration: underline;
@@ -118,7 +118,7 @@ a {
   transition: color 0.2s var(--ease);
 }
 
-.body a:hover,
+.body a:not(.button):hover,
 .prose-link:hover {
   color: var(--ember-hi);
 }
@@ -246,8 +246,11 @@ a {
 }
 
 .main-nav .nav-cta {
-  margin: 6px 0;
-  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 4px 0;
+  padding: 0 16px;
   background: var(--ember);
   color: var(--on-accent);
   border: 1px solid var(--ember);
@@ -263,8 +266,8 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex: none;
   padding: 0;
   background: transparent;
@@ -454,6 +457,19 @@ h3 {
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45));
 }
 
+/* Light theme: a warmer, lighter shadow. Desktop only; phones drop it. */
+@media (min-width: 961px) {
+  :root[data-theme="light"] .hero-logo {
+    filter: drop-shadow(0 24px 40px rgba(70, 45, 10, 0.2));
+  }
+}
+
+@media (min-width: 961px) and (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .hero-logo {
+    filter: drop-shadow(0 24px 40px rgba(70, 45, 10, 0.2));
+  }
+}
+
 
 /* ── Buttons ──────────────────────────────────────────── */
 
@@ -527,7 +543,7 @@ h3 {
 
 .split > .section-heading {
   position: sticky;
-  top: 112px;
+  top: 156px;
 }
 
 .section-heading h2 {
@@ -750,8 +766,9 @@ h3 {
 }
 
 .footer-phone {
-  display: inline-block;
-  padding: 8px 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-2);
 }
 
@@ -817,9 +834,6 @@ h3 {
   background: var(--ground-2);
 }
 
-.wp-abstract {
-  max-width: calc(70ch + 2 * var(--gutter));
-}
 
 .wp-abstract h2,
 .wp-section h2 {
@@ -920,6 +934,9 @@ p.wp-note.wp-spaced {
 }
 
 .evidence-card a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.14em;
@@ -1132,10 +1149,49 @@ p.wp-note.wp-spaced {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .hero {
+    padding-top: clamp(36px, 7vw, 64px);
+  }
+
+  /* The mark sits beside the eyebrow; everything else spans the full width. */
+  .hero-grid {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 0;
+  }
+
+  .hero-copy {
+    display: contents;
+  }
+
   .hero-mark {
-    order: -1;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
     justify-self: start;
-    width: 168px;
+    width: 136px;
+    margin: 0 0 28px;
+  }
+
+  .hero-logo {
+    filter: none;
+  }
+
+  .hero-copy > .eyebrow {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    margin: 0 0 28px;
+    padding-left: 20px;
+    border-left: 1px solid var(--hair-2);
+  }
+
+  .hero-copy > .eyebrow::before {
+    display: none;
+  }
+
+  .hero-copy > :not(.eyebrow) {
+    grid-column: 1 / -1;
   }
 
   .split > .section-heading {
@@ -1174,7 +1230,40 @@ p.wp-note.wp-spaced {
 
   .header-bar {
     min-height: 68px;
-    gap: 12px;
+    gap: 0 12px;
+  }
+
+  .hero-mark {
+    width: 112px;
+    margin-bottom: 24px;
+  }
+
+  .hero-copy > .eyebrow {
+    margin-bottom: 24px;
+    padding-left: 16px;
+  }
+
+  .hero h1 {
+    margin-bottom: 24px;
+  }
+
+  .lede {
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    gap: 10px;
+    font-size: 0.66rem;
+    letter-spacing: 0.17em;
+  }
+
+  .eyebrow::before {
+    width: 24px;
+  }
+
+  .section-heading.center h2 + p {
+    margin-top: 20px;
+    font-size: 1.04rem;
   }
 
   .brand-mark {
