@@ -68,7 +68,7 @@
       <div class="container">
         <p class="eyebrow">dominusos.ai</p>
         <h1>Privacy notice</h1>
-        <p class="meta">Published by Dominus Foundry LLC &mdash; Last updated October 12, 2026</p>
+        <p class="meta">Published by Dominus Foundry LLC &mdash; Last updated October 13, 2026</p>
       </div>
     </section>
 
@@ -93,15 +93,17 @@
             <button type="button" class="button ghost" data-consent-allow hidden>Allow analytics</button>
           </div>
         </div>
-        <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, for 180 days, and then you are asked again.</p>
+        <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, in two places. A cookie holds it for 180 days. A copy in browser storage stays until you clear your browser&rsquo;s data for this site or change your choice here, and the site reads that copy first. So clearing your cookies alone does not bring the question back.</p>
 
         <h2>Global Privacy Control</h2>
         <p>If your browser sends a Global Privacy Control signal, we treat it as &ldquo;No analytics&rdquo;. You are not asked, and the signal overrides an earlier &ldquo;Allow&rdquo; for as long as it is on.</p>
-        <p>This site is a set of static pages with no server code. So it reads the signal the way your browser offers it to the page (<code>navigator.globalPrivacyControl</code>). It cannot see the <code>Sec-GPC</code> request header on its own. Browsers that send the header also offer the signal to the page. If yours sends only the header, choose &ldquo;No analytics&rdquo; above.</p>
+        <p>The site reads the signal the way your browser offers it to the page (<code>navigator.globalPrivacyControl</code>). That part is tested.</p>
+        <p>The site is also set up to answer the <code>Sec-GPC</code> request header: when a page request carries it, our hosting is configured to set a short-lived <code>consent_gpc</code> cookie that the page treats the same way. That part has not yet been confirmed on the live site. If your browser sends only the header and not the page signal, choose &ldquo;No analytics&rdquo; above to be sure.</p>
 
         <h2>What is stored in your browser</h2>
         <ul>
-          <li><code>dos-consent</code> (browser storage and a cookie): your analytics choice. It is always set once you choose, because without it we could not respect the choice.</li>
+          <li><code>dos-consent</code>: your analytics choice. It is always set once you choose, because without it we could not respect the choice. The cookie lasts 180 days; the browser-storage copy stays until you clear it or change your choice.</li>
+          <li><code>consent_gpc</code> (cookie, one day): meant to be set when your browser sends a Global Privacy Control header and cleared when it stops (not yet confirmed on the live site, see above). It means &ldquo;No analytics&rdquo;.</li>
           <li><code>dos-theme</code> (browser storage): light or dark theme, if you switch it.</li>
           <li><code>_ga</code> and <code>_ga_Z0BTF1J29X</code>: only if you allow analytics (see above). Google sets them to last up to two years unless you clear them or choose &ldquo;No analytics&rdquo;.</li>
         </ul>

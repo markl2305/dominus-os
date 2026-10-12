@@ -1,0 +1,6 @@
+# The site is published from the repo root (vercel.json "outputDirectory": "."), so every file NOT listed here is
+# public on dominusos.ai. Compliance P1-1h (2026-10-13): test harnesses and evidence are never published; they carry
+# local machine paths and are not part of the site. Do NOT add a global *.mjs rule:
+# scripts/check-formal-verification-receipt.mjs is the buildCommand and must be uploaded.
+tests/
+evidence/

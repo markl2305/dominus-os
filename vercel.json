@@ -12,16 +12,104 @@
       "destination": "/privacy.html"
     }
   ],
+  "headers": [
+    {
+      "source": "/((?!.*\\.).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "sec-gpc",
+          "value": "1"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Set-Cookie",
+          "value": "consent_gpc=1; Path=/; Max-Age=86400; SameSite=Lax; Secure"
+        }
+      ]
+    },
+    {
+      "source": "/((?!.*\\.).*)",
+      "has": [
+        {
+          "type": "cookie",
+          "key": "consent_gpc"
+        }
+      ],
+      "missing": [
+        {
+          "type": "header",
+          "key": "sec-gpc",
+          "value": "1"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Set-Cookie",
+          "value": "consent_gpc=; Path=/; Max-Age=0; SameSite=Lax; Secure"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "has": [
+        {
+          "type": "header",
+          "key": "sec-gpc",
+          "value": "1"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Set-Cookie",
+          "value": "consent_gpc=1; Path=/; Max-Age=86400; SameSite=Lax; Secure"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "has": [
+        {
+          "type": "cookie",
+          "key": "consent_gpc"
+        }
+      ],
+      "missing": [
+        {
+          "type": "header",
+          "key": "sec-gpc",
+          "value": "1"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Set-Cookie",
+          "value": "consent_gpc=; Path=/; Max-Age=0; SameSite=Lax; Secure"
+        }
+      ]
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "getmentis.ai" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "getmentis.ai"
+        }
+      ],
       "destination": "https://dominusos.ai/$1",
       "permanent": true
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.getmentis.ai" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.getmentis.ai"
+        }
+      ],
       "destination": "https://dominusos.ai/$1",
       "permanent": true
     }

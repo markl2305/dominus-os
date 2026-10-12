@@ -14,6 +14,7 @@
  *
  * The rules this file enforces, and the only ones:
  *   1. Nothing is loaded until the stored choice is "accept" for the CURRENT version. No choice = nothing.
+ *      A page load on a private route (C.privatePaths) loads nothing even after accept.
  *   2. GPC wins over everything: navigator.globalPrivacyControl === true, or the `consent_gpc=1` cookie that
  *      proxy.js sets when the request carried `Sec-GPC: 1`, is a reject. No bar is shown and a stored
  *      "accept" is ignored while the signal is on.
@@ -103,8 +104,12 @@
     });
     addScript('/_vercel/insights/script.js');
   }
+  // Private routes (C.privatePaths) load nothing at all, accept or not: the check runs before any loader.
+  // A tag already loaded on an earlier page of the same tab is not unloaded by a client-side route change;
+  // GA4 page views and Vercel events still drop private paths through their own filters.
+  function privatePage() { return PRIVATE.test(w.location.pathname); }
   function start() {
-    if (started || !allowed()) return;
+    if (started || !allowed() || privatePage()) return;
     started = true;
     if (C.ga4) loadGa4(C.ga4);
     if (C.linkedin) loadLinkedIn(C.linkedin);
