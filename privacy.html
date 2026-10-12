@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy notice &mdash; DominusOS</title>
+  <meta name="description" content="What dominusos.ai collects: analytics only if you allow it, Global Privacy Control honoured, and how to change your choice. Published by Dominus Foundry LLC.">
+  <meta property="og:title" content="Privacy notice &mdash; DominusOS">
+  <meta property="og:url" content="https://dominusos.ai/privacy">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="/icons/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/icons/apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152.png">
+  <link rel="manifest" href="/icons/site.webmanifest">
+  <meta name="theme-color" content="#18262A">
+  <script>try{var t=localStorage.getItem('dos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="stylesheet" href="/styles.css?v=20261012a">
+<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
+     Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
+     Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
+     byte-for-byte copy of hiresabina.ai's gate (commit 90cd8fd) and creates every analytics tag itself, in the
+     browser, after that check; no tag is written into this HTML, so with JavaScript off nothing is sent.
+     privatePaths keeps the old Vercel beforeSend filter's list. The gate strips query string and fragment from
+     both GA4 and Vercel events. Static site, no build step: the GA id is hardcoded here, as before. -->
+<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
+<script src="/consent/consent.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-bar">
+      <div class="brand">
+        <picture>
+          <source srcset="/assets/brand/dominusos-logo-transparent-256.webp" type="image/webp">
+          <img src="/assets/brand/dominusos-logo-transparent-256.png" class="brand-mark" alt="DominusOS" width="60" height="60">
+        </picture>
+        <div class="brand-text">
+          <span class="brand-name sr-only">DominusOS</span>
+          <span class="brand-subline">Authority and execution control behind Sabina</span>
+        </div>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <a href="/#problem">The Problem</a>
+        <a href="/#architecture">How It Works</a>
+        <a href="/#authority">Authority</a>
+        <a class="nav-paper" href="/whitepaper">White Paper (March 2026, historical)</a>
+        <a class="nav-cta" href="/#contact">Contact</a>
+      </nav>
+      <div class="header-tools">
+        <button class="icon-button theme-toggle" type="button" aria-label="Switch between light and dark theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        </button>
+        <button class="icon-button nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wp-hero" id="top">
+      <div class="container">
+        <p class="eyebrow">dominusos.ai</p>
+        <h1>Privacy notice</h1>
+        <p class="meta">Published by Dominus Foundry LLC &mdash; Last updated October 12, 2026</p>
+      </div>
+    </section>
+
+    <section class="wp-section">
+      <div class="container wp-abstract privacy-notice">
+        <h2>What this notice covers</h2>
+        <p>This notice covers the dominusos.ai website: this page, the home page and the white paper page. Dominus Foundry LLC publishes the site and is responsible for it. The site has no forms and no accounts. You can read every page without giving us anything.</p>
+
+        <h2>Analytics: only if you allow it</h2>
+        <p>The site can use two analytics services, and only after you choose &ldquo;Allow analytics&rdquo;. Nothing is sent until you choose. If you choose &ldquo;No analytics&rdquo;, or make no choice, neither service is loaded.</p>
+        <ul>
+          <li><strong>Google Analytics</strong> (Google LLC). If you allow it, your browser loads Google&rsquo;s script and sends page views. These include the page address without any query string or fragment, the page title, and the previous page&rsquo;s address without its query string. Google sets the cookies <code>_ga</code> and <code>_ga_Z0BTF1J29X</code> to recognise a returning browser. Google also receives your IP address, as any website you contact does.</li>
+          <li><strong>Vercel Web Analytics</strong>. If you allow it, your browser sends page views to an address on this site. They also carry no query string or fragment. It sets no cookie.</li>
+        </ul>
+        <p>We do not use advertising tags, we do not sell information about visitors, and we do not share it for cross-context behavioural advertising.</p>
+
+        <h2>Your analytics choice</h2>
+        <div class="consent-choice" data-consent-choice>
+          <p data-consent-status>Your browser has JavaScript turned off, so this site loads no analytics at all.</p>
+          <div class="consent-buttons">
+            <button type="button" class="button ghost" data-consent-withdraw hidden>No analytics</button>
+            <button type="button" class="button ghost" data-consent-allow hidden>Allow analytics</button>
+          </div>
+        </div>
+        <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, for 180 days, and then you are asked again.</p>
+
+        <h2>Global Privacy Control</h2>
+        <p>If your browser sends a Global Privacy Control signal, we treat it as &ldquo;No analytics&rdquo;. You are not asked, and the signal overrides an earlier &ldquo;Allow&rdquo; for as long as it is on.</p>
+        <p>This site is a set of static pages with no server code. So it reads the signal the way your browser offers it to the page (<code>navigator.globalPrivacyControl</code>). It cannot see the <code>Sec-GPC</code> request header on its own. Browsers that send the header also offer the signal to the page. If yours sends only the header, choose &ldquo;No analytics&rdquo; above.</p>
+
+        <h2>What is stored in your browser</h2>
+        <ul>
+          <li><code>dos-consent</code> (browser storage and a cookie): your analytics choice. It is always set once you choose, because without it we could not respect the choice.</li>
+          <li><code>dos-theme</code> (browser storage): light or dark theme, if you switch it.</li>
+          <li><code>_ga</code> and <code>_ga_Z0BTF1J29X</code>: only if you allow analytics (see above). Google sets them to last up to two years unless you clear them or choose &ldquo;No analytics&rdquo;.</li>
+        </ul>
+
+        <h2>Other services your browser contacts</h2>
+        <p>Every page also loads two things from other companies. They load whatever you choose about analytics, and with JavaScript off too. They are not analytics, and we receive nothing from them about you. The companies receive your IP address and the name of this site, as any server you contact does.</p>
+        <ul>
+          <li>Typefaces from Google Fonts (Google LLC).</li>
+          <li>The verification badge in the page footer, an image served by LocateFaith.</li>
+        </ul>
+
+        <h2>Hosting</h2>
+        <p>Our hosting provider serves the site and keeps standard request logs: IP address, browser type, the address requested and the time. Those logs are kept for operating and securing the site, not for analytics.</p>
+
+        <h2>If you contact us</h2>
+        <p>The site lists an email address and a phone number. If you write or call, we receive what you send and use it to reply. Calls to (505) 520-1433 may be recorded, and you are told at the start of the call. For Dominus Foundry&rsquo;s other services, see <a href="https://dominusfoundry.com/privacy">dominusfoundry.com/privacy</a>.</p>
+
+        <h2>How long we keep it</h2>
+        <p>We have not set a fixed deletion date for analytics or for messages you send us. Ask us and we will delete what we hold about you.</p>
+
+        <h2>Contact</h2>
+        <p>Questions, or a request to see or delete information about you: <a href="mailto:mark@dominusfoundry.com">mark@dominusfoundry.com</a>, Dominus Foundry LLC.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <img src="/assets/brand/dominusos-shield-96.png" class="footer-mark" alt="DominusOS crest" width="56" height="56">
+        <div>
+          <p class="brand-name">DominusOS</p>
+          <p class="brand-subline">DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
+        </div>
+      </div>
+      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="footer-link" href="/privacy">Privacy notice</a></p>
+      <div class="footer-badge">
+        <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // The analytics choice control. It only calls the shared gate (/consent/consent.js); it loads nothing itself.
+    (function () {
+      var box = document.querySelector('[data-consent-choice]');
+      if (!box) return;
+      var status = box.querySelector('[data-consent-status]');
+      var no = box.querySelector('[data-consent-withdraw]');
+      var yes = box.querySelector('[data-consent-allow]');
+      var TEXT = {
+        gpc: 'Your browser is sending a Global Privacy Control signal, so analytics are off and you are not asked. Turn the signal off in your browser to choose here.',
+        accept: 'You have allowed analytics in this browser.',
+        reject: 'You have chosen no analytics in this browser.',
+        none: 'You have not chosen yet, so no analytics are loaded.'
+      };
+      function render(s) {
+        status.textContent = TEXT[s || 'none'] || TEXT.none;
+        no.hidden = false; yes.hidden = false;
+        no.disabled = s === 'gpc' || s === 'reject';
+        yes.disabled = s === 'gpc' || s === 'accept';
+      }
+      function ready() {
+        if (!window.SiteConsent) { status.textContent = 'The analytics control could not load, so no analytics are loaded.'; return; }
+        render(window.SiteConsent.state());
+        window.SiteConsent.subscribe(render);
+        no.addEventListener('click', function () { window.SiteConsent.set('reject'); });
+        yes.addEventListener('click', function () { window.SiteConsent.set('accept'); });
+      }
+      ready();
+    })();
+  </script>
+  <script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const mainNav = document.querySelector('.main-nav');
+    if (navToggle && mainNav) {
+      const closeNav = () => { mainNav.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); };
+      navToggle.addEventListener('click', () => { const isOpen = mainNav.classList.toggle('open'); navToggle.setAttribute('aria-expanded', String(isOpen)); });
+      mainNav.querySelectorAll('a').forEach((link) => { link.addEventListener('click', closeNav); });
+    }
+
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current = root.getAttribute('data-theme')
+          || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        const next = current === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('dos-theme', next); } catch (e) {}
+      });
+    }
+  </script>
+</body>
+</html>

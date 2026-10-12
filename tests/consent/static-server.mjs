@@ -1,0 +1,32 @@
+/**
+ * Local static server for the consent matrix (compliance P1-1h, 2026-10-12). Serves a checkout of this repo the way
+ * Vercel serves it: files from the root (outputDirectory "."), plus the exact-match `rewrites` in vercel.json.
+ * It deliberately does NOT emulate any header-conditioned behaviour, because this site has none: a static Vercel
+ * deployment cannot read `Sec-GPC` in page code.
+ *
+ *   node tests/consent/static-server.mjs <root> <port>
+ */
+import { createServer } from 'node:http';
+import { readFileSync, statSync } from 'node:fs';
+import { join, extname, resolve, sep } from 'node:path';
+
+const [root, port] = [resolve(process.argv[2] || '.'), +(process.argv[3] || 4491)];
+let rewrites = [];
+try { rewrites = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8')).rewrites || []; } catch (e) { /* no config */ }
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.webp': 'image/webp',
+  '.ico': 'image/x-icon', '.svg': 'image/svg+xml', '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain', '.pdf': 'application/pdf',
+  '.webmanifest': 'application/manifest+json', '.md': 'text/markdown' };
+
+createServer((req, res) => {
+  let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+  const rw = rewrites.find((r) => r.source === path);
+  if (rw) path = rw.destination;
+  if (path.endsWith('/')) path += 'index.html';
+  const file = resolve(join(root, path));
+  if (file !== root && !file.startsWith(root + sep)) { res.writeHead(403); return res.end(); }
+  try {
+    if (!statSync(file).isFile()) throw new Error('not a file');
+    res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream' });
+    res.end(req.method === 'HEAD' ? undefined : readFileSync(file));
+  } catch (e) { res.writeHead(404, { 'content-type': 'text/plain' }); res.end('404'); }
+}).listen(port, '127.0.0.1', () => console.log(`static ${root} on http://localhost:${port}`));

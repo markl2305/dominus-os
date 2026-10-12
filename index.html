@@ -20,38 +20,16 @@
   <link rel="manifest" href="/icons/site.webmanifest">
   <meta name="theme-color" content="#18262A">
   <script>try{var t=localStorage.getItem('dos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
-  <link rel="stylesheet" href="/styles.css?v=20261009b">
-<!-- Vercel Web Analytics (Mark 2026-10-01). -->
-<script>
-window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-window.va('beforeSend', function (event) {
-  var url = new URL(event.url);
-  if (/^\/(api|chat|login|graph|command|transcribe)(\/|$)/.test(url.pathname)) return null;
-  url.search = '';
-  url.hash = '';
-  return Object.assign({}, event, { url: url.toString() });
-});
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
-<!-- Google Analytics 4. Static site, no build step -- id is hardcoded (no env var
-     mechanism exists here, same reasoning as the Vercel block above). page_location is
-     explicitly overridden to origin+pathname, never window.location.href, so no query
-     string or fragment ever reaches Google; this site has no query-string-bearing links
-     today, but the override holds regardless. -->
-<script defer src="https://www.googletagmanager.com/gtag/js?id=G-Z0BTF1J29X"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  window.gtag = window.gtag || gtag;
-  gtag('js', new Date());
-  var gaReferrer = '';
-  try { var r = new URL(document.referrer); gaReferrer = r.origin + r.pathname; } catch (e) { gaReferrer = ''; }
-  gtag('config', 'G-Z0BTF1J29X', {
-    page_path: window.location.pathname,
-    page_location: window.location.origin + window.location.pathname,
-    page_referrer: gaReferrer,
-  });
-</script>
+  <link rel="stylesheet" href="/styles.css?v=20261012a">
+<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
+     Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
+     Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
+     byte-for-byte copy of hiresabina.ai's gate (commit 90cd8fd) and creates every analytics tag itself, in the
+     browser, after that check; no tag is written into this HTML, so with JavaScript off nothing is sent.
+     privatePaths keeps the old Vercel beforeSend filter's list. The gate strips query string and fragment from
+     both GA4 and Vercel events. Static site, no build step: the GA id is hardcoded here, as before. -->
+<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
+<script src="/consent/consent.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -287,7 +265,7 @@ window.va('beforeSend', function (event) {
           <p class="brand-subline">DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
         </div>
       </div>
-      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="footer-phone" href="tel:+15055201433">(505) 520-1433</a></p>
+      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="footer-phone" href="tel:+15055201433">(505) 520-1433</a><br><a class="footer-link" href="/privacy">Privacy notice</a></p>
       <div class="footer-badge">
         <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
       </div>

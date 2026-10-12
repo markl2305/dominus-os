@@ -776,6 +776,70 @@ h3 {
   color: var(--ember-hi);
 }
 
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-link:hover {
+  color: var(--ember-hi);
+}
+
+/* ── Privacy notice (/privacy) ────────────────────────── */
+
+.privacy-notice h2 {
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  margin: 2.2em 0 0.7em;
+}
+
+.privacy-notice h2:first-child {
+  margin-top: 0;
+}
+
+.privacy-notice ul {
+  margin: 0 0 1.35em;
+  padding-left: 1.2em;
+}
+
+.privacy-notice li {
+  margin: 0 0 0.6em;
+}
+
+.privacy-notice a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.consent-choice {
+  margin: 0 0 1.35em;
+  padding: 22px 24px;
+  border: 1px solid var(--hair-2);
+}
+
+.consent-choice p {
+  margin: 0 0 16px;
+}
+
+.consent-choice .consent-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.consent-choice [hidden] {
+  display: none;
+}
+
+.consent-choice .button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .footer-badge {
   grid-column: 1 / -1;
   display: flex;

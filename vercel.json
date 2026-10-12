@@ -6,6 +6,10 @@
     {
       "source": "/whitepaper",
       "destination": "/whitepaper.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
     }
   ],
   "redirects": [
