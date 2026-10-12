@@ -21,6 +21,28 @@
   <meta name="theme-color" content="#18262A">
   <script>try{var t=localStorage.getItem('dos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
   <link rel="stylesheet" href="/styles.css?v=20261009b">
+<!-- Vercel Web Analytics (Mark 2026-10-01). -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<!-- Google Analytics 4. Static site, no build step -- id is hardcoded (no env var
+     mechanism exists here, same reasoning as the Vercel block above). page_location is
+     explicitly overridden to origin+pathname, never window.location.href, so no query
+     string or fragment ever reaches Google; this site has no query-string-bearing links
+     today, but the override holds regardless. -->
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-Z0BTF1J29X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  window.gtag = window.gtag || gtag;
+  gtag('js', new Date());
+  var gaReferrer;
+  try { var r = new URL(document.referrer); gaReferrer = r.origin + r.pathname; } catch (e) { gaReferrer = undefined; }
+  gtag('config', 'G-Z0BTF1J29X', {
+    page_path: window.location.pathname,
+    page_location: window.location.origin + window.location.pathname,
+    page_referrer: gaReferrer,
+  });
+</script>
 </head>
 <body>
   <header class="site-header">
