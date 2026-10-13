@@ -93,7 +93,7 @@
             <button type="button" class="button ghost" data-consent-allow hidden>Allow analytics</button>
           </div>
         </div>
-        <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, in two places. A cookie holds it for 180 days. A copy in browser storage stays until you clear your browser&rsquo;s data for this site or change your choice here, and the site reads that copy first. So clearing your cookies alone does not bring the question back.</p>
+        <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, in two places: a cookie and a copy in browser storage. Both are honored for 180 days from when you chose, and the site reads the storage copy first. After 180 days, your choice expires and is treated as if you had not chosen: analytics stays off and you are asked again. Because the storage copy stays valid for those same 180 days, clearing your cookies alone does not bring the question back before then.</p>
 
         <h2>Global Privacy Control</h2>
         <p>If your browser sends a Global Privacy Control signal, we treat it as &ldquo;No analytics&rdquo;. You are not asked, and the signal overrides an earlier &ldquo;Allow&rdquo; for as long as it is on.</p>
@@ -102,7 +102,7 @@
 
         <h2>What is stored in your browser</h2>
         <ul>
-          <li><code>dos-consent</code>: your analytics choice. It is always set once you choose, because without it we could not respect the choice. The cookie lasts 180 days; the browser-storage copy stays until you clear it or change your choice.</li>
+          <li><code>dos-consent</code>: your analytics choice. It is always set once you choose, because without it we could not respect the choice. Both the cookie and the browser-storage copy are honored for 180 days from when you chose, then the choice expires and you are asked again.</li>
           <li><code>consent_gpc</code> (cookie, one day): meant to be set when your browser sends a Global Privacy Control header and cleared when it stops (not yet confirmed on the live site, see above). It means &ldquo;No analytics&rdquo;.</li>
           <li><code>dos-theme</code> (browser storage): light or dark theme, if you switch it.</li>
           <li><code>_ga</code> and <code>_ga_Z0BTF1J29X</code>: only if you allow analytics (see above). Google sets them to last up to two years unless you clear them or choose &ldquo;No analytics&rdquo;.</li>

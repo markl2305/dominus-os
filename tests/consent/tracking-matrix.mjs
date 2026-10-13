@@ -406,7 +406,16 @@ async function main() {
       ok(r && r.status() === 200 && /Privacy notice/i.test(h1), `/privacy renders (status ${r && r.status()}, h1 "${h1.trim()}")`);
       ok(Object.values(links).every((ls) => ls.length > 0), 'every checked page has a Privacy link');
       ok(bad.length === 0, `every Privacy link resolves to /privacy (${bad.join('; ') || 'all'})`);
-      finish(matrix, 'privacy_page', rec, { status: r && r.status(), h1: h1.trim(), privacy_links: links, links_not_to_privacy: bad });
+      // v2sync-REVIEW F1: the notice must say BOTH stores (cookie and browser storage) expire at 180 days and that
+      // an expired choice is no choice (analytics off, asked again) — never the old indefinite-local-storage claim.
+      const text = (await page.locator('body').innerText().catch(() => '')) || '';
+      const mustHave180 = ['honored for 180 days from when you chose', 'treated as if you had not chosen'];
+      const missing180 = mustHave180.filter((m) => !text.includes(m));
+      const bannedOld = ['stays until you clear your browser', 'stays until you clear it or change your choice'];
+      const presentOld = bannedOld.filter((m) => text.includes(m));
+      ok(missing180.length === 0, `/privacy states the 180-day expiry on both stores, and expiry means no choice (missing: ${missing180.join('; ') || 'none'})`);
+      ok(presentOld.length === 0, `/privacy carries none of the old indefinite-storage sentences (present: ${presentOld.join('; ') || 'none'})`);
+      finish(matrix, 'privacy_page', rec, { status: r && r.status(), h1: h1.trim(), privacy_links: links, links_not_to_privacy: bad, notice_180_day_missing: missing180, notice_old_indefinite_present: presentOld });
       await context.close(); }
 
     // 9 anvil 1h-R1 F1: a visitor ARRIVES by a real link from another origin whose Referrer-Policy is unsafe-url, on a
