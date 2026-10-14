@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js has-band" data-theme="dark" data-theme-pref="system">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Historical Technical White Paper v3 (March 2026) &mdash; DominusOS</title>
   <meta name="description" content="Historical technical paper, March 2026: DominusOS White Paper v3, The Human-Governed AI Hypervisor. It describes that version of the architecture. For the current system, see Dominus Foundry&rsquo;s technology overview.">
   <meta name="keywords" content="governed intelligence, AI hypervisor, self-learning AI, autonomic computing, federated kernels, constitutional governance, evolution engine, MAPE-K, speculative execution, world-model governance, behavioral baselines, intent orchestration, capability authority">
@@ -19,8 +19,21 @@
   <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152.png?v=20261013">
   <link rel="manifest" href="/icons/site.webmanifest?v=20261013">
   <meta name="theme-color" content="#18262A">
-  <script>try{var t=localStorage.getItem('dos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
-  <link rel="stylesheet" href="/styles.css?v=20261012a">
+  <meta name="color-scheme" content="dark light">
+<script>
+/* Pre-paint theme resolution: runs before first paint, so there is never a
+   wrong-theme frame. Dark is the base; System follows the OS. Storage may be
+   blocked, so it is wrapped. */
+(function () {
+  var d = document.documentElement, p = 'system';
+  try { var s = localStorage.getItem('dos-theme'); if (s === 'dark' || s === 'light') p = s; } catch (e) {}
+  var light = p === 'light' || (p === 'system' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
+  d.setAttribute('data-theme-pref', p);
+  d.setAttribute('data-theme', light ? 'light' : 'dark');
+  d.className = d.className.replace('no-js', 'js');
+})();
+</script>
+  <link rel="stylesheet" href="/styles.css?v=20261014a">
 <!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
      Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
      Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
@@ -31,504 +44,469 @@
 <script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
 <script src="/consent/consent.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-bar">
-      <div class="brand">
-        <picture>
-          <source srcset="/assets/brand/dominusos-logo-transparent-256.webp" type="image/webp">
-          <img src="/assets/brand/dominusos-logo-transparent-256.png" class="brand-mark" alt="DominusOS" width="60" height="60">
-        </picture>
-        <div class="brand-text">
-          <span class="brand-name sr-only">DominusOS</span>
-          <span class="brand-subline">Authority and execution control behind Sabina</span>
-        </div>
-      </div>
-      <nav class="main-nav" aria-label="Primary">
-        <a href="/#problem">The Problem</a>
-        <a href="/#architecture">How It Works</a>
-        <a href="/#authority">Authority</a>
-        <a class="nav-paper" href="/whitepaper">White Paper (March 2026, historical)</a>
-        <a class="nav-cta" href="/#contact">Contact</a>
-      </nav>
-      <div class="header-tools">
-        <button class="icon-button theme-toggle" type="button" aria-label="Switch between light and dark theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
-        </button>
-        <button class="icon-button nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-        </button>
-      </div>
+<body class="page-whitepaper">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="/" aria-label="DominusOS home">
+      <img src="/assets/brand/dominusos-shield-96.png" alt="" width="34" height="34">
+      <span class="brand-name">DominusOS</span>
+    </a>
+    <div class="nav-mid">
+      <button class="where" id="where" type="button" aria-expanded="false" aria-controls="index" data-top="Technical White Paper">
+        <span class="n"></span><span class="name">Technical White Paper</span>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+      </button>
     </div>
-  </header>
-
-  <main>
-    <section class="hero wp-hero" id="top">
-            <div class="container">
-        <p class="eyebrow">Technical White Paper</p>
-        <h1>DominusOS: The Human-Governed AI Hypervisor</h1>
-        <p class="subtitle">Self-learning federated intelligence under constitutional governance. Autonomic planning, governed evolution, and context-aware policy &mdash; in production.</p>
-        <p class="meta"><strong>Historical technical paper &mdash; March 2026. This document describes that version of the architecture. For the current company-AI system and delivery plan, see Dominus Foundry&rsquo;s <a href="https://dominusfoundry.com/technology">technology overview</a> and <a href="https://dominusfoundry.com/pitch">investor case</a>.</strong><br>Mark Lord, Dominus Foundry &mdash; March 2026 &mdash; Version 3.0</p>
-        <div class="wp-cta">
-          <a class="button primary" href="/DominusOS_White_Paper_v3.pdf" download>Download the March 2026 Paper (PDF)</a>
-          <a class="button ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
-          <a class="button ghost" href="/">Back to DominusOS</a>
-        </div>
+    <div class="nav-right">
+      <a class="nav-link paper-link" href="/whitepaper" aria-current="page">White Paper (March 2026, historical)</a>
+      <div class="seg seg-theme" role="radiogroup" aria-label="Appearance">
+        <button type="button" role="radio" data-v="system" aria-checked="true" aria-label="Match system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5M8 11.5V14"/></svg><span class="lbl">System</span></button>
+        <button type="button" role="radio" data-v="dark" aria-checked="false" aria-label="Dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M13.5 9.8A5.8 5.8 0 0 1 6.2 2.5a5.8 5.8 0 1 0 7.3 7.3Z"/></svg><span class="lbl">Dark</span></button>
+        <button type="button" role="radio" data-v="light" aria-checked="false" aria-label="Light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg><span class="lbl">Light</span></button>
       </div>
-    </section>
+      <a class="pill pill-solid nav-cta" href="/#contact">Contact</a>
+    </div>
+  </div>
+  <div class="wrap band"><span class="dot" aria-hidden="true"></span>Historical technical paper &middot; March 2026 &middot; Version 3.0</div>
+  <div class="progress" id="progress"></div>
+</header>
 
-    <!-- ABSTRACT -->
-    <section class="wp-section">
-      <div class="container wp-abstract">
-        <h2>Abstract</h2>
-        <p>AI systems increasingly execute consequential actions within production infrastructure &mdash; managing workflows, processing data, communicating with stakeholders, and allocating resources. Yet governance of these systems remains structurally decoupled from execution: reactive, policy-based, and dependent on configuration rather than architecture.</p>
+<nav class="index" id="index" aria-label="Site index" inert>
+  <div class="group">
+    <h2>In this paper</h2>
+    <ol id="indexList"></ol>
+  </div>
+  <div class="group">
+    <h2>Pages</h2>
+    <ul>
+      <li><a href="/">DominusOS</a></li>
+      <li><a class="paper" href="/whitepaper" aria-current="page">White Paper (March 2026, historical)</a></li>
+      <li><a href="/privacy">Privacy notice</a></li>
+    </ul>
+  </div>
+  <div class="group appearance">
+    <h2>Appearance</h2>
+    <div class="seg seg-theme" role="radiogroup" aria-label="Appearance">
+        <button type="button" role="radio" data-v="system" aria-checked="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5M8 11.5V14"/></svg><span class="lbl">System</span></button>
+        <button type="button" role="radio" data-v="dark" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M13.5 9.8A5.8 5.8 0 0 1 6.2 2.5a5.8 5.8 0 1 0 7.3 7.3Z"/></svg><span class="lbl">Dark</span></button>
+        <button type="button" role="radio" data-v="light" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg><span class="lbl">Light</span></button>
+      </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="stage wp-hero" id="top" aria-labelledby="wp-title">
+  <div class="wrap">
+    <p class="eyebrow">Technical White Paper</p>
+    <h1 class="display" id="wp-title">DominusOS: The Human-Governed AI Hypervisor</h1>
+    <p class="subtitle">Self-learning federated intelligence under constitutional governance. Autonomic planning, governed evolution, and context-aware policy &mdash; in production.</p>
+    <p class="histnote"><strong>Historical technical paper &mdash; March 2026. This document describes that version of the architecture. For the current company-AI system and delivery plan, see Dominus Foundry&rsquo;s <a href="https://dominusfoundry.com/technology">technology overview</a> and <a href="https://dominusfoundry.com/pitch">investor case</a>.</strong>Mark Lord, Dominus Foundry &mdash; March 2026 &mdash; Version 3.0</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="DominusOS_White_Paper_v3.pdf" download>Download the March 2026 Paper (PDF)</a>
+      <a class="btn btn-ghost" href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">Specification Repository</a>
+      <a class="btn btn-ghost" href="/">Back to DominusOS</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABSTRACT -->
+<section class="sec" id="abstract" data-n="1" data-name="Abstract" aria-labelledby="h-abstract">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2 class="h2" id="h-abstract">Abstract</h2></div>
+    <div class="sec-body">
+      <div class="prose reveal" style="max-width:44em">
+        <p class="wp-lead">AI systems increasingly execute consequential actions within production infrastructure &mdash; managing workflows, processing data, communicating with stakeholders, and allocating resources. Yet governance of these systems remains structurally decoupled from execution: reactive, policy-based, and dependent on configuration rather than architecture.</p>
         <p>DominusOS introduces a human-governed AI hypervisor: a mandatory control layer beneath AI execution that mediates all system actions through a unified governance architecture. Built on a federated multi-kernel microkernel with a mandatory syscall gate, capability-based authority, event-sourced determinism, tenant isolation, and constitutional governance sealed by cryptographic hash verification, the system enforces structural guarantees that monitoring and policy alone cannot provide.</p>
         <p>Version 3.0 documents the complete self-learning architecture now operating in production: an autonomic planner implementing a formal Monitor-Analyze-Plan-Execute loop, a governed evolution engine that proposes and validates its own improvements under human authority, context-aware governance that adjusts policy posture based on real-world conditions, speculative execution that predicts and pre-warms optimal paths, intent-based orchestration that decomposes goals into governed syscall sequences, behavioral baseline establishment with continuous deviation scoring, shadow execution for policy backtesting against historical events, and kernel-level source introspection that enables the system to reason about its own structure.</p>
         <p>The system operates across federated kernel instances under a sealed constitutional canon of immutable governance articles, with split-key authority for modifications. Every subsystem learns. Every learning action is governed. Every governance decision is recorded with full provenance.</p>
         <p>This paper presents the architectural thesis, core infrastructure, federation design, self-learning architecture, constitutional governance, structural guarantees, production evidence, and roadmap &mdash; including planned extension to IoT and autonomous edge environments.</p>
-        <div class="wp-keywords">
-          <span>Self-learning governance</span>
-          <span>AI hypervisor</span>
-          <span>Autonomic computing</span>
-          <span>MAPE-K</span>
-          <span>Governed evolution</span>
-          <span>Federated kernels</span>
-          <span>Constitutional AI</span>
-          <span>Speculative execution</span>
-          <span>Context-aware policy</span>
-          <span>Behavioral baselines</span>
-          <span>Intent orchestration</span>
-          <span>Shadow execution</span>
-          <span>Knowledge decay</span>
-          <span>World-model governance</span>
-          <span>Capability authority</span>
-          <span>Dynamic trust</span>
-          <span>Deterministic execution</span>
-          <span>IoT governance</span>
-        </div>
       </div>
-    </section>
+      <ul class="chips reveal" aria-label="Keywords">
+        <li>Self-learning governance</li><li>AI hypervisor</li><li>Autonomic computing</li><li>MAPE-K</li><li>Governed evolution</li><li>Federated kernels</li><li>Constitutional AI</li><li>Speculative execution</li><li>Context-aware policy</li><li>Behavioral baselines</li><li>Intent orchestration</li><li>Shadow execution</li><li>Knowledge decay</li><li>World-model governance</li><li>Capability authority</li><li>Dynamic trust</li><li>Deterministic execution</li><li>IoT governance</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <!-- CONVERGENCE PROBLEM -->
-    <section class="wp-section alt">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">The Convergence Problem</p>
-          <h2>Each era of software solved one problem and created the next.</h2>
-        </div>
-        <p class="wp-table-hint">Swipe across the table to compare all four columns.</p>
-        <div class="wp-table-scroll" tabindex="0" role="region" aria-label="Software eras comparison">
-        <table class="convergence-table">
-          <thead>
-            <tr><th>Era</th><th>Abstraction</th><th>What It Solved</th><th>What It Left Unsolved</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Monolith</td><td>Centralized control</td><td>Integration</td><td>Scalability</td></tr>
-            <tr><td>SaaS</td><td>Specialization</td><td>Scalability</td><td>Data fragmentation</td></tr>
-            <tr><td>API Economy</td><td>Composability</td><td>Cross-vendor integration</td><td>Dependency complexity</td></tr>
-            <tr><td>AI Copilots</td><td>Local reasoning</td><td>Per-task intelligence</td><td>Session-scoped memory</td></tr>
-            <tr><td>Agents</td><td>Distributed execution</td><td>Task automation at scale</td><td>Authority, coherence</td></tr>
-            <tr><td>Tool Sprawl</td><td>Surface coverage</td><td>Feature access</td><td>Cognitive fragmentation, governance</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="section-heading center">
-          <p class="wp-note">The absence of a governed execution substrate is the limiting factor in the current AI stack. The next abstraction layer is not another tool. It is a hypervisor.</p>
-        </div>
-      </div>
-    </section>
+<!-- CONVERGENCE PROBLEM -->
+<section class="sec alt" id="convergence" data-n="2" data-name="The Convergence Problem" aria-labelledby="h-conv">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Convergence Problem</p>
+      <h2 class="h2" id="h-conv">Each era of software solved one problem and created the next.</h2>
+    </div>
+    <div class="sec-body">
+      <table class="eras reveal" aria-label="Software eras comparison">
+        <thead><tr><th scope="col">Era</th><th scope="col">Abstraction</th><th scope="col">What It Solved</th><th scope="col">What It Left Unsolved</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Monolith</th><td data-k="Abstraction">Centralized control</td><td data-k="What It Solved">Integration</td><td data-k="What It Left Unsolved">Scalability</td></tr>
+          <tr><th scope="row">SaaS</th><td data-k="Abstraction">Specialization</td><td data-k="What It Solved">Scalability</td><td data-k="What It Left Unsolved">Data fragmentation</td></tr>
+          <tr><th scope="row">API Economy</th><td data-k="Abstraction">Composability</td><td data-k="What It Solved">Cross-vendor integration</td><td data-k="What It Left Unsolved">Dependency complexity</td></tr>
+          <tr><th scope="row">AI Copilots</th><td data-k="Abstraction">Local reasoning</td><td data-k="What It Solved">Per-task intelligence</td><td data-k="What It Left Unsolved">Session-scoped memory</td></tr>
+          <tr><th scope="row">Agents</th><td data-k="Abstraction">Distributed execution</td><td data-k="What It Solved">Task automation at scale</td><td data-k="What It Left Unsolved">Authority, coherence</td></tr>
+          <tr><th scope="row">Tool Sprawl</th><td data-k="Abstraction">Surface coverage</td><td data-k="What It Solved">Feature access</td><td data-k="What It Left Unsolved">Cognitive fragmentation, governance</td></tr>
+        </tbody>
+      </table>
+      <p class="wp-note reveal">The absence of a governed execution substrate is the limiting factor in the current AI stack. The next abstraction layer is not another tool. It is a hypervisor.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- ARCHITECTURAL THESIS -->
-    <section class="wp-section">
-      <div class="container wp-abstract">
-        <h2>Architectural Thesis</h2>
-        <p>The structural gap in the current AI stack is not a missing tool &mdash; it is a missing layer.</p>
+<!-- ARCHITECTURAL THESIS -->
+<section class="sec" id="thesis" data-n="3" data-name="Architectural Thesis" aria-labelledby="h-thesis">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2 class="h2" id="h-thesis">Architectural Thesis</h2></div>
+    <div class="sec-body">
+      <div class="prose reveal" style="max-width:44em">
+        <p class="wp-lead">The structural gap in the current AI stack is not a missing tool &mdash; it is a missing layer.</p>
         <p>AI systems operate with growing autonomy but without a substrate that enforces governance at the point of execution. Current approaches attempt to govern after the fact: observability dashboards record what happened; policy engines advise what should happen; audit logs capture what did happen. None intervene architecturally where execution occurs.</p>
         <p>DominusOS advances a thesis: <strong>governance must move beneath runtime.</strong> Rather than wrapping AI systems in external policy, DominusOS positions a hypervisor layer between AI processes and the infrastructure they act upon. Every action &mdash; every write, every communication, every resource commitment &mdash; passes through a syscall gate that enforces capability envelopes &mdash; scoped, time-limited, and revocable &mdash; before execution proceeds.</p>
         <p>But governance alone is insufficient. A system that only enforces rules is static. The v3 thesis extends: <strong>intelligent systems must learn, adapt, and improve &mdash; but only within constitutional boundaries.</strong> DominusOS does not choose between autonomy and control. It implements both: a self-learning architecture where every subsystem compounds intelligence, proposes improvements, and adapts to changing conditions &mdash; while remaining structurally bound by an immutable constitutional canon that no automated process can modify.</p>
         <p>Authority is not assumed. It is granted, bounded, time-limited, and auditable. No process inherits ambient authority from its environment. No learning process can override governance. No evolution can weaken structural guarantees.</p>
         <p>This is the distinction between a governed system and a monitored one. Monitoring records what happened. A hypervisor determines what is permitted to happen &mdash; and learns to determine it better over time.</p>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- CORE ARCHITECTURE -->
-    <section class="wp-section alt">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Core Architecture</p>
-          <h2>Five structural components of a governed hypervisor.</h2>
-        </div>
-        <div class="arch-grid">
-          <div class="arch-item">
-            <h3>Syscall Gate</h3>
-            <p>The mandatory mediation point for all AI execution. No process writes, communicates, deploys, or commits resources without passing through the gate. The gate enforces authority checks against the process&rsquo;s capability set, logs the action to an immutable event ledger, and applies governance rules before permitting execution. The gate is not optional and cannot be bypassed &mdash; it is the only path from intent to action.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Capability Envelopes</h3>
-            <p>Every process operates within an explicit capability envelope. Envelopes define what a process may do (scope), for how long (time-limited), and under whose authority (attribution). Capability envelopes are granted by human operators, are transitively revocable, and follow the principle of least authority. A process cannot access any resource or perform any action for which it does not hold an explicit, unexpired capability grant. Capabilities are unforgeable tokens with expiry, revocation, and use-count limits &mdash; modeled after formally verified capability systems.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Event-Sourced Determinism</h3>
-            <p>Every state change in the system is captured as an immutable, sequenced event. The complete system state can be reconstructed by replaying the event log from any point. This provides replay determinism: any execution sequence can be audited, verified, and reproduced. There are no silent state mutations, no unrecorded side effects, no gaps in the attribution chain.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Tenant Isolation</h3>
-            <p>Organizational domains execute within isolated boundaries. No process in one domain can access another domain&rsquo;s data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Microkernel Architecture</h3>
-            <p>The kernel is minimal by design. It manages process scheduling, capability enforcement, the syscall gate, and the event ledger. All domain logic, integrations, drivers, and services run in user space outside the kernel boundary. A fault in any driver or integration cannot crash the kernel or affect other subsystems. The design minimizes the trusted computing base and maximizes fault containment.</p>
-          </div>
-        </div>
+<!-- CORE ARCHITECTURE -->
+<section class="sec alt" id="core" data-n="4" data-name="Core Architecture" aria-labelledby="h-core">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Core Architecture</p>
+      <h2 class="h2" id="h-core">Five structural components of a governed hypervisor.</h2>
+    </div>
+    <div class="sec-body">
+      <div class="cards">
+        <article class="reveal"><h3 class="titling">Syscall Gate</h3><p>The mandatory mediation point for all AI execution. No process writes, communicates, deploys, or commits resources without passing through the gate. The gate enforces authority checks against the process&rsquo;s capability set, logs the action to an immutable event ledger, and applies governance rules before permitting execution. The gate is not optional and cannot be bypassed &mdash; it is the only path from intent to action.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Capability Envelopes</h3><p>Every process operates within an explicit capability envelope. Envelopes define what a process may do (scope), for how long (time-limited), and under whose authority (attribution). Capability envelopes are granted by human operators, are transitively revocable, and follow the principle of least authority. A process cannot access any resource or perform any action for which it does not hold an explicit, unexpired capability grant. Capabilities are unforgeable tokens with expiry, revocation, and use-count limits &mdash; modeled after formally verified capability systems.</p></article>
+        <article class="reveal"><h3 class="titling">Event-Sourced Determinism</h3><p>Every state change in the system is captured as an immutable, sequenced event. The complete system state can be reconstructed by replaying the event log from any point. This provides replay determinism: any execution sequence can be audited, verified, and reproduced. There are no silent state mutations, no unrecorded side effects, no gaps in the attribution chain.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Tenant Isolation</h3><p>Organizational domains execute within isolated boundaries. No process in one domain can access another domain&rsquo;s data, capabilities, or execution context without explicit cross-domain authority grants. Isolation limits blast radius, prevents cascade failures, and ensures that a fault or compromise in one domain cannot propagate to others.</p></article>
+        <article class="reveal"><h3 class="titling">Microkernel Architecture</h3><p>The kernel is minimal by design. It manages process scheduling, capability enforcement, the syscall gate, and the event ledger. All domain logic, integrations, drivers, and services run in user space outside the kernel boundary. A fault in any driver or integration cannot crash the kernel or affect other subsystems. The design minimizes the trusted computing base and maximizes fault containment.</p></article>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- FEDERATION ARCHITECTURE -->
-    <section class="wp-section">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Federation Architecture</p>
-          <h2>Distributed sovereignty across federated kernel instances.</h2>
-        </div>
-        <div class="arch-grid">
-          <div class="arch-item">
-            <h3>Sovereign Kernel</h3>
-            <p>A single sovereign kernel instance holds the constitutional canon, issues trust passports, and manages the federation registry. It serves as the root of authority across all federated instances. Domain kernels register with the sovereign, receive trust credentials, and synchronize governance state. The sovereign does not execute domain logic &mdash; it governs the federation itself.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Domain Kernels</h3>
-            <p>Each business domain operates its own kernel instance with full isolation, independent scheduling, and domain-scoped capabilities. Domain kernels maintain their own event streams, trust scoring, and resource allocation while remaining bound by the sovereign&rsquo;s constitutional canon. A failure or compromise in one domain kernel cannot affect another.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Federation Event Bus</h3>
-            <p>Cross-kernel communication flows through a signed federation event bus. Every inter-kernel message carries cryptographic provenance &mdash; signed with HMAC verification. Events are routed by domain scope, and no kernel can inject events into another kernel&rsquo;s stream without valid federation credentials. The bus enables coordination without coupling.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Trust Passports</h3>
-            <p>Federation authority is mediated by trust passports &mdash; time-bounded, revocable credentials issued by the sovereign kernel. Passports define what operations a domain kernel may perform across federation boundaries. They expire, they can be revoked instantly, and they carry the full attribution chain of who issued them and under what authority.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Master Cortex</h3>
-            <p>A federated knowledge graph that aggregates abstracted intelligence signals from all domain kernels. The master cortex does not receive raw data &mdash; it receives typed signals: trust velocity, behavioral patterns, operational tempo, anomaly indicators, resource pressure. It synthesizes cross-domain patterns that no individual kernel can detect, generating macro-level insights while preserving domain isolation. The entire federation learns from the collective without exposing domain internals.</p>
-          </div>
-        </div>
+<!-- FEDERATION ARCHITECTURE -->
+<section class="sec" id="federation" data-n="5" data-name="Federation Architecture" aria-labelledby="h-fed">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Federation Architecture</p>
+      <h2 class="h2" id="h-fed">Distributed sovereignty across federated kernel instances.</h2>
+    </div>
+    <div class="sec-body">
+      <div class="cards">
+        <article class="reveal"><h3 class="titling">Sovereign Kernel</h3><p>A single sovereign kernel instance holds the constitutional canon, issues trust passports, and manages the federation registry. It serves as the root of authority across all federated instances. Domain kernels register with the sovereign, receive trust credentials, and synchronize governance state. The sovereign does not execute domain logic &mdash; it governs the federation itself.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Domain Kernels</h3><p>Each business domain operates its own kernel instance with full isolation, independent scheduling, and domain-scoped capabilities. Domain kernels maintain their own event streams, trust scoring, and resource allocation while remaining bound by the sovereign&rsquo;s constitutional canon. A failure or compromise in one domain kernel cannot affect another.</p></article>
+        <article class="reveal"><h3 class="titling">Federation Event Bus</h3><p>Cross-kernel communication flows through a signed federation event bus. Every inter-kernel message carries cryptographic provenance &mdash; signed with HMAC verification. Events are routed by domain scope, and no kernel can inject events into another kernel&rsquo;s stream without valid federation credentials. The bus enables coordination without coupling.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Trust Passports</h3><p>Federation authority is mediated by trust passports &mdash; time-bounded, revocable credentials issued by the sovereign kernel. Passports define what operations a domain kernel may perform across federation boundaries. They expire, they can be revoked instantly, and they carry the full attribution chain of who issued them and under what authority.</p></article>
+        <article class="reveal"><h3 class="titling">Master Cortex</h3><p>A federated knowledge graph that aggregates abstracted intelligence signals from all domain kernels. The master cortex does not receive raw data &mdash; it receives typed signals: trust velocity, behavioral patterns, operational tempo, anomaly indicators, resource pressure. It synthesizes cross-domain patterns that no individual kernel can detect, generating macro-level insights while preserving domain isolation. The entire federation learns from the collective without exposing domain internals.</p></article>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- SELF-LEARNING ARCHITECTURE -->
-    <section class="wp-section alt">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Self-Learning Architecture</p>
-          <h2>Every subsystem learns. Every learning action is governed.</h2>
-        </div>
-        <p class="wp-note wp-spaced">The following capabilities are not planned features. They are running in production, accumulating knowledge, proposing improvements, and adapting to changing conditions &mdash; all under constitutional governance.</p>
-
-        <div class="tier-grid">
-          <div class="tier-card">
-            <div class="tier-label">Knowledge Foundation</div>
-            <h3>Compounding Knowledge with Provenance and Decay</h3>
+<!-- SELF-LEARNING ARCHITECTURE -->
+<section class="sec alt" id="self-learning" data-n="6" data-name="Self-Learning Architecture" aria-labelledby="h-learn">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Self-Learning Architecture</p>
+      <h2 class="h2" id="h-learn">Every subsystem learns. Every learning action is governed.</h2>
+      <p class="lead">The following capabilities are not planned features. They are running in production, accumulating knowledge, proposing improvements, and adapting to changing conditions &mdash; all under constitutional governance.</p>
+    </div>
+    <div class="sec-body">
+      <div class="tiers">
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Knowledge Foundation</span><h3 class="titling">Compounding Knowledge with Provenance and Decay</h3></div>
+          <div class="tier-main">
             <p>The system accumulates knowledge continuously from every operation it performs. Knowledge enters the system through four distinct channels: <strong>observed</strong> patterns derived from behavioral analysis, <strong>taught</strong> knowledge explicitly provided by human operators, <strong>derived</strong> insights inferred from cross-entity and cross-domain correlation, and <strong>corrected</strong> knowledge updated after human intervention overrides a previous understanding.</p>
-            <p>Every knowledge node carries full provenance: who or what created it, when, from what evidence, at what confidence level, and whether it has been contradicted. Confidence scores decay over time &mdash; recent, reinforced knowledge retains high confidence while stale patterns degrade naturally. Knowledge that falls below a minimum confidence threshold is archived but never deleted. The system forgets what is no longer relevant while preserving the ability to recall why it once believed something.</p>
-            <p class="novel">What makes this different: knowledge is not a static database. It is a living graph with temporal dynamics, provenance chains, and governed decay. The system&rsquo;s memory improves over time &mdash; it does not merely accumulate.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Every knowledge node carries full provenance: who or what created it, when, from what evidence, at what confidence level, and whether it has been contradicted. Confidence scores decay over time &mdash; recent, reinforced knowledge retains high confidence while stale patterns degrade naturally. Knowledge that falls below a minimum confidence threshold is archived but never deleted. The system forgets what is no longer relevant while preserving the ability to recall why it once believed something.</p>
+              <p class="novel">What makes this different: knowledge is not a static database. It is a living graph with temporal dynamics, provenance chains, and governed decay. The system&rsquo;s memory improves over time &mdash; it does not merely accumulate.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Autonomic Planning</div>
-            <h3>MAPE-K Autonomic Loop</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Autonomic Planning</span><h3 class="titling">MAPE-K Autonomic Loop</h3></div>
+          <div class="tier-main">
             <p>DominusOS implements a formal Monitor-Analyze-Plan-Execute over shared Knowledge (MAPE-K) autonomic computing loop. The planner runs on a continuous cycle, observing anomaly scores, behavioral patterns, resource metrics, and governance posture across all subsystems.</p>
-            <p>Observations are classified into proposal types: trust adjustments, resource optimizations, policy refinements, and capability modifications. Each proposal carries a confidence score, a blast radius estimate, and a reversibility classification. Proposals are sorted into three tiers of authority:</p>
-            <ul class="constraint-list tight">
-              <li><strong>Tier 1 &mdash; Auto-execute:</strong> Bounded, reversible, low-blast-radius actions. The system executes these autonomously and records the action with full attribution.</li>
-              <li><strong>Tier 2 &mdash; Recommend:</strong> Higher-impact proposals queued for human review with evidence and projected impact. The system recommends. Humans authorize.</li>
-              <li><strong>Tier 3 &mdash; Governance gate:</strong> Structural changes, kill switch actions, policy modifications, and capability revocations. These always require explicit human authority through the governance gate.</li>
-            </ul>
-            <p class="novel">What makes this different: the system proposes its own optimizations with quantified confidence and impact estimates. It does not wait to be told what to improve &mdash; but it does wait for permission on anything consequential.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Observations are classified into proposal types: trust adjustments, resource optimizations, policy refinements, and capability modifications. Each proposal carries a confidence score, a blast radius estimate, and a reversibility classification. Proposals are sorted into three tiers of authority:</p>
+              <ul class="rule-list tight">
+                <li><strong>Tier 1 &mdash; Auto-execute:</strong> Bounded, reversible, low-blast-radius actions. The system executes these autonomously and records the action with full attribution.</li>
+                <li><strong>Tier 2 &mdash; Recommend:</strong> Higher-impact proposals queued for human review with evidence and projected impact. The system recommends. Humans authorize.</li>
+                <li><strong>Tier 3 &mdash; Governance gate:</strong> Structural changes, kill switch actions, policy modifications, and capability revocations. These always require explicit human authority through the governance gate.</li>
+              </ul>
+              <p class="novel">What makes this different: the system proposes its own optimizations with quantified confidence and impact estimates. It does not wait to be told what to improve &mdash; but it does wait for permission on anything consequential.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Governed Self-Improvement</div>
-            <h3>Evolution Engine</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Governed Self-Improvement</span><h3 class="titling">Evolution Engine</h3></div>
+          <div class="tier-main">
             <p>The kernel generates its own improvement proposals based on accumulated behavioral patterns, performance metrics, and operational history. Proposals are staged &mdash; never applied directly to production. Each proposal passes through a multi-phase validation pipeline:</p>
-            <p><strong>Shadow validation:</strong> The proposed change runs in a sandboxed environment against historical event data. The system determines what would have happened differently under the proposed change.</p>
-            <p><strong>Canary deployment:</strong> Validated proposals route a small percentage of real traffic through the modified path for a confirmation window. Metrics are monitored continuously during this period.</p>
-            <p><strong>Automatic rollback:</strong> If any monitored metric breaches its threshold during the confirmation window, the change is automatically reverted. No human intervention required for safety &mdash; only for promotion.</p>
-            <p><strong>Promotion:</strong> Changes that pass the confirmation window are promoted to production with full versioning. The system maintains a self-model that tracks proposal quality over time &mdash; per-category confidence scores adjust based on historical approval and rejection rates.</p>
-            <p class="novel">What makes this different: the system proposes and validates its own code-level improvements. Architectural changes and constitutional modifications always require the governance gate. The evolution engine can improve the system &mdash; but it cannot change what the system is.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p><strong>Shadow validation:</strong> The proposed change runs in a sandboxed environment against historical event data. The system determines what would have happened differently under the proposed change.</p>
+              <p><strong>Canary deployment:</strong> Validated proposals route a small percentage of real traffic through the modified path for a confirmation window. Metrics are monitored continuously during this period.</p>
+              <p><strong>Automatic rollback:</strong> If any monitored metric breaches its threshold during the confirmation window, the change is automatically reverted. No human intervention required for safety &mdash; only for promotion.</p>
+              <p><strong>Promotion:</strong> Changes that pass the confirmation window are promoted to production with full versioning. The system maintains a self-model that tracks proposal quality over time &mdash; per-category confidence scores adjust based on historical approval and rejection rates.</p>
+              <p class="novel">What makes this different: the system proposes and validates its own code-level improvements. Architectural changes and constitutional modifications always require the governance gate. The evolution engine can improve the system &mdash; but it cannot change what the system is.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Behavioral Intelligence</div>
-            <h3>Behavioral Baselines and Deviation Scoring</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Behavioral Intelligence</span><h3 class="titling">Behavioral Baselines and Deviation Scoring</h3></div>
+          <div class="tier-main">
             <p>The system establishes behavioral baselines for every entity it governs. Baselines track multiple metrics per entity: event rates, error patterns, resource consumption, interaction sequences, and decision distributions. Baseline confidence grows with accumulated observations &mdash; a minimum observation threshold must be met before comparison begins.</p>
-            <p>Once a baseline is established, the system continuously scores deviations against it. Deviations beyond a statistical threshold trigger autonomic proposals &mdash; trust adjustments, resource reallocation, or governance escalation. The baseline itself evolves as entity behavior changes, distinguishing between genuine behavioral shift and transient anomaly.</p>
-            <p class="novel">What makes this different: the system defines &ldquo;normal&rdquo; for each entity from observation, not configuration. Anomaly detection is continuous, per-entity, and feeds directly into the governance loop.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Once a baseline is established, the system continuously scores deviations against it. Deviations beyond a statistical threshold trigger autonomic proposals &mdash; trust adjustments, resource reallocation, or governance escalation. The baseline itself evolves as entity behavior changes, distinguishing between genuine behavioral shift and transient anomaly.</p>
+              <p class="novel">What makes this different: the system defines &ldquo;normal&rdquo; for each entity from observation, not configuration. Anomaly detection is continuous, per-entity, and feeds directly into the governance loop.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">World Awareness</div>
-            <h3>Context-Aware Governance</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">World Awareness</span><h3 class="titling">Context-Aware Governance</h3></div>
+          <div class="tier-main">
             <p>Governance does not operate in a vacuum. DominusOS ingests external signals &mdash; market conditions, environmental indicators, operational stress markers &mdash; and computes a unified governance sensitivity score. This score adjusts the kernel&rsquo;s governance posture in real-time across a spectrum from relaxed to critical.</p>
-            <p>During elevated sensitivity, error signals carry increased weight in trust calculations, tier change thresholds lower, and anomaly detection tightens. During critical sensitivity, any deviation triggers governance review. The system maintains a historical archive of world-model snapshots, enabling pattern matching against previously observed conditions &mdash; &ldquo;have we seen this pattern before, and what happened next?&rdquo;</p>
-            <p class="novel">What makes this different: governance rules are not static. They respond to the environment. The same action may be permitted in stable conditions and flagged in volatile ones &mdash; without changing any policy. The world informs the governance posture.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>During elevated sensitivity, error signals carry increased weight in trust calculations, tier change thresholds lower, and anomaly detection tightens. During critical sensitivity, any deviation triggers governance review. The system maintains a historical archive of world-model snapshots, enabling pattern matching against previously observed conditions &mdash; &ldquo;have we seen this pattern before, and what happened next?&rdquo;</p>
+              <p class="novel">What makes this different: governance rules are not static. They respond to the environment. The same action may be permitted in stable conditions and flagged in volatile ones &mdash; without changing any policy. The world informs the governance posture.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Execution Optimization</div>
-            <h3>Speculative Execution</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Execution Optimization</span><h3 class="titling">Speculative Execution</h3></div>
+          <div class="tier-main">
             <p>While an entity waits on an external response, the kernel predicts the next likely operation based on historical execution patterns. If the prediction confidence exceeds a threshold, the system pre-warms the knowledge layer, pre-allocates resources, and pre-verifies capabilities for the predicted operation. If the prediction is correct, the next operation executes with near-zero latency. If incorrect, pre-warmed resources are released with no side effects.</p>
-            <p>Security-critical operations &mdash; governance actions, capability modifications, authentication, and policy changes &mdash; are never speculated. Prediction accuracy is continuously tracked and fed back into the learning system.</p>
-            <p class="novel">What makes this different: the system applies CPU-level optimization concepts to AI governance. It learns optimal execution sequences from its own history and proactively optimizes for them &mdash; without bypassing any governance checks.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Security-critical operations &mdash; governance actions, capability modifications, authentication, and policy changes &mdash; are never speculated. Prediction accuracy is continuously tracked and fed back into the learning system.</p>
+              <p class="novel">What makes this different: the system applies CPU-level optimization concepts to AI governance. It learns optimal execution sequences from its own history and proactively optimizes for them &mdash; without bypassing any governance checks.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Intent Abstraction</div>
-            <h3>Intent-Based Orchestration</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Intent Abstraction</span><h3 class="titling">Intent-Based Orchestration</h3></div>
+          <div class="tier-main">
             <p>Entities declare high-level intents rather than imperative syscall sequences. The kernel decomposes intents into directed acyclic graphs of governed syscalls, validates the entire plan against current capabilities and policies before execution begins, and executes the plan through the standard syscall gate.</p>
-            <p>Decomposition draws from two sources: defined templates for well-understood operations, and learned decompositions derived from historical syscall sequences that achieved similar outcomes. The system improves its decomposition accuracy over time as it observes which sequences produce successful results.</p>
-            <p class="novel">What makes this different: the system translates goals into governed action plans. It validates the entire plan before any step executes. And it learns better decompositions from its own operational history.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Decomposition draws from two sources: defined templates for well-understood operations, and learned decompositions derived from historical syscall sequences that achieved similar outcomes. The system improves its decomposition accuracy over time as it observes which sequences produce successful results.</p>
+              <p class="novel">What makes this different: the system translates goals into governed action plans. It validates the entire plan before any step executes. And it learns better decompositions from its own operational history.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Policy Validation</div>
-            <h3>Shadow Execution and Policy Backtesting</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Policy Validation</span><h3 class="titling">Shadow Execution and Policy Backtesting</h3></div>
+          <div class="tier-main">
             <p>Before any policy change takes effect, the system can replay historical events through the proposed modification. Shadow execution never modifies real policy or real state &mdash; it is strictly read-only. The system reports exactly what would have been denied, permitted, escalated, or flagged under the proposed change.</p>
-            <p>This enables governance decisions to be evidence-based rather than speculative. An operator considering raising a trust threshold can see the projected impact against actual historical behavior before committing to the change. Shadow execution results are stored as knowledge nodes, building a governance decision history that informs future policy evolution.</p>
-            <p class="novel">What makes this different: policy changes are backtested like trading strategies. You see the impact before you commit. Governance evolves with evidence, not intuition.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>This enables governance decisions to be evidence-based rather than speculative. An operator considering raising a trust threshold can see the projected impact against actual historical behavior before committing to the change. Shadow execution results are stored as knowledge nodes, building a governance decision history that informs future policy evolution.</p>
+              <p class="novel">What makes this different: policy changes are backtested like trading strategies. You see the impact before you commit. Governance evolves with evidence, not intuition.</p>
+            </div></details>
           </div>
-
-          <div class="tier-card">
-            <div class="tier-label">Self-Awareness</div>
-            <h3>Kernel Source Introspection</h3>
+        </div>
+        <div class="tier reveal">
+          <div class="tier-head"><span class="mono-label">Self-Awareness</span><h3 class="titling">Kernel Source Introspection</h3></div>
+          <div class="tier-main">
             <p>The kernel indexes and reasons about its own source structure. It builds and maintains a self-map: modules, exported functions, data dependencies, event types emitted, and tables accessed. This index is read-only from the planner&rsquo;s perspective &mdash; it enables introspection, not self-modification.</p>
-            <p>Source introspection provides the bridge between behavioral pattern detection and structural hypothesis generation. When the autonomic planner detects a behavioral anomaly, introspection enables it to generate hypotheses about structural causes &mdash; and when the evolution engine proposes improvements, introspection ensures it understands what it is changing.</p>
-            <p>The system also maintains periodic self-model snapshots &mdash; comprehensive records of its own operational state, capabilities, confidence areas, and blind spots. These snapshots enable temporal comparison: how has the system&rsquo;s understanding of itself changed over time?</p>
-            <p class="novel">What makes this different: the system reads and reasons about its own architecture. It knows what it can do, what it cannot do, and where its understanding is weakest.</p>
+            <details class="more"><summary>Read the detail <span class="plus" aria-hidden="true"></span></summary><div class="more-body">
+              <p>Source introspection provides the bridge between behavioral pattern detection and structural hypothesis generation. When the autonomic planner detects a behavioral anomaly, introspection enables it to generate hypotheses about structural causes &mdash; and when the evolution engine proposes improvements, introspection ensures it understands what it is changing.</p>
+              <p>The system also maintains periodic self-model snapshots &mdash; comprehensive records of its own operational state, capabilities, confidence areas, and blind spots. These snapshots enable temporal comparison: how has the system&rsquo;s understanding of itself changed over time?</p>
+              <p class="novel">What makes this different: the system reads and reasons about its own architecture. It knows what it can do, what it cannot do, and where its understanding is weakest.</p>
+            </div></details>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- CONSTITUTIONAL GOVERNANCE -->
-    <section class="wp-section">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Constitutional Governance</p>
-          <h2>Immutable articles. Split-key authority. Multi-operator sovereignty.</h2>
-        </div>
-        <div class="arch-grid">
-          <div class="arch-item">
-            <h3>Constitutional Canon</h3>
-            <p>The system operates under a sealed governance canon &mdash; a set of immutable articles that define the boundaries of all system behavior. Articles cover human sovereignty, governance-by-design, cognitive scoping, transparency requirements, teaching-over-configuration, memory provenance, stewardship orientation, continuous learning mandates, and immutability enforcement. The canon is a frozen constant verified by cryptographic hash at every kernel boot. If the hash does not match, the kernel refuses to start.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Split-Key Authority</h3>
-            <p>Constitutional modifications require split-key governance: no single operator can unilaterally alter the governance framework. Changes require multi-party authorization, documented version incrementing, and acknowledgment across all federated kernel instances. The modification process itself is auditable, versioned, and irreversible without the same multi-party authority.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Multi-Operator Sovereignty</h3>
-            <p>Authority is differentiated across operators with distinct sovereignty levels. A sovereign operator holds full authority across all domains with veto and override capability. Co-operators can initiate governance proposals but require sovereign confirmation for execution. Domain-sovereign operators hold full authority within a single domain but remain bound by the constitutional canon. Every authority level is explicit, auditable, and revocable.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Counsel Layer</h3>
-            <p>Before operators make governance decisions, the system generates evidence-backed counsel briefs. Briefs include relevant historical context, projected impact of proposed actions, confidence levels in the analysis, and supporting evidence from the knowledge graph. The counsel layer recommends &mdash; it does not decide. All reasoning is documented with full attribution and confidence scoring.</p>
-          </div>
-          <div class="arch-item">
-            <h3>Deep Temporal Memory</h3>
-            <p>The system maintains queryable access to its full operational history with temporal indexing. Operators can reason about patterns across time: what happened during similar conditions previously, how governance decisions played out, which entity behaviors preceded incidents. Temporal policy evaluation enables governance rules that reference historical state &mdash; decisions informed by the system&rsquo;s entire operational experience, not just its current snapshot.</p>
-          </div>
-        </div>
+<!-- CONSTITUTIONAL GOVERNANCE -->
+<section class="sec" id="constitutional" data-n="7" data-name="Constitutional Governance" aria-labelledby="h-const">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Constitutional Governance</p>
+      <h2 class="h2" id="h-const">Immutable articles. Split-key authority. Multi-operator sovereignty.</h2>
+    </div>
+    <div class="sec-body">
+      <div class="cards">
+        <article class="reveal"><h3 class="titling">Constitutional Canon</h3><p>The system operates under a sealed governance canon &mdash; a set of immutable articles that define the boundaries of all system behavior. Articles cover human sovereignty, governance-by-design, cognitive scoping, transparency requirements, teaching-over-configuration, memory provenance, stewardship orientation, continuous learning mandates, and immutability enforcement. The canon is a frozen constant verified by cryptographic hash at every kernel boot. If the hash does not match, the kernel refuses to start.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Split-Key Authority</h3><p>Constitutional modifications require split-key governance: no single operator can unilaterally alter the governance framework. Changes require multi-party authorization, documented version incrementing, and acknowledgment across all federated kernel instances. The modification process itself is auditable, versioned, and irreversible without the same multi-party authority.</p></article>
+        <article class="reveal"><h3 class="titling">Multi-Operator Sovereignty</h3><p>Authority is differentiated across operators with distinct sovereignty levels. A sovereign operator holds full authority across all domains with veto and override capability. Co-operators can initiate governance proposals but require sovereign confirmation for execution. Domain-sovereign operators hold full authority within a single domain but remain bound by the constitutional canon. Every authority level is explicit, auditable, and revocable.</p></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Counsel Layer</h3><p>Before operators make governance decisions, the system generates evidence-backed counsel briefs. Briefs include relevant historical context, projected impact of proposed actions, confidence levels in the analysis, and supporting evidence from the knowledge graph. The counsel layer recommends &mdash; it does not decide. All reasoning is documented with full attribution and confidence scoring.</p></article>
+        <article class="reveal"><h3 class="titling">Deep Temporal Memory</h3><p>The system maintains queryable access to its full operational history with temporal indexing. Operators can reason about patterns across time: what happened during similar conditions previously, how governance decisions played out, which entity behaviors preceded incidents. Temporal policy evaluation enables governance rules that reference historical state &mdash; decisions informed by the system&rsquo;s entire operational experience, not just its current snapshot.</p></article>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- STRUCTURAL GUARANTEES -->
-    <section class="wp-section alt">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Structural Guarantees</p>
-          <h2>Eight invariants enforced by architecture, not by policy.</h2>
-        </div>
-        <ul class="invariants-list">
-          <li><strong>Replay Determinism</strong> <span>Any execution sequence can be replayed from the event log and will produce identical, verifiable results. Full audit reconstruction from any point in system history.</span></li>
-          <li><strong>Capability Enforcement Integrity</strong> <span>No process can exceed its granted capabilities. Enforcement is mandatory and architectural. Scope violations are structurally difficult by design, not merely detectable.</span></li>
-          <li><strong>Tenant Isolation Integrity</strong> <span>No cross-tenant data access, capability escalation, or execution context leakage is structurally possible. Domain boundaries are enforced at the kernel level.</span></li>
-          <li><strong>Revocation Cascades</strong> <span>When a capability is revoked, all capabilities derived from it are transitively and immediately revoked. Authority cannot persist after withdrawal. The operator&rsquo;s ability to halt always outpaces the system&rsquo;s ability to act.</span></li>
-          <li><strong>Driver Fault Containment</strong> <span>A failure in any driver, integration, or user-space service cannot propagate to the kernel or affect unrelated subsystems. The system fails safe by design.</span></li>
-          <li><strong>Canon Immutability</strong> <span>The system&rsquo;s constitutional governance rules cannot be modified by any automated process, including privileged ones. Amendments require multi-party human authority through the split-key governance gate.</span></li>
-          <li><strong>Federation Isolation</strong> <span>Cross-kernel communication is signed and scoped. No domain kernel can inject events, escalate capabilities, or access data in another kernel&rsquo;s domain without valid federation credentials.</span></li>
-          <li><strong>Governed Intelligence</strong> <span>Every learning action, every knowledge mutation, every evolution proposal, every autonomic decision operates within governance boundaries. Intelligence compounds. It never compounds outside constitutional constraints.</span></li>
-        </ul>
+<!-- STRUCTURAL GUARANTEES -->
+<section class="sec alt" id="guarantees" data-n="8" data-name="Structural Guarantees" aria-labelledby="h-inv">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Structural Guarantees</p>
+      <h2 class="h2" id="h-inv">Eight invariants enforced by architecture, not by policy.</h2>
+    </div>
+    <div class="sec-body">
+      <ul class="invariants reveal">
+        <li><strong>Replay Determinism</strong> <span>Any execution sequence can be replayed from the event log and will produce identical, verifiable results. Full audit reconstruction from any point in system history.</span></li>
+        <li><strong>Capability Enforcement Integrity</strong> <span>No process can exceed its granted capabilities. Enforcement is mandatory and architectural. Scope violations are structurally difficult by design, not merely detectable.</span></li>
+        <li><strong>Tenant Isolation Integrity</strong> <span>No cross-tenant data access, capability escalation, or execution context leakage is structurally possible. Domain boundaries are enforced at the kernel level.</span></li>
+        <li><strong>Revocation Cascades</strong> <span>When a capability is revoked, all capabilities derived from it are transitively and immediately revoked. Authority cannot persist after withdrawal. The operator&rsquo;s ability to halt always outpaces the system&rsquo;s ability to act.</span></li>
+        <li><strong>Driver Fault Containment</strong> <span>A failure in any driver, integration, or user-space service cannot propagate to the kernel or affect unrelated subsystems. The system fails safe by design.</span></li>
+        <li><strong>Canon Immutability</strong> <span>The system&rsquo;s constitutional governance rules cannot be modified by any automated process, including privileged ones. Amendments require multi-party human authority through the split-key governance gate.</span></li>
+        <li><strong>Federation Isolation</strong> <span>Cross-kernel communication is signed and scoped. No domain kernel can inject events, escalate capabilities, or access data in another kernel&rsquo;s domain without valid federation credentials.</span></li>
+        <li><strong>Governed Intelligence</strong> <span>Every learning action, every knowledge mutation, every evolution proposal, every autonomic decision operates within governance boundaries. Intelligence compounds. It never compounds outside constitutional constraints.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- THE STRUCTURAL ARGUMENT -->
+<section class="sec" id="argument" data-n="9" data-name="The Structural Argument" aria-labelledby="h-arg">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2 class="h2" id="h-arg">The Structural Argument</h2></div>
+    <div class="sec-body">
+      <p class="wp-lead reveal">Constraint is what makes intelligent systems stable.</p>
+      <ul class="rule-list reveal">
+        <li><strong>Autonomy without constraint</strong> produces entropy. Systems that act without boundaries eventually act in ways that conflict with organizational intent.</li>
+        <li><strong>Learning without versioning</strong> produces corruption. Systems that overwrite previous state cannot distinguish between current belief and prior understanding.</li>
+        <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated. Each interaction starts from zero.</li>
+        <li><strong>Tool proliferation without substrate</strong> produces incoherence. Each new tool creates a new data silo, a new failure surface, and a new governance gap.</li>
+        <li><strong>Observability without mediation</strong> produces the illusion of control. Observability tells you what happened. Only a hypervisor layer can determine what is permitted to happen.</li>
+        <li><strong>Intelligence without governance</strong> produces corruption. Systems that learn without constitutional boundaries will eventually learn to optimize for outcomes that conflict with operator intent. The learning must be governed, or it becomes the threat.</li>
+      </ul>
+      <p class="wp-note reveal">The stability of intelligent systems depends on structural constraint, governed memory, and non-destructive evolution. These properties must be enforced beneath runtime, not applied above it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENT STATE -->
+<section class="sec alt" id="current-state" data-n="10" data-name="Current State (March 2026)" aria-labelledby="h-state">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">As of March 2026</p>
+      <h2 class="h2" id="h-state">Current State</h2>
+    </div>
+    <div class="sec-body">
+      <p class="wp-note reveal">DominusOS is not a proposal or a prototype. The system is deployed and running in production across federated kernel instances, orchestrating governed AI operations for a multi-domain service business:</p>
+      <ul class="rule-list reveal">
+        <li><strong>Federated Kernel Instances</strong> operating under a sovereign kernel with domain-specific kernels managing isolated business domains. All instances share a sealed constitutional canon and synchronize through signed federation protocols.</li>
+        <li><strong>Self-Learning Intelligence</strong> compounding organizational knowledge continuously. The knowledge graph accumulates observations, taught facts, derived insights, and corrections &mdash; all with provenance, confidence scoring, and temporal decay.</li>
+        <li><strong>Autonomic Planning</strong> running formal MAPE-K loops that detect anomalies, generate improvement proposals, and auto-execute bounded optimizations while queuing consequential changes for human review.</li>
+        <li><strong>Governed Evolution</strong> proposing and validating system improvements through shadow execution, canary deployment, and automatic rollback. The system improves itself under human authority.</li>
+        <li><strong>Context-Aware Governance</strong> adjusting policy posture based on external conditions and historical pattern matching. Governance sensitivity responds to the world, not just internal state.</li>
+        <li><strong>Multiple Virtual Employees</strong> executing governed workflows daily across email, document processing, compliance enforcement, and operational intelligence.</li>
+        <li><strong>Behavioral Baselines</strong> established for all governed entities with continuous deviation scoring feeding trust adjustments and governance escalation.</li>
+        <li><strong>Native Operator Applications</strong> on desktop and mobile with live process visibility, governance dashboards, counsel briefs, and direct kill authority.</li>
+        <li><strong>Speculative Execution</strong> predicting and pre-warming optimal execution paths from historical patterns, with accuracy tracking feeding continuous improvement.</li>
+        <li><strong>System-Level Kill Switch</strong> tested regularly. One action halts all AI execution across every subsystem, every kernel instance, instantly and visibly.</li>
+      </ul>
+      <div class="summary-box reveal">
+        <p><strong>The architecture described in this paper is not aspirational. Every capability documented &mdash; federation, autonomic planning, evolution engine, behavioral baselines, context-aware governance, speculative execution, shadow policy testing, kernel introspection &mdash; is implemented, deployed, and accumulating operational history in production.</strong></p>
+        <p>The system learns from everything it does. It proposes its own improvements. It backtests policy changes against its own history. It adjusts governance posture based on real-world conditions. It predicts optimal execution paths. And it does all of this under a sealed constitutional canon that no automated process can modify.</p>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- THE STRUCTURAL ARGUMENT -->
-    <section class="wp-section">
-      <div class="container wp-abstract">
-        <h2>The Structural Argument</h2>
-        <p class="wp-lead">Constraint is what makes intelligent systems stable.</p>
-        <ul class="constraint-list">
-          <li><strong>Autonomy without constraint</strong> produces entropy. Systems that act without boundaries eventually act in ways that conflict with organizational intent.</li>
-          <li><strong>Learning without versioning</strong> produces corruption. Systems that overwrite previous state cannot distinguish between current belief and prior understanding.</li>
-          <li><strong>Execution without structured memory</strong> produces repetition. Intelligence is generated but never accumulated. Each interaction starts from zero.</li>
-          <li><strong>Tool proliferation without substrate</strong> produces incoherence. Each new tool creates a new data silo, a new failure surface, and a new governance gap.</li>
-          <li><strong>Observability without mediation</strong> produces the illusion of control. Observability tells you what happened. Only a hypervisor layer can determine what is permitted to happen.</li>
-          <li><strong>Intelligence without governance</strong> produces corruption. Systems that learn without constitutional boundaries will eventually learn to optimize for outcomes that conflict with operator intent. The learning must be governed, or it becomes the threat.</li>
-        </ul>
-        <div class="section-heading center">
-          <p class="wp-note">The stability of intelligent systems depends on structural constraint, governed memory, and non-destructive evolution. These properties must be enforced beneath runtime, not applied above it.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CURRENT STATE -->
-    <section class="wp-section alt">
-      <div class="container wp-abstract">
-        <h2>Current State</h2>
-        <p>DominusOS is not a proposal or a prototype. The system is deployed and running in production across federated kernel instances, orchestrating governed AI operations for a multi-domain service business:</p>
-        <ul class="constraint-list">
-          <li><strong>Federated Kernel Instances</strong> operating under a sovereign kernel with domain-specific kernels managing isolated business domains. All instances share a sealed constitutional canon and synchronize through signed federation protocols.</li>
-          <li><strong>Self-Learning Intelligence</strong> compounding organizational knowledge continuously. The knowledge graph accumulates observations, taught facts, derived insights, and corrections &mdash; all with provenance, confidence scoring, and temporal decay.</li>
-          <li><strong>Autonomic Planning</strong> running formal MAPE-K loops that detect anomalies, generate improvement proposals, and auto-execute bounded optimizations while queuing consequential changes for human review.</li>
-          <li><strong>Governed Evolution</strong> proposing and validating system improvements through shadow execution, canary deployment, and automatic rollback. The system improves itself under human authority.</li>
-          <li><strong>Context-Aware Governance</strong> adjusting policy posture based on external conditions and historical pattern matching. Governance sensitivity responds to the world, not just internal state.</li>
-          <li><strong>Multiple Virtual Employees</strong> executing governed workflows daily across email, document processing, compliance enforcement, and operational intelligence.</li>
-          <li><strong>Behavioral Baselines</strong> established for all governed entities with continuous deviation scoring feeding trust adjustments and governance escalation.</li>
-          <li><strong>Native Operator Applications</strong> on desktop and mobile with live process visibility, governance dashboards, counsel briefs, and direct kill authority.</li>
-          <li><strong>Speculative Execution</strong> predicting and pre-warming optimal execution paths from historical patterns, with accuracy tracking feeding continuous improvement.</li>
-          <li><strong>System-Level Kill Switch</strong> tested regularly. One action halts all AI execution across every subsystem, every kernel instance, instantly and visibly.</li>
-        </ul>
-
-        <div class="summary-box">
-          <p><strong>The architecture described in this paper is not aspirational. Every capability documented &mdash; federation, autonomic planning, evolution engine, behavioral baselines, context-aware governance, speculative execution, shadow policy testing, kernel introspection &mdash; is implemented, deployed, and accumulating operational history in production.</strong></p>
-          <p>The system learns from everything it does. It proposes its own improvements. It backtests policy changes against its own history. It adjusts governance posture based on real-world conditions. It predicts optimal execution paths. And it does all of this under a sealed constitutional canon that no automated process can modify.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- COMPETITIVE LANDSCAPE -->
-    <section class="wp-section">
-      <div class="container wp-abstract">
-        <h2>Competitive Landscape</h2>
-        <p>Most organizations assemble a patchwork of tools that each solve one problem. None of them solve the governance problem &mdash; and none of them learn.</p>
+<!-- COMPETITIVE LANDSCAPE -->
+<section class="sec" id="landscape" data-n="11" data-name="Competitive Landscape" aria-labelledby="h-land">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2 class="h2" id="h-land">Competitive Landscape</h2></div>
+    <div class="sec-body">
+      <div class="prose reveal" style="max-width:44em">
+        <p class="wp-lead">Most organizations assemble a patchwork of tools that each solve one problem. None of them solve the governance problem &mdash; and none of them learn.</p>
         <p><strong>Automation platforms</strong> connect systems and move data between services. They do not enforce authority boundaries, maintain audit-grade provenance, learn from operational patterns, or provide a single kill switch when something goes wrong. When AI agents run inside them, no one controls the scope.</p>
         <p><strong>Agent frameworks</strong> let AI call functions and produce outputs. Most lack hard authority boundaries, durable process identity, behavioral baseline tracking, or the ability to trace any outcome to the human who approved it. When the agent drifts, no structural failsafe exists. No framework proposes its own improvements under governance.</p>
         <p><strong>Observability dashboards</strong> show you what happened. They do not control what is allowed to happen next. They cannot backtest proposed policy changes against historical events. They observe &mdash; they do not govern, learn, or adapt.</p>
         <p><strong>AI governance tools</strong> apply policy from above: rules, guardrails, content filters. They do not operate beneath execution. They do not learn from operational patterns. They do not adjust governance posture based on world conditions. They do not propose their own improvements. Policy-based governance is configuration. Structural governance is architecture.</p>
         <p><strong>DominusOS</strong> operates at the hypervisor layer &mdash; beneath execution, above infrastructure. A mandatory syscall gate, capability-based authority, event-sourced determinism, federated multi-kernel sovereignty, a self-learning knowledge graph with governed decay, an autonomic planner that proposes and validates improvements, context-aware policy that responds to the world, and constitutional governance sealed by cryptographic verification. Execute, learn, govern, evolve, prove, halt &mdash; in one system. Not bolted on. Architected in.</p>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- ROADMAP -->
-    <section class="wp-section alt">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Roadmap</p>
-          <h2>Self-learning governance today. Autonomous infrastructure tomorrow.</h2>
-        </div>
-        <div class="roadmap-grid">
-          <div class="roadmap-card">
-            <div class="phase">Current</div>
-            <h3>Enterprise AI Governance</h3>
-            <p>Founding deployments with organizations that require governed organizational intelligence, self-learning systems under constitutional authority, and auditable execution across multiple domains. Federated kernels with autonomic planning and governed evolution in production.</p>
-          </div>
-          <div class="roadmap-card">
-            <div class="phase">Near-Term</div>
-            <h3>Multi-Tenant Platform</h3>
-            <p>Scaling the hypervisor to support multiple organizations, each operating within isolated tenant boundaries with independent governance configurations, authority structures, and compounding intelligence layers. Federation protocol enables cross-organization learning without domain exposure.</p>
-          </div>
-          <div class="roadmap-card future">
-            <div class="phase">Long-Term</div>
-            <h3>Autonomous Infrastructure &amp; IoT</h3>
-            <p>The capability-based authority model, syscall gate, and tenant isolation architecture are designed to extend to IoT and autonomous edge environments. When autonomous systems execute actions in the physical world &mdash; controlling devices, managing facilities, operating equipment &mdash; the need for bounded authority, context-aware governance, and immediate halt capability becomes critical.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- ROADMAP -->
+<section class="sec alt" id="roadmap" data-n="12" data-name="Roadmap" aria-labelledby="h-road">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Roadmap</p>
+      <h2 class="h2" id="h-road">Self-learning governance today. Autonomous infrastructure tomorrow.</h2>
+    </div>
+    <div class="sec-body">
+      <ol class="horizon">
+        <li class="reveal"><span class="mono-label">Current</span><h3 class="titling">Enterprise AI Governance</h3><p>Founding deployments with organizations that require governed organizational intelligence, self-learning systems under constitutional authority, and auditable execution across multiple domains. Federated kernels with autonomic planning and governed evolution in production.</p></li>
+        <li class="reveal" style="--i:1"><span class="mono-label">Near-Term</span><h3 class="titling">Multi-Tenant Platform</h3><p>Scaling the hypervisor to support multiple organizations, each operating within isolated tenant boundaries with independent governance configurations, authority structures, and compounding intelligence layers. Federation protocol enables cross-organization learning without domain exposure.</p></li>
+        <li class="reveal future" style="--i:2"><span class="mono-label">Long-Term</span><h3 class="titling">Autonomous Infrastructure &amp; IoT</h3><p>The capability-based authority model, syscall gate, and tenant isolation architecture are designed to extend to IoT and autonomous edge environments. When autonomous systems execute actions in the physical world &mdash; controlling devices, managing facilities, operating equipment &mdash; the need for bounded authority, context-aware governance, and immediate halt capability becomes critical.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
 
-    <!-- VERIFICATION -->
-    <section class="wp-section">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Verification</p>
-          <h2>Evidence Anchors</h2>
-        </div>
-        <div class="evidence-grid">
-          <article class="evidence-card">
-            <h3>Specification Repository</h3>
-            <p>Public repository with architecture overview, conceptual documentation, and project specification.</p>
-            <a href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">View on GitHub &rarr;</a>
-          </article>
-          <article class="evidence-card">
-            <h3>Dominus Foundry</h3>
-            <p>The company behind DominusOS. Dominus Foundry builds and operates Managed AI for businesses.</p>
-            <a href="https://dominusfoundry.com" target="_blank" rel="noopener">dominusfoundry.com &rarr;</a>
-          </article>
-          <article class="evidence-card">
-            <h3>dominusos.ai</h3>
-            <p>The current DominusOS site: company-defined permissions, approvals, revocation, and records of permitted work.</p>
-            <a href="https://dominusos.ai" target="_blank" rel="noopener">dominusos.ai &rarr;</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- FOUNDING DEPLOYMENTS -->
-    <section class="section" id="contact">
-      <div class="container split engagement">
-        <div class="section-heading">
-          <p class="eyebrow">Current Information</p>
-          <h2>This paper is historical. The current system is described elsewhere.</h2>
-        </div>
-        <div class="body">
-          <p>This paper is kept as the March 2026 record of that version of the architecture. For the current company-AI system and delivery plan, see Dominus Foundry&rsquo;s technology overview and investor case, linked at the top of this page.</p>
-          <div class="contact-actions">
-            <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=DominusOS%20%E2%80%94%20White%20Paper%20Inquiry">Ask About the Current System</a>
-            <a class="button ghost" href="/">Back to DominusOS</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-brand">
-        <img src="/assets/brand/dominusos-shield-96.png" class="footer-mark" alt="DominusOS crest" width="56" height="56">
-        <div>
-          <p class="brand-name">DominusOS</p>
-          <p class="brand-subline">DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
-        </div>
-      </div>
-      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="footer-link" href="/privacy">Privacy notice</a></p>
-      <div class="footer-badge">
-        <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
+<!-- VERIFICATION -->
+<section class="sec" id="verification" data-n="13" data-name="Evidence Anchors" aria-labelledby="h-ver">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Verification</p>
+      <h2 class="h2" id="h-ver">Evidence Anchors</h2>
+    </div>
+    <div class="sec-body">
+      <div class="evidence">
+        <article class="reveal"><h3 class="titling">Specification Repository</h3><p>Public repository with architecture overview, conceptual documentation, and project specification.</p><a href="https://github.com/markl2305/dominus-os" target="_blank" rel="noopener">View on GitHub &rarr;</a></article>
+        <article class="reveal" style="--i:1"><h3 class="titling">Dominus Foundry</h3><p>The company behind DominusOS. Dominus Foundry builds and operates Managed AI for businesses.</p><a href="https://dominusfoundry.com" target="_blank" rel="noopener">dominusfoundry.com &rarr;</a></article>
+        <article class="reveal" style="--i:2"><h3 class="titling">dominusos.ai</h3><p>The current DominusOS site: company-defined permissions, approvals, revocation, and records of permitted work.</p><a href="/">dominusos.ai &rarr;</a></article>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    const navToggle = document.querySelector('.nav-toggle');
-    const mainNav = document.querySelector('.main-nav');
-    if (navToggle && mainNav) {
-      const closeNav = () => { mainNav.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); };
-      navToggle.addEventListener('click', () => { const isOpen = mainNav.classList.toggle('open'); navToggle.setAttribute('aria-expanded', String(isOpen)); });
-      mainNav.querySelectorAll('a').forEach((link) => { link.addEventListener('click', closeNav); });
-    }
+<!-- CURRENT INFORMATION -->
+<section class="sec alt contact" id="contact" data-n="14" data-name="Current Information" aria-labelledby="h-info">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Current Information</p>
+      <h2 class="h2" id="h-info">This paper is historical. The current system is described elsewhere.</h2>
+      <p class="lead">This paper is kept as the March 2026 record of that version of the architecture. For the current company-AI system and delivery plan, see Dominus Foundry&rsquo;s technology overview and investor case, linked at the top of this page.</p>
+    </div>
+    <div class="sec-body">
+      <div class="actions reveal">
+        <a class="btn btn-primary" href="mailto:mark@dominusfoundry.com?subject=DominusOS%20%E2%80%94%20White%20Paper%20Inquiry">Ask About the Current System <span class="arr" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn-ghost" href="/">Back to DominusOS</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
 
-    const themeToggle = document.querySelector('.theme-toggle');
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        const root = document.documentElement;
-        const current = root.getAttribute('data-theme')
-          || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        const next = current === 'light' ? 'dark' : 'light';
-        root.setAttribute('data-theme', next);
-        try { localStorage.setItem('dos-theme', next); } catch (e) {}
-      });
-    }
-  </script>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="/assets/brand/dominusos-shield-96.png" alt="DominusOS crest" width="52" height="52">
+      <div>
+        <span class="brand-name">DominusOS</span>
+        <p>Authority and execution control behind Sabina</p>
+        <p>DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
+      </div>
+    </div>
+    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="u" href="/privacy">Privacy notice</a></p>
+    <nav class="foot-pages" aria-label="Pages">
+      <a href="/">DominusOS</a>
+      <a href="/#problem">The Problem</a>
+      <a href="/#architecture">How It Works</a>
+      <a href="/#authority">Authority</a>
+      <a href="/whitepaper" aria-current="page">White Paper (March 2026, historical)</a>
+      <a href="/privacy">Privacy notice</a>
+    </nav>
+    <div class="badge-slot">
+      <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=20261014a"></script>
 </body>
 </html>

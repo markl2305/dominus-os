@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js" data-theme="dark" data-theme-pref="system">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DominusOS &mdash; Authority and Accountable AI Execution</title>
   <meta name="description" content="Company-defined permissions, approvals, revocation, and records of permitted work. DominusOS is the authority and execution-control layer behind Sabina, your company's own AI, built and operated by Dominus Foundry.">
   <meta name="keywords" content="AI authority, accountable AI execution, approvals, revocation, action records, signed permits, Managed AI, Dominus Foundry, Sabina">
@@ -19,8 +19,21 @@
   <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152.png?v=20261013">
   <link rel="manifest" href="/icons/site.webmanifest?v=20261013">
   <meta name="theme-color" content="#18262A">
-  <script>try{var t=localStorage.getItem('dos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
-  <link rel="stylesheet" href="/styles.css?v=20261012a">
+  <meta name="color-scheme" content="dark light">
+<script>
+/* Pre-paint theme resolution: runs before first paint, so there is never a
+   wrong-theme frame. Dark is the base; System follows the OS. Storage may be
+   blocked, so it is wrapped. */
+(function () {
+  var d = document.documentElement, p = 'system';
+  try { var s = localStorage.getItem('dos-theme'); if (s === 'dark' || s === 'light') p = s; } catch (e) {}
+  var light = p === 'light' || (p === 'system' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
+  d.setAttribute('data-theme-pref', p);
+  d.setAttribute('data-theme', light ? 'light' : 'dark');
+  d.className = d.className.replace('no-js', 'js');
+})();
+</script>
+  <link rel="stylesheet" href="/styles.css?v=20261014a">
 <!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
      Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
      Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
@@ -31,278 +44,408 @@
 <script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
 <script src="/consent/consent.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-bar">
-      <div class="brand">
-        <picture>
-          <source srcset="/assets/brand/dominusos-logo-transparent-256.webp" type="image/webp">
-          <img src="/assets/brand/dominusos-logo-transparent-256.png" class="brand-mark" alt="DominusOS" width="60" height="60">
-        </picture>
-        <div class="brand-text">
-          <span class="brand-name sr-only">DominusOS</span>
-          <span class="brand-subline">Authority and execution control behind Sabina</span>
-        </div>
+<body class="page-index">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="DominusOS, back to the top">
+      <img src="/assets/brand/dominusos-shield-96.png" alt="" width="34" height="34">
+      <span class="brand-name">DominusOS</span>
+    </a>
+    <div class="nav-mid">
+      <button class="where" id="where" type="button" aria-expanded="false" aria-controls="index" data-top="Overview">
+        <span class="n"></span><span class="name">Overview</span>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+      </button>
+    </div>
+    <div class="nav-right">
+      <a class="nav-link paper-link" href="/whitepaper">White Paper (March 2026, historical)</a>
+      <div class="seg seg-theme" role="radiogroup" aria-label="Appearance">
+        <button type="button" role="radio" data-v="system" aria-checked="true" aria-label="Match system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5M8 11.5V14"/></svg><span class="lbl">System</span></button>
+        <button type="button" role="radio" data-v="dark" aria-checked="false" aria-label="Dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M13.5 9.8A5.8 5.8 0 0 1 6.2 2.5a5.8 5.8 0 1 0 7.3 7.3Z"/></svg><span class="lbl">Dark</span></button>
+        <button type="button" role="radio" data-v="light" aria-checked="false" aria-label="Light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg><span class="lbl">Light</span></button>
       </div>
-      <nav class="main-nav" aria-label="Primary">
-        <a href="#problem">The Problem</a>
-        <a href="#architecture">How It Works</a>
-        <a href="#direction">Where It Fits</a>
-        <a href="#kill-switch">Kill Switch</a>
-        <a href="#audience">Who It&rsquo;s For</a>
-        <a href="#production">In Production</a>
-        <a class="nav-paper" href="/whitepaper">White Paper (March 2026, historical)</a>
-        <a class="nav-cta" href="#contact">Contact</a>
-      </nav>
-      <div class="header-tools">
-        <button class="icon-button theme-toggle" type="button" aria-label="Switch between light and dark theme">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
-        </button>
-        <button class="icon-button nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-        </button>
+      <a class="pill pill-solid nav-cta" href="#contact">Contact</a>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<nav class="index" id="index" aria-label="Site index" inert>
+  <div class="group">
+    <h2>On this page</h2>
+    <ol id="indexList"></ol>
+  </div>
+  <div class="group">
+    <h2>Pages</h2>
+    <ul>
+      <li><a href="/" aria-current="page">DominusOS</a></li>
+      <li><a class="paper" href="/whitepaper">White Paper (March 2026, historical)</a></li>
+      <li><a href="/privacy">Privacy notice</a></li>
+    </ul>
+  </div>
+  <div class="group appearance">
+    <h2>Appearance</h2>
+    <div class="seg seg-theme" role="radiogroup" aria-label="Appearance">
+        <button type="button" role="radio" data-v="system" aria-checked="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M5.5 14h5M8 11.5V14"/></svg><span class="lbl">System</span></button>
+        <button type="button" role="radio" data-v="dark" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M13.5 9.8A5.8 5.8 0 0 1 6.2 2.5a5.8 5.8 0 1 0 7.3 7.3Z"/></svg><span class="lbl">Dark</span></button>
+        <button type="button" role="radio" data-v="light" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg><span class="lbl">Light</span></button>
+      </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ================================================= HERO: one statement, on the shield's dark stage -->
+<section class="stage hero2" id="top" aria-labelledby="hero-title">
+  <div class="wrap hero2-in">
+    <img class="hero2-crest" src="/assets/brand/dominusos-logo-transparent-256.png" alt="DominusOS crest" width="128" height="128">
+    <p class="kicker">DominusOS · Authority and execution control behind Sabina</p>
+    <h1 class="mega" id="hero-title">Your company defines the authority. <em>Sabina works within it.</em></h1>
+    <p class="hero2-lead">DominusOS is the authority and execution-control layer behind Sabina.</p>
+    <div class="hero2-actions">
+      <a class="pill pill-solid" href="#flow">See How It Works <span class="arr" aria-hidden="true">&rarr;</span></a>
+      <a class="pill pill-ghost" href="https://hiresabina.ai/evaluate">See Sabina work <span class="arr" aria-hidden="true">&rarr;</span></a>
+    </div>
+    <p class="hero2-note"><a href="https://hiresabina.ai/evaluate">Start with a short operational assessment of your business. <span class="arr" aria-hidden="true">&rarr;</span></a></p>
+  </div>
+</section>
+
+<!-- ================================================= AT A GLANCE: the three guarantees as tiles -->
+<section class="glance2" id="guarantees" data-n="I" data-name="Three guarantees" aria-labelledby="h-glance">
+  <div class="wrap">
+    <p class="kicker kicker-dim" id="h-glance">Three structural guarantees</p>
+    <div class="glance2-grid">
+      <article class="g-tile">
+        <span class="g-ix">I</span>
+        <h2 class="g-t">Bounded Authority</h2>
+        <p class="g-p">No capability runs beyond what was granted.</p>
+        <details class="g-more"><summary>More <span class="plus" aria-hidden="true"></span></summary>
+          <p>A restriction &mdash; a boundary the owner writes &mdash; bites immediately. Widening authority is inert until it is deliberately confirmed; nothing Sabina reads, notices, or infers can grant it to herself. She cannot promote herself.</p>
+        </details>
+      </article>
+      <article class="g-tile">
+        <span class="g-ix">II</span>
+        <h2 class="g-t">Attributable Action</h2>
+        <p class="g-p">Every action is written to the record before it is carried out &mdash; whether it is committed, refused, or still waiting on a person.</p>
+        <details class="g-more"><summary>More <span class="plus" aria-hidden="true"></span></summary>
+          <p>Standing rules carry who wrote them and when. Revoking one stops future actions without erasing what already happened.</p>
+        </details>
+      </article>
+      <article class="g-tile">
+        <span class="g-ix">III</span>
+        <h2 class="g-t">Receipt Before Speech</h2>
+        <p class="g-p">She cannot tell a customer something is booked, sent, or changed until the record shows it actually happened.</p>
+        <details class="g-more"><summary>More <span class="plus" aria-hidden="true"></span></summary>
+          <p>The check runs on every sentence before it reaches a caller&rsquo;s ear or a customer&rsquo;s inbox &mdash; not on a policy she is trusted to remember.</p>
+        </details>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================= AUTHORITY FLOWS: interactive explainer -->
+<section class="chap" id="flow" data-n="II" data-name="How authority flows" aria-labelledby="h-flow">
+  <span id="authority" class="anchor" aria-hidden="true"></span>
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">Authority Structure</p>
+      <h2 class="big" id="h-flow">Define the work. Confirm the scope. <em>Preserve the record.</em></h2>
+      <p class="chap-lead">Company rules define what she may do, when approval is required, and how permitted work is recorded. Sabina&rsquo;s understanding of the company can grow. Her authority continues to come from the permissions the company grants.</p>
+    </header>
+    <div class="flow reveal">
+      <ol class="flow-stack" role="tablist" aria-label="How authority flows" aria-orientation="vertical">
+        <li class="flow-cap">
+          <span class="flow-cap-k">Your company</span>
+          <span class="flow-cap-t">The authorized business sets boundaries.</span>
+        </li>
+        <li role="presentation"><button class="flow-step" role="tab" id="tab-restriction" aria-controls="pan-restriction" aria-selected="true" data-step="restriction"><span class="fs-n">1</span><span class="fs-t">Restriction</span><svg class="fs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></li>
+        <li role="presentation"><button class="flow-step" role="tab" id="tab-permit" aria-controls="pan-permit" aria-selected="false" data-step="permit"><span class="fs-n">2</span><span class="fs-t">Permit</span><svg class="fs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></li>
+        <li role="presentation"><button class="flow-step" role="tab" id="tab-record" aria-controls="pan-record" aria-selected="false" data-step="record"><span class="fs-n">3</span><span class="fs-t">Record</span><svg class="fs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></li>
+        <li role="presentation"><button class="flow-step" role="tab" id="tab-attestation" aria-controls="pan-attestation" aria-selected="false" data-step="attestation"><span class="fs-n">4</span><span class="fs-t">Attestation</span><svg class="fs-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></li>
+        <li class="flow-cap flow-cap-end">
+          <span class="flow-cap-k">Sabina</span>
+          <span class="flow-cap-t">Sabina works within it.</span>
+        </li>
+      </ol>
+      <div class="flow-panels">
+        <div class="flow-panel" role="tabpanel" id="pan-restriction" aria-labelledby="tab-restriction">
+          <span class="fp-k">Step 1 of 4</span>
+          <h3 class="fp-t">Restriction</h3>
+          <p>The owner writes boundaries in plain language &mdash; never a permission, only a limit. A restriction takes effect the moment it is sent, with no second step where someone translates it into settings.</p>
+        </div>
+        <div class="flow-panel" role="tabpanel" id="pan-permit" aria-labelledby="tab-permit">
+          <span class="fp-k">Step 2 of 4</span>
+          <h3 class="fp-t">Permit</h3>
+          <p>On supported governed paths, an external effect requires a permit for the exact action &mdash; tenant, capability, arguments and a time window, signed once and consumed once. Registry changes invalidate permits on those paths; this is not a claim that every Sabina capability is admitted.</p>
+        </div>
+        <div class="flow-panel" role="tabpanel" id="pan-record" aria-labelledby="tab-record">
+          <span class="fp-k">Step 3 of 4</span>
+          <h3 class="fp-t">Record</h3>
+          <p>What was attempted, what was permitted, and what actually happened are written to the record before and after the act &mdash; attributable to the authority that allowed it, whether that was a person&rsquo;s approval or a standing restriction that did not apply.</p>
+        </div>
+        <div class="flow-panel" role="tabpanel" id="pan-attestation" aria-labelledby="tab-attestation">
+          <span class="fp-k">Step 4 of 4</span>
+          <h3 class="fp-t">Attestation</h3>
+          <p>The design requires a time-limited, signed attestation of admitted capabilities. When it lapses, those capabilities must return to propose-only. Availability and enforcement are checked for the specific supported path before a company relies on it.</p>
+        </div>
+        <div class="flow-nav">
+          <button class="pill pill-ghost pill-sm" type="button" data-flow="prev" aria-label="Previous step">&larr; Previous</button>
+          <button class="pill pill-ghost pill-sm" type="button" data-flow="next" aria-label="Next step">Next &rarr;</button>
+        </div>
       </div>
     </div>
-  </header>
+    <p class="chap-note reveal">Broader permission follows the approved confirmation process; it does not appear because the model learned something new or because one action was approved once. Revocation stops future work under the withdrawn authority. It does not erase the record or reverse an action already completed.</p>
+  </div>
+</section>
 
-  <main>
-    <section class="hero" id="top">
-            <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">DominusOS · Authority and execution control behind Sabina</p>
-          <h1>Your company defines the authority. <em>Sabina works within it.</em></h1>
-          <p class="lede">DominusOS is the authority and execution-control layer behind Sabina. Company rules define what she may do, when approval is required, and how permitted work is recorded. Sabina&rsquo;s understanding of the company can grow. Her authority continues to come from the permissions the company grants.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#architecture">See How It Works</a>
-            <a class="button ghost" href="https://hiresabina.ai/evaluate">See Sabina work</a>
+<!-- ================================================= ONE ACTION: the path, interactive -->
+<section class="chap chap-alt" id="architecture" data-n="III" data-name="One action, end to end" aria-labelledby="h-arch">
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">How It Works &mdash; Technical Detail</p>
+      <h2 class="big" id="h-arch">Not a policy. <em>A record and a permit, on every action.</em></h2>
+    </header>
+    <div class="arch2 reveal">
+      <figure class="path-fig tile" id="pathFig">
+        <div class="path-tools">
+          <span class="mono-label">Follow one action</span>
+          <div class="seg" id="pathSeg" role="radiogroup" aria-label="Outcome">
+            <button type="button" role="radio" data-v="approval" aria-checked="false" aria-label="Approval required"><span class="long">Approval required</span><span class="short" aria-hidden="true">Approval</span></button>
+            <button type="button" role="radio" data-v="permitted" aria-checked="false">Permitted</button>
+            <button type="button" role="radio" data-v="uncertain" aria-checked="false" aria-label="Fails or uncertain"><span class="long">Fails or uncertain</span><span class="short" aria-hidden="true">Uncertain</span></button>
           </div>
-          <p class="hero-note">Start with a short operational assessment of your business.</p>
         </div>
-        <figure class="hero-mark" aria-label="DominusOS crest">
-          <picture>
-            <source srcset="/assets/brand/dominusos-logo-transparent-768.webp" type="image/webp">
-            <img src="/assets/brand/dominusos-logo-transparent-768.png" class="hero-logo" alt="DominusOS" width="440" height="440">
-          </picture>
-        </figure>
+          <svg class="path-wide" viewBox="0 0 1144 468" role="img" aria-labelledby="pathTitleW">
+          <title id="pathTitleW">The path of one action: prepared, authority checked, then it waits for approval, or it is permitted and carried out; a completed result is recorded, and a failed or uncertain one is not described as completed.</title>
+          <path class="pedge" data-on="approval permitted uncertain" d="M264 182 H304"/>
+          <path class="pedge" data-on="approval" d="M552 182 C572 182 572 70 592 70"/>
+          <path class="pedge" data-on="permitted uncertain" d="M552 182 C572 182 572 294 592 294"/>
+          <path class="pedge" data-on="permitted" d="M840 294 C860 294 860 238 880 238"/>
+          <path class="pedge" data-on="uncertain" d="M840 294 C860 294 860 350 880 350"/>
+          <g class="pnode" data-on="approval permitted uncertain"><rect x="16" y="136" width="248" height="92" rx="3"/><text class="t" x="34" y="168">Prepared</text><text class="s" x="34" y="190">A customer-facing</text><text class="s" x="34" y="210">follow-up</text></g>
+          <g class="pnode" data-on="approval permitted uncertain"><rect x="304" y="136" width="248" height="92" rx="3"/><text class="t" x="322" y="168">Authority checked</text><text class="s" x="322" y="190">Current authority for that</text><text class="s" x="322" y="210">company and responsibility</text></g>
+          <g class="pnode" data-on="approval"><rect x="592" y="24" width="248" height="92" rx="3"/><text class="t" x="610" y="56">Approval required</text><text class="s" x="610" y="78">The action waits</text></g>
+          <g class="pnode" data-on="permitted uncertain"><rect x="592" y="248" width="248" height="92" rx="3"/><text class="t" x="610" y="280">Permitted</text><text class="s" x="610" y="302">The supported execution path</text><text class="s" x="610" y="322">carries it out</text></g>
+          <g class="pnode" data-on="permitted"><rect x="880" y="192" width="248" height="92" rx="3"/><text class="t" x="898" y="224">Completed</text><text class="s" x="898" y="246">Records the result</text></g>
+          <g class="pnode" data-on="uncertain"><rect x="880" y="304" width="248" height="92" rx="3"/><text class="t" x="898" y="336">Fails or uncertain</text><text class="s" x="898" y="358">Must not be described</text><text class="s" x="898" y="378">as completed</text></g>
+          <g class="prail" data-on="approval permitted uncertain"><line x1="16" y1="452" x2="1128" y2="452"/><text x="16" y="438">EVERY ACTION IS WRITTEN TO THE RECORD BEFORE IT IS CARRIED OUT</text></g>
+          </svg>
+          <svg class="path-tall" viewBox="0 0 330 732" role="img" aria-labelledby="pathTitleT">
+          <title id="pathTitleT">The path of one action: prepared, authority checked, then it waits for approval, or it is permitted and carried out; a completed result is recorded, and a failed or uncertain one is not described as completed.</title>
+          <path class="pedge" data-on="approval permitted uncertain" d="M165 100 V120"/>
+          <path class="pedge" data-on="approval permitted uncertain" d="M22 212 V278"/>
+          <path class="pedge" data-on="approval" d="M22 278 H36"/>
+          <path class="pedge" data-on="permitted uncertain" d="M22 278 V390 H36"/>
+          <path class="pedge" data-on="permitted uncertain" d="M50 436 V502"/>
+          <path class="pedge" data-on="permitted" d="M50 502 H64"/>
+          <path class="pedge" data-on="uncertain" d="M50 502 V614 H64"/>
+          <g class="pnode" data-on="approval permitted uncertain"><rect x="8" y="8" width="314" height="92" rx="3"/><text class="t" x="26" y="40">Prepared</text><text class="s" x="26" y="62">A customer-facing</text><text class="s" x="26" y="82">follow-up</text></g>
+          <g class="pnode" data-on="approval permitted uncertain"><rect x="8" y="120" width="314" height="92" rx="3"/><text class="t" x="26" y="152">Authority checked</text><text class="s" x="26" y="174">Current authority for that</text><text class="s" x="26" y="194">company and responsibility</text></g>
+          <g class="pnode" data-on="approval"><rect x="36" y="232" width="286" height="92" rx="3"/><text class="t" x="54" y="264">Approval required</text><text class="s" x="54" y="286">The action waits</text></g>
+          <g class="pnode" data-on="permitted uncertain"><rect x="36" y="344" width="286" height="92" rx="3"/><text class="t" x="54" y="376">Permitted</text><text class="s" x="54" y="398">The supported execution path</text><text class="s" x="54" y="418">carries it out</text></g>
+          <g class="pnode" data-on="permitted"><rect x="64" y="456" width="258" height="92" rx="3"/><text class="t" x="82" y="488">Completed</text><text class="s" x="82" y="510">Records the result</text></g>
+          <g class="pnode" data-on="uncertain"><rect x="64" y="568" width="258" height="92" rx="3"/><text class="t" x="82" y="600">Fails or uncertain</text><text class="s" x="82" y="622">Must not be described</text><text class="s" x="82" y="642">as completed</text></g>
+          <g class="prail" data-on="approval permitted uncertain"><text x="8" y="688">EVERY ACTION IS WRITTEN TO THE</text><text x="8" y="706">RECORD BEFORE IT IS CARRIED OUT</text><line x1="8" y1="720" x2="322" y2="720"/></g>
+          </svg>
+        <p class="sr" id="pathLive" aria-live="polite"></p>
+      </figure>
+      <div class="prose arch2-copy">
+        <p>A customer-facing follow-up is prepared. The system checks the current authority for that company and responsibility. <span class="scn" data-scn="approval">Where the approved scope requires approval, the action waits.</span> <span class="scn" data-scn="permitted">Where it is permitted, the supported execution path carries it out and records the result.</span> <span class="scn" data-scn="uncertain">If it fails or remains uncertain, the system must not describe it as completed.</span></p>
+        <p class="hint">Choose an outcome. The diagram and this paragraph mark the same step.</p>
       </div>
-    </section>
+    </div>
+      <details class="more reveal">
+        <summary>Read the technical detail <span class="plus" aria-hidden="true"></span></summary>
+        <div class="more-body prose detail-list">
+          <div><span class="k">Record and permit</span><p>Every action Sabina attempts is written to the record before it is carried out &mdash; a row that exists whether the action is committed, refused, or still waiting on a person. Anything that reaches the outside world needs a permit: a signed, single-use token bound to the tenant, the capability, the exact arguments, and a time window. The permit is minted once and consumed once; a verifier can check its signature, but only the authority service can mint one.</p></div>
+          <div><span class="k">Restrictions, not grants</span><p>The rules an owner writes are restrictions, not grants. There is no instruction in the rule grammar that widens what Sabina can do, spends money, or turns a suggestion into a standing rule &mdash; that term does not exist for the compiler to accept. A one-time approval is consumed and expires; it never becomes a standing permission.</p></div>
+          <div><span class="k">Attestation</span><p>Her authority is also bounded by a signed attestation of what she is currently permitted to run. That attestation expires on a fixed schedule, and if it lapses &mdash; or the code it is pinned to changes &mdash; every capability demotes automatically to propose-only until it is re-signed.</p></div>
+          <div><span class="k">Receipt before speech</span><p>Before anything becomes a spoken or written sentence, a check runs against the record: she cannot claim a booking, a payment, or a change that the system does not show as actually committed.</p></div>
+          <div><span class="k">Written once</span><p>None of this lives in an editable log. Grants, rule changes, revocations, and approval events are written once and never altered &mdash; a rule can be withdrawn, but the record that it existed, who wrote it, and when, stays.</p></div>
+        </div>
+      </details>
+  </div>
+</section>
 
-    <section class="section" id="guarantees">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Three structural guarantees</p>
-        </div>
-        <div class="grid cards-3">
-          <article class="card">
-            <h3>Bounded Authority</h3>
-            <p>No capability runs beyond what was granted. A restriction &mdash; a boundary the owner writes &mdash; bites immediately. Widening authority is inert until it is deliberately confirmed; nothing Sabina reads, notices, or infers can grant it to herself. She cannot promote herself.</p>
-          </article>
-          <article class="card">
-            <h3>Attributable Action</h3>
-            <p>Every action is written to the record before it is carried out &mdash; whether it is committed, refused, or still waiting on a person. Standing rules carry who wrote them and when. Revoking one stops future actions without erasing what already happened.</p>
-          </article>
-          <article class="card">
-            <h3>Receipt Before Speech</h3>
-            <p>She cannot tell a customer something is booked, sent, or changed until the record shows it actually happened. The check runs on every sentence before it reaches a caller&rsquo;s ear or a customer&rsquo;s inbox &mdash; not on a policy she is trusted to remember.</p>
-          </article>
-        </div>
+<!-- ================================================= UNDERSTANDING vs PERMISSION: two tiles -->
+<section class="chap" id="direction" data-n="IV" data-name="Understanding vs. permission" aria-labelledby="h-direction">
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">Where It Fits</p>
+      <h2 class="big" id="h-direction">What the model understands is separate from what the system permits.</h2>
+      <p class="chap-lead">Teaching Sabina, the company memory she keeps, and the training of the core model are different mechanisms. None of them widens her authority. As useful company knowledge carries forward, she can understand more of the work; what she may act on still comes only from what your company has granted.</p>
+    </header>
+    <div class="pair">
+      <div class="tile pair-tile reveal">
+        <span class="mono-label">Understanding</span>
+        <h3 class="pt-t">What the model understands</h3>
+        <ul class="pt-list">
+          <li>A core model trained and operated by Foundry</li>
+          <li>Proprietary memory and teaching systems</li>
+          <li>The company memory she keeps</li>
+        </ul>
+        <span class="pt-arrow" aria-hidden="true">Can grow</span>
       </div>
-    </section>
-
-    <section class="section" id="problem">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">The Problem</p>
-          <h2>Systems that act without a record erode trust. Systems that cannot explain themselves erode confidence.</h2>
-        </div>
-        <div class="body">
-          <p>Most AI tools force a choice between capability and accountability. Either a system acts freely &mdash; creating risk nobody can trace back to a decision &mdash; or it is locked down so tightly it cannot do real work. As AI takes on more of an organization&rsquo;s work, the owner still has to answer for outcomes they did not personally review.</p>
-          <p>Monitoring tells you what already happened. Governance has to answer a different question before the fact: what is this system permitted to do right now, and can it prove it stayed inside that boundary.</p>
-        </div>
+      <div class="pair-div reveal" aria-hidden="true"><span>None of them widens her authority.</span></div>
+      <div class="tile pair-tile pair-tile-dark reveal" style="--i:1">
+        <span class="mono-label">DominusOS</span>
+        <h3 class="pt-t">What the system permits</h3>
+        <ul class="pt-list">
+          <li>Responsibilities, grants and conditions</li>
+          <li>Approvals and revocations</li>
+          <li>The record of what was permitted and done</li>
+        </ul>
+        <span class="pt-arrow" aria-hidden="true">What your company has granted</span>
       </div>
-    </section>
-
-    <section class="section muted" id="architecture">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">How It Works &mdash; Technical Detail</p>
-          <h2>Not a policy. <em>A record and a permit, on every action.</em></h2>
-        </div>
-        <div class="body">
-          <p>A customer-facing follow-up is prepared. The system checks the current authority for that company and responsibility. Where the approved scope requires approval, the action waits. Where it is permitted, the supported execution path carries it out and records the result. If it fails or remains uncertain, the system must not describe it as completed.</p>
-          <p>Every action Sabina attempts is written to the record before it is carried out &mdash; a row that exists whether the action is committed, refused, or still waiting on a person. Anything that reaches the outside world needs a permit: a signed, single-use token bound to the tenant, the capability, the exact arguments, and a time window. The permit is minted once and consumed once; a verifier can check its signature, but only the authority service can mint one.</p>
-          <p>The rules an owner writes are restrictions, not grants. There is no instruction in the rule grammar that widens what Sabina can do, spends money, or turns a suggestion into a standing rule &mdash; that term does not exist for the compiler to accept. A one-time approval is consumed and expires; it never becomes a standing permission.</p>
-          <p>Her authority is also bounded by a signed attestation of what she is currently permitted to run. That attestation expires on a fixed schedule, and if it lapses &mdash; or the code it is pinned to changes &mdash; every capability demotes automatically to propose-only until it is re-signed.</p>
-          <p>Before anything becomes a spoken or written sentence, a check runs against the record: she cannot claim a booking, a payment, or a change that the system does not show as actually committed.</p>
-          <p>None of this lives in an editable log. Grants, rule changes, revocations, and approval events are written once and never altered &mdash; a rule can be withdrawn, but the record that it existed, who wrote it, and when, stays.</p>
-        </div>
+    </div>
+    <details class="more reveal">
+      <summary>Read the detail <span class="plus" aria-hidden="true"></span></summary>
+      <div class="more-body prose">
+        <p>Sabina runs on a core model trained and operated by Foundry. Our proprietary memory and teaching systems shape that foundation around your company, while your permissions define what she may do. DominusOS is the part that holds those permissions: the responsibilities, grants, conditions, approvals, and revocations your company sets, and the record of what was permitted and done.</p>
       </div>
-    </section>
+    </details>
+  </div>
+</section>
 
-    <section class="section" id="direction">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">Where It Fits</p>
-          <h2>What the model understands is separate from what the system permits.</h2>
-        </div>
-        <div class="body">
-          <p>Sabina runs on a core model trained and operated by Foundry. Our proprietary memory and teaching systems shape that foundation around your company, while your permissions define what she may do. DominusOS is the part that holds those permissions: the responsibilities, grants, conditions, approvals, and revocations your company sets, and the record of what was permitted and done.</p>
-          <p>Teaching Sabina, the company memory she keeps, and the training of the core model are different mechanisms. None of them widens her authority. As useful company knowledge carries forward, she can understand more of the work; what she may act on still comes only from what your company has granted.</p>
-        </div>
+<!-- ================================================= KILL SWITCH: one dark tile, claim and limits together -->
+<section class="chap chap-alt" id="kill-switch" data-n="V" data-name="Kill switch" aria-labelledby="h-kill">
+  <div class="wrap">
+    <div class="kill tile-dark reveal">
+      <div class="kill-head">
+        <svg class="kill-glyph" viewBox="0 0 96 48" aria-hidden="true"><rect x="1" y="1" width="94" height="46" rx="23" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="17" fill="currentColor"/></svg>
+        <p class="kicker">Kill Switch</p>
+        <h2 class="big" id="h-kill">One switch stops Sabina from starting anything new.</h2>
       </div>
-    </section>
-
-    <section class="section muted" id="kill-switch">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">Kill Switch</p>
-          <h2>One switch stops Sabina from starting anything new.</h2>
-        </div>
-        <div class="body">
-          <p>A single stop command refuses new sessions, marks active ones stopped, and closes the calls and sends already gated behind it. It states its own limits rather than promising more than it does: a caller already mid-sentence may hear up to one more line before the line closes, and the switch does not yet reach every process Sabina touches. The stop is fail-closed &mdash; until it is deliberately resumed, gated sends stay blocked.</p>
+      <div class="kill-body">
+        <p>A single stop command refuses new sessions, marks active ones stopped, and closes the calls and sends already gated behind it. It states its own limits rather than promising more than it does: a caller already mid-sentence may hear up to one more line before the line closes, and the switch does not yet reach every process Sabina touches. The stop is fail-closed &mdash; until it is deliberately resumed, gated sends stay blocked.</p>
+        <div class="kill-limits">
+          <span class="mono-label">Its limits, stated plainly</span>
           <p>Anyone told this switch is instantaneous everywhere has been told something that is not yet true. Extending its reach across every path, and rehearsing it on a schedule so it is exercised before the day it is needed, is work still ahead &mdash; not a claim on this page.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section muted" id="authority">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Authority Structure</p>
-          <h2>Define the work. Confirm the scope. <em>Preserve the record.</em></h2>
-          <p>The authorized business sets boundaries. Broader permission follows the approved confirmation process; it does not appear because the model learned something new or because one action was approved once. Revocation stops future work under the withdrawn authority. It does not erase the record or reverse an action already completed.</p>
-        </div>
-        <div class="authority-diagram">
-          <div class="layer">
-            <div class="layer-title">Restriction</div>
-            <p class="layer-body">The owner writes boundaries in plain language &mdash; never a permission, only a limit. A restriction takes effect the moment it is sent, with no second step where someone translates it into settings.</p>
-          </div>
-          <div class="layer highlight">
-            <div class="layer-title">Permit</div>
-            <p class="layer-body">On supported governed paths, an external effect requires a permit for the exact action &mdash; tenant, capability, arguments and a time window, signed once and consumed once. Registry changes invalidate permits on those paths; this is not a claim that every Sabina capability is admitted.</p>
-          </div>
-          <div class="layer">
-            <div class="layer-title">Record</div>
-            <p class="layer-body">What was attempted, what was permitted, and what actually happened are written to the record before and after the act &mdash; attributable to the authority that allowed it, whether that was a person&rsquo;s approval or a standing restriction that did not apply.</p>
-          </div>
-          <div class="layer">
-            <div class="layer-title">Attestation</div>
-            <p class="layer-body">The design requires a time-limited, signed attestation of admitted capabilities. When it lapses, those capabilities must return to propose-only. Availability and enforcement are checked for the specific supported path before a company relies on it.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="audience">
-      <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">Who It&rsquo;s For</p>
-          <h2>Built for people who must account for every decision.</h2>
-        </div>
-        <div class="section-heading center">
-          <p>DominusOS is built for operators and owners who cannot afford black boxes &mdash; and cannot afford to slow down to avoid them. It assumes someone must always be able to explain what happened, why it happened, and who authorized it. Governance is not bolted on after the fact; it is the record and the permit an action needs before it happens.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section muted" id="foundation">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">Company Boundaries</p>
-          <h2>Your company&rsquo;s knowledge and permissions stay your company&rsquo;s.</h2>
-        </div>
-        <div class="body">
-          <p>Your company&rsquo;s knowledge, memory, operating instructions, and permissions remain specific to your company. Access follows the sources and authority you approve, and every session carries a verified company claim that is checked before it can act.</p>
-          <p>For people who must protect discretion, confidentiality, and fiduciary duty, this is not a feature. It is the reason to choose DominusOS.</p>
-          <p>Any future use of eligible derived information beyond providing your company&rsquo;s service requires separate, specific agreement. See Sabina&rsquo;s <a href="https://hiresabina.ai/trust">trust and company-data page</a> for how company information is handled.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="production">
-      <div class="container split">
-        <div class="section-heading">
-          <p class="eyebrow">In Production</p>
-          <h2>Running today. Governing Sabina&rsquo;s supported work paths.</h2>
-        </div>
-        <div class="body">
-          <p>DominusOS is not a proposal or a whitepaper exercise. It is the live governance layer behind Sabina&rsquo;s supported work paths: proposed actions are recorded before execution and permitted customer-facing actions require a signed permit; and a stop switch &mdash; with its limits stated plainly above &mdash; can halt her from starting anything new.</p>
-          <p>What is not yet true: there is no automated planner that proposes and ships its own changes to production traffic; cross-company pattern-sharing is not operating today; and there is no rehearsed kill-switch drill on the record.</p>
-          <p>Foundry configures, deploys, and operates Sabina for your company. Your team teaches her the business and decides what she may handle.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section muted" id="contact">
-      <div class="container split engagement">
-        <div class="section-heading">
-          <p class="eyebrow">Contact</p>
-          <h2>Talk to Dominus Foundry.</h2>
-        </div>
-        <div class="body">
-          <p>For the people accountable for delegated work: bring a specific action, source, and authority question. We will distinguish the public operating model from the coverage demonstrated by the current work.</p>
-          <div class="contact-actions">
-            <a class="button primary" href="mailto:mark@dominusfoundry.com?subject=DominusOS%20%E2%80%94%20Governance%20Question">Start a Conversation</a>
-            <a class="button ghost" href="https://hiresabina.ai/evaluate">See Sabina work</a>
-            <a class="button ghost" href="tel:+15055201433">Call (505) 520-1433</a>
-            <a class="button ghost" href="#top">Return to the top</a>
-          </div>
-          <p>Start with a short operational assessment of your business.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <div class="footer-brand">
-        <img src="/assets/brand/dominusos-shield-96.png" class="footer-mark" alt="DominusOS crest" width="56" height="56">
-        <div>
-          <p class="brand-name">DominusOS</p>
-          <p class="brand-subline">DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
-        </div>
-      </div>
-      <p class="footer-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="footer-phone" href="tel:+15055201433">(505) 520-1433</a><br><a class="footer-link" href="/privacy">Privacy notice</a></p>
-      <div class="footer-badge">
-        <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
+<!-- ================================================= PROOF: status ledger -->
+<section class="chap" id="production" data-n="VI" data-name="What runs today" aria-labelledby="h-production">
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">In Production</p>
+      <h2 class="big" id="h-production">Running today. Governing Sabina&rsquo;s supported work paths.</h2>
+      <p class="chap-lead">DominusOS is not a proposal or a whitepaper exercise.</p>
+    </header>
+    <div class="ledger2-tools reveal">
+      <div class="seg" id="ledgerSeg" role="radiogroup" aria-label="Filter by status">
+        <button type="button" role="radio" data-v="all" aria-checked="true">All <span class="count">7</span></button>
+        <button type="button" role="radio" data-v="live" aria-checked="false">Running today <span class="count">3</span></button>
+        <button type="button" role="radio" data-v="notyet" aria-checked="false">Not yet true <span class="count">4</span></button>
       </div>
     </div>
-  </footer>
+    <ul class="ledger2 reveal" id="ledger2">
+      <li data-st="live"><span class="st st-live">Running today</span><span class="lt">proposed actions are recorded before execution</span></li>
+      <li data-st="live"><span class="st st-live">Running today</span><span class="lt">permitted customer-facing actions require a signed permit</span></li>
+      <li data-st="live"><span class="st st-live">Running today</span><span class="lt">a stop switch &mdash; with its limits stated plainly above &mdash; can halt her from starting anything new</span></li>
+      <li data-st="notyet"><span class="st st-not">Not yet true</span><span class="lt">the switch does not yet reach every process Sabina touches</span></li>
+      <li data-st="notyet"><span class="st st-not">Not yet true</span><span class="lt">there is no automated planner that proposes and ships its own changes to production traffic</span></li>
+      <li data-st="notyet"><span class="st st-not">Not yet true</span><span class="lt">cross-company pattern-sharing is not operating today</span></li>
+      <li data-st="notyet"><span class="st st-not">Not yet true</span><span class="lt">there is no rehearsed kill-switch drill on the record</span></li>
+    </ul>
+    <p class="chap-note reveal">Foundry configures, deploys, and operates Sabina for your company. Your team teaches her the business and decides what she may handle.</p>
+    <details class="more reveal">
+      <summary>Read the full statement <span class="plus" aria-hidden="true"></span></summary>
+      <div class="more-body prose">
+        <p>DominusOS is not a proposal or a whitepaper exercise. It is the live governance layer behind Sabina&rsquo;s supported work paths: proposed actions are recorded before execution and permitted customer-facing actions require a signed permit; and a stop switch &mdash; with its limits stated plainly above &mdash; can halt her from starting anything new.</p>
+        <p>What is not yet true: there is no automated planner that proposes and ships its own changes to production traffic; cross-company pattern-sharing is not operating today; and there is no rehearsed kill-switch drill on the record.</p>
+      </div>
+    </details>
+  </div>
+</section>
 
-  <script>
-    const navToggle = document.querySelector('.nav-toggle');
-    const mainNav = document.querySelector('.main-nav');
+<!-- ================================================= WHY: before / after -->
+<section class="chap chap-alt" id="problem" data-n="VII" data-name="Why it matters" aria-labelledby="h-problem">
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">The Problem</p>
+      <h2 class="big" id="h-problem">Systems that act without a record erode trust. Systems that cannot explain themselves erode confidence.</h2>
+      <p class="chap-lead">Monitoring tells you what already happened. Governance has to answer a different question before the fact: what is this system permitted to do right now, and can it prove it stayed inside that boundary.</p>
+    </header>
+    <div class="ba reveal" role="img" aria-label="Governance answers before the action; monitoring reports after it.">
+      <div class="ba-side ba-gov tile-dark"><span class="mono-label">Before the fact</span><span class="ba-t">Governance</span><span class="ba-q">What is this system permitted to do right now?</span></div>
+      <div class="ba-act"><span>The action</span></div>
+      <div class="ba-side tile"><span class="mono-label">After</span><span class="ba-t">Monitoring</span><span class="ba-q">What already happened.</span></div>
+    </div>
+    <details class="more reveal">
+      <summary>Read the detail <span class="plus" aria-hidden="true"></span></summary>
+      <div class="more-body prose">
+        <p>Most AI tools force a choice between capability and accountability. Either a system acts freely &mdash; creating risk nobody can trace back to a decision &mdash; or it is locked down so tightly it cannot do real work. As AI takes on more of an organization&rsquo;s work, the owner still has to answer for outcomes they did not personally review.</p>
+      </div>
+    </details>
+  </div>
+</section>
 
-    if (navToggle && mainNav) {
-      const closeNav = () => {
-        mainNav.classList.remove('open');
-        navToggle.setAttribute('aria-expanded', 'false');
-      };
+<!-- ================================================= WHO + BOUNDARIES: statement, then a tile -->
+<section class="chap statement-chap" id="audience" data-n="VIII" data-name="Who it&rsquo;s for" aria-labelledby="h-audience">
+  <div class="wrap">
+    <header class="chap-head reveal">
+      <p class="kicker">Who It&rsquo;s For</p>
+      <h2 class="big" id="h-audience">Built for people who must account for every decision.</h2>
+    </header>
+    <p class="statement2 reveal">DominusOS is built for operators and owners who cannot afford black boxes &mdash; and cannot afford to slow down to avoid them. It assumes someone must always be able to explain what happened, why it happened, and who authorized it. Governance is not bolted on after the fact; it is the record and the permit an action needs before it happens.</p>
+    <article class="tile bound reveal" id="foundation" data-n="IX" data-name="Company boundaries" aria-labelledby="h-foundation">
+      <p class="kicker">Company Boundaries</p>
+      <h3 class="pt-t bound-t" id="h-foundation">Your company&rsquo;s knowledge and permissions stay your company&rsquo;s.</h3>
+      <div class="prose">
+        <p>Your company&rsquo;s knowledge, memory, operating instructions, and permissions remain specific to your company. Access follows the sources and authority you approve, and every session carries a verified company claim that is checked before it can act.</p>
+        <p>For people who must protect discretion, confidentiality, and fiduciary duty, this is not a feature. It is the reason to choose DominusOS.</p>
+        <p>Any future use of eligible derived information beyond providing your company&rsquo;s service requires separate, specific agreement. See Sabina&rsquo;s <a href="https://hiresabina.ai/trust">trust and company-data page</a> for how company information is handled.</p>
+      </div>
+    </article>
+  </div>
+</section>
 
-      navToggle.addEventListener('click', () => {
-        const isOpen = mainNav.classList.toggle('open');
-        navToggle.setAttribute('aria-expanded', String(isOpen));
-      });
+<!-- ================================================= CONTACT: back on the stage -->
+<section class="stage cta2" id="contact" data-n="X" data-name="Contact" aria-labelledby="h-contact">
+  <div class="wrap cta2-in reveal">
+    <img src="/assets/brand/dominusos-shield-96.png" alt="" width="56" height="56">
+    <p class="kicker">Contact</p>
+    <h2 class="big" id="h-contact">Talk to Dominus Foundry.</h2>
+    <p class="chap-lead">For the people accountable for delegated work: bring a specific action, source, and authority question. We will distinguish the public operating model from the coverage demonstrated by the current work.</p>
+    <div class="hero2-actions">
+      <a class="pill pill-solid" href="mailto:mark@dominusfoundry.com?subject=DominusOS%20%E2%80%94%20Governance%20Question">Start a Conversation <span class="arr" aria-hidden="true">&rarr;</span></a>
+      <a class="pill pill-ghost" href="https://hiresabina.ai/evaluate">See Sabina work</a>
+      <a class="pill pill-ghost num" href="tel:+15055201433">Call (505) 520-1433</a>
+      <a class="pill pill-ghost" href="#top">Return to the top</a>
+    </div>
+    <p class="hero2-note"><a href="https://hiresabina.ai/evaluate">Start with a short operational assessment of your business. <span class="arr" aria-hidden="true">&rarr;</span></a></p>
+  </div>
+</section>
+</main>
 
-      mainNav.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', closeNav);
-      });
-    }
 
-    const themeToggle = document.querySelector('.theme-toggle');
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        const root = document.documentElement;
-        const current = root.getAttribute('data-theme')
-          || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        const next = current === 'light' ? 'dark' : 'light';
-        root.setAttribute('data-theme', next);
-        try { localStorage.setItem('dos-theme', next); } catch (e) {}
-      });
-    }
-  </script>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="/assets/brand/dominusos-shield-96.png" alt="DominusOS crest" width="52" height="52">
+      <div>
+        <span class="brand-name">DominusOS</span>
+        <p>DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
+      </div>
+    </div>
+    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="num" href="tel:+15055201433">(505) 520-1433</a><br><a class="u" href="/privacy">Privacy notice</a></p>
+    <nav class="foot-pages" aria-label="Pages">
+      <a href="/" aria-current="page">DominusOS</a>
+      <a href="/whitepaper">White Paper (March 2026, historical)</a>
+      <a href="/privacy">Privacy notice</a>
+    </nav>
+    <div class="badge-slot">
+      <a href="https://locatefaith.com/business/sabina-by-dominus-foundry"><img src="https://locatefaith.com/brand/verified-badge-v2.svg" alt="Verified Christian Business on LocateFaith" width="240" height="107"></a>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site.js?v=20261014a"></script>
 </body>
 </html>
