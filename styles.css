@@ -958,3 +958,26 @@ details.more:last-child { border-bottom: 1px solid var(--hair); }
 .index { top: calc(env(safe-area-inset-top) + var(--nav-h) + var(--band-h) + var(--bar-off, 0px) + 8px); }
 html { scroll-padding-top: calc(var(--nav-h) + var(--band-h) + var(--bar-off, 0px) + 16px); }
 .anchor { display: block; height: 0; }
+
+/* review fix 2 (2026-10-14): under reduced transparency the nav is opaque in every
+   state, including clear-over-the-hero at the top. This must follow the later
+   ".nav::before { opacity: 0 }" rule. The stage scope keeps --ground dark over the
+   hero; once .solid it takes the page theme, so both themes stay opaque. */
+@media (prefers-reduced-transparency: reduce) {
+  .nav::before { opacity: 1; transition: none; background: var(--ground); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav.solid::before { opacity: 1; }
+}
+
+/* review fix 3 (2026-10-14): on phones the paper hero is compacted so its first two
+   actions sit on the first screen even with the consent bar showing. Copy and the
+   historical note are unchanged; only spacing and type size move. */
+@media (max-width: 560px) {
+  .stage.wp-hero { padding-top: calc(var(--nav-h) + var(--band-h) + env(safe-area-inset-top) + 20px); padding-bottom: 48px; }
+  .wp-hero .eyebrow { margin-bottom: 10px; font-size: 0.62rem; }
+  .stage.wp-hero .display { font-size: clamp(1.9rem, 8.4vw, 2.3rem); line-height: 1.04; margin-bottom: 12px; }
+  .wp-hero .subtitle { margin-bottom: 14px; font-size: 1.02rem; line-height: 1.35; }
+  .wp-hero .histnote { margin-bottom: 16px; padding: 10px 12px 10px 14px; font-size: 0.8rem; line-height: 1.45; }
+  .wp-hero .histnote strong { margin-bottom: 4px; }
+  .wp-hero .actions { gap: 8px; }
+  .wp-hero .actions .btn { min-height: 44px; font-size: 0.92rem; }
+}
