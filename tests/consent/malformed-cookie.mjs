@@ -21,7 +21,7 @@ import { chromium } from 'playwright';
 const ROOT = new URL('../../', import.meta.url);
 const GATE = readFileSync(process.env.CONSENT_GATE_FILE || new URL(process.env.CONSENT_GATE_PATH || 'consent/consent.js', ROOT), 'utf8');
 const OUT = process.env.CONSENT_OUT || '';
-const SITE = 'http://malformed-cookie.test';
+const SITE = 'https://malformed-cookie.test'; // https: the choice cookie is the Secure __Host- one (consent.js rule 5)
 const KEY = 'mc-consent';
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36';
 const BAD = ['%', '%E0%A4', '%E0%A4%A', '%C3%28', '%FF%FE', '1.accept.%'];
@@ -38,7 +38,7 @@ const page = () => `<!doctype html><html><head><meta charset="utf-8"><title>mc</
 
 async function fresh(browser, { cookies = [], local = null, gpc = false } = {}) {
   const context = await browser.newContext({ userAgent: UA, serviceWorkers: 'block' });
-  if (cookies.length) await context.addCookies(cookies.map(([name, value]) => ({ name, value, url: SITE })));
+  if (cookies.length) await context.addCookies(cookies.map(([name, value]) => (name === KEY ? { name: `__Host-${KEY}`, value, url: SITE, secure: true } : { name, value, url: SITE })));
   await context.addInitScript(({ site, local, gpc, key }) => {
     if (location.origin !== site) return;
     if (local) localStorage.setItem(key, local);

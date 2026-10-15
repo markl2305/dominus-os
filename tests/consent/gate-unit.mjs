@@ -28,7 +28,7 @@ const BASE = execFileSync('git', ['show', `${BASE_REF}:${process.env.CONSENT_GAT
 const VERCEL = readFileSync(new URL('./fixtures/vercel-insights-script.js', import.meta.url), 'utf8');
 const LI = Object.fromEntries(['insight.min.js', 'insight.beta.min.js', 'insight.old.min.js'].map((f) => [`https://snap.licdn.com/li.lms-analytics/${f}`, readFileSync(new URL(`./fixtures/linkedin-${f}`, import.meta.url), 'utf8')]));
 const OUT = process.env.CONSENT_OUT || '';
-const SITE = 'http://gate-unit.test';
+const SITE = 'https://gate-unit.test'; // https: the choice cookie is the Secure __Host- one (consent.js rule 5)
 const REF = 'http://gate-unit-ref.test';
 const KEY = 'unit-consent';
 const DAY = 864e5;
@@ -46,7 +46,7 @@ async function fresh(browser, { config = { vercel: true }, gate = GATE, seedStor
   const context = await browser.newContext({ userAgent: UA, serviceWorkers: 'block' });
   await context.addInitScript(() => { Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false, configurable: true }); });
   if (seedStorage) await context.addInitScript(([k, v]) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem(k, v); sessionStorage.setItem('seeded', '1'); } }, [KEY, seedStorage]);
-  if (seedCookie) await context.addCookies([{ name: KEY, value: seedCookie, url: SITE }]);
+  if (seedCookie) await context.addCookies([{ name: `__Host-${KEY}`, value: seedCookie, url: SITE, secure: true }]); // this host's own choice cookie
   const rec = { views: [], vendor: [], stray: [], navReferer: '', target: '/p', phase: 'before' };
   await context.route('**/*', async (route) => {
     const q = route.request(); const u = new URL(q.url());
@@ -176,7 +176,8 @@ async function main() {
       ['cookie 181d accept', { seedCookie: `1.accept.${Date.now() - 181 * DAY}` }, null],
       ['cookie 181d reject', { seedCookie: `1.reject.${Date.now() - 181 * DAY}` }, null],
       ['localStorage 181d accept + cookie 10d reject', { seedStorage: `1.accept.${Date.now() - 181 * DAY}`, seedCookie: `1.reject.${Date.now() - 10 * DAY}` }, 'reject'],
-      ['localStorage 10d reject + cookie 10d accept', { seedStorage: `1.reject.${Date.now() - 10 * DAY}`, seedCookie: `1.accept.${Date.now() - 10 * DAY}` }, 'reject'],
+      // One timestamp for both (two Date.now() calls could differ by a millisecond): a tie is a reject.
+      ...(() => { const t = Date.now() - 10 * DAY; return [['localStorage 10d reject + cookie 10d accept (same time)', { seedStorage: `1.reject.${t}`, seedCookie: `1.accept.${t}` }, 'reject']]; })(),
       ['localStorage time 2 days in the future', { seedStorage: `1.accept.${Date.now() + 2 * DAY}` }, null],
       ['localStorage no time', { seedStorage: '1.accept' }, null],
     ];
@@ -193,7 +194,7 @@ async function main() {
     { const { context, page: p } = await fresh(browser);
       await p.goto(`${SITE}/p`); await p.locator('[data-consent="reject"]').click();
       const local = await p.evaluate((k) => localStorage.getItem(k), KEY);
-      const cookie = (await context.cookies()).find((c) => c.name === KEY);
+      const cookie = (await context.cookies()).find((c) => c.name === `__Host-${KEY}`);
       const t = Number(String(local).split('.')[2]);
       ok(/^1\.reject\.\d+$/.test(local) && Math.abs(Date.now() - t) < 60000, `V2 save: local storage holds ${local}`);
       ok(cookie && Math.abs(cookie.expires - (Date.now() / 1000 + 180 * 86400)) < 120 && decodeURIComponent(cookie.value) === local, `V2 save: the cookie matches and expires in 180 days (${cookie && cookie.expires})`);

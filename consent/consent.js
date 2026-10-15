@@ -30,7 +30,15 @@
  *   4. No server-side injection: every analytics tag is created here, in the browser, after rule 1 passes.
  *      With JavaScript off nothing runs, so nothing is sent.
  *   5. A choice is remembered for 180 days in BOTH stores: the cookie expires then, and a local-storage copy older
- *      than that (by the time saved with it) is treated as no choice, so the visitor is asked again.
+ *      than that (by the time saved with it) is treated as no choice, so the visitor is asked again. The cookie is the
+ *      host-only "__Host-<storageKey>" (Secure, Path=/, no Domain), which no other subdomain can set (2026-10-14,
+ *      same class as review F2). The pre-2026-10-14 cookie named <storageKey> could carry a Domain attribute from a
+ *      sibling subdomain, and document.cookie cannot tell, so it is read for a reject only (fail closed): a legacy
+ *      "No" is honoured and migrated once into the host cookie; a legacy "Allow" is never trusted on its own (it is
+ *      carried over only when this origin's local storage holds the same visitor's Allow); otherwise the visitor is
+ *      asked again. Review R2-2: nothing legacy is removed before it is reconciled; the winner across every store and
+ *      every visible legacy value is written to the host cookie first, and the legacy cookies this page can address
+ *      (host-only and Domain-scoped, at / and this page's path) are removed only once the host cookie reads it back.
  *   6. The page a visitor came from never reaches a vendor with its query string or fragment. Before any tag
  *      loads, document.referrer is narrowed to origin + path for this page, so every loader (GA4, LinkedIn,
  *      Vercel, and Vercel's React <Analytics />, which reads document.referrer itself and outside beforeSend)
@@ -62,8 +70,31 @@
  *      the native API that absolute string. No .url property or second conversion of the caller's object is read,
  *      and the caller's object never reaches the native API. An input that cannot be resolved is refused quietly.
  *  11. Stored choices are strict (F7): exactly 1.<accept|reject>.<digits> within 180 days. Duplicate consent cookies
- *      grant acceptance only if every visible one parses and all agree; a valid local-storage choice still comes first.
+ *      grant acceptance only if every visible one parses and all agree.
+ *      The stores are reconciled by the time saved in each (review F3, 2026-10-14): local storage and the host cookie
+ *      (both this origin's alone) and a legacy cookie's reject; the newest explicit choice wins, a valid reject with
+ *      no newer accept wins, and equal times are a reject. If local storage cannot record a choice, its old value is
+ *      removed.
  *      Every visible consent_gpc cookie is read (F6): any exact "1" means GPC, whatever its order or siblings.
+ *  12. Region (RULED by Mark 2026-10-14, shared memory 77550c45). Ask-first applies to EU/EEA, UK and Swiss visitors;
+ *      everyone else gets analytics on by default. The site's edge middleware decides it from Vercel's
+ *      x-vercel-ip-country (consent-region.mjs, copied byte-for-byte with this file) and sets the host-only cookie
+ *      __Host-consent_region on every document response. Two conditions, both required (review F2, 2026-10-14):
+ *      the site's config says regionalDefault: true (a site that has not set up the edge step never sets it, so it is
+ *      ask-first everywhere whatever cookies exist), and the __Host- cookie is unambiguous and fresh (every visible one
+ *      exactly "default.<epoch seconds>" at most 10 s old and at most 2 s ahead of this clock at page load; review
+ *      round 3 and 4, so a document that did not get the edge refresh asks first once the value is older than that).
+ *      Read once per page load. A __Host- cookie can only be set by this exact host, so another subdomain cannot mint the grant;
+ *      the plain consent_region name is not read at all. Anything else (no flag, no cookie, a garbled or disagreeing
+ *      value) is ask-first, and everything above applies unchanged. In the default-on region, with no stored choice and no GPC,
+ *      state() is 'default': no bar, and allowed() answers as for a stored accept (rules 1, 6 and 7 otherwise hold:
+ *      private paths, referrer narrowing, the guard). A stored choice still wins (a "No" stays No) and GPC still wins
+ *      over everything. A reject that replaces 'default' is a withdrawal (rule 3), exactly as one replacing an accept.
+ *  13. "Your privacy choices". Any element marked data-consent-open (the footer link, on every page, every region)
+ *      re-opens the choice bar (allow / no analytics) on click, in the page flow at the end of <body> (never pinned over
+ *      content, review F5), scrolled into view with focus on it. It is an ordinary link to the privacy notice, so with
+ *      JavaScript off, before this file loads, or under GPC (nothing to choose: the signal is the choice) it simply
+ *      navigates there. SiteConsent.openChoices() does the same from code and returns false under GPC.
  * Bump VERSION to ask everyone again (an old stored choice is then treated as no choice).
  */
 (function (w, d) {
@@ -72,6 +103,7 @@
   var C = w.CONSENT_CONFIG || {};
   var VERSION = 1;
   var KEY = C.storageKey || 'site-consent';
+  var HOST_KEY = '__Host-' + KEY; // rule 5: the only cookie trusted for an Allow
   var MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
   // Rule 9 (fail safe): an unparseable privatePaths makes every path private, so nothing loads; it never breaks the gate.
   var PRIVATE;
@@ -109,50 +141,137 @@
   // field, no NUL, no sign, no space), saved within the last 180 days and not more than a day ahead of this clock.
   // Anything else is no choice. The saved format is unchanged; every value this file or v1 ever wrote matches it.
   var STORED = /^1\.(accept|reject)\.([0-9]{1,16})$/;
-  function parse(raw) {
+  // { c: 'accept'|'reject', t: <ms saved> } or null.
+  function parseFull(raw) {
     if (typeof raw !== 'string') return null;
     var m = STORED.exec(raw);
     if (!m || VERSION !== 1) return null;
-    var age = Date.now() - Number(m[2]);
+    var t = Number(m[2]);
+    var age = Date.now() - t;
     if (!(age <= MAX_AGE_MS && age >= -864e5)) return null;
-    return m[1];
+    return { c: m[1], t: t };
   }
+  function parse(raw) { var p = parseFull(raw); return p ? p.c : null; }
   // F7: the cookie supplies a choice only when it is unambiguous: every visible consent cookie parses and all agree.
   // Any malformed, expired or disagreeing sibling means the cookie grants no acceptance; if one of them is a valid
   // reject, reject is honoured (the more private reading), otherwise there is no choice.
-  function cookieChoice() {
-    var vals = readCookies(KEY), first = null, ambiguous = false, sawReject = false;
+  // Returns { c, t } (t = the newest time among the agreeing values; for an ambiguous set with a reject, the newest
+  // reject's time) or null.
+  function cookieChoice(name) {
+    var vals = readCookies(name), first = null, ambiguous = false, rejectT = -1, t = -1;
     if (!vals.length) return null;
     for (var i = 0; i < vals.length; i++) {
-      var c = parse(vals[i]);
-      if (c === 'reject') sawReject = true;
-      if (c === null) { ambiguous = true; continue; }
-      if (first === null) first = c; else if (c !== first) ambiguous = true;
+      var p = parseFull(vals[i]);
+      if (p && p.c === 'reject' && p.t > rejectT) rejectT = p.t;
+      if (p === null) { ambiguous = true; continue; }
+      if (p.t > t) t = p.t;
+      if (first === null) first = p.c; else if (p.c !== first) ambiguous = true;
     }
-    if (!ambiguous) return first;
-    return sawReject ? 'reject' : null;
+    if (!ambiguous) return { c: first, t: t };
+    return rejectT >= 0 ? { c: 'reject', t: rejectT } : null;
   }
-  // A valid local-storage choice keeps its precedence over the cookie.
-  function stored() {
-    var local = null;
-    try { local = parse(w.localStorage.getItem(KEY)); } catch (e) { /* storage blocked: fall back to the cookie */ }
-    return local || cookieChoice();
+  function localChoice() {
+    try { return parseFull(w.localStorage.getItem(KEY)); } catch (e) { return null; } // storage blocked: no local choice
+  }
+  // A legacy <storageKey> cookie counts only as a reject (rule 5): it may have been set by another subdomain.
+  function legacyReject() { var l = cookieChoice(KEY); return l && l.c === 'reject' ? l : null; }
+  // Rule 11 (review F3): the newest explicit choice wins across local storage, the host cookie and a legacy reject; a
+  // reject with no newer accept wins; a tie is a reject. Returns the winner { c, t } or null.
+  function winner() {
+    var all = [localChoice(), cookieChoice(HOST_KEY), legacyReject()], acc = null, rej = null;
+    for (var i = 0; i < all.length; i++) {
+      var c = all[i]; if (!c) continue;
+      if (c.c === 'reject') { if (!rej || c.t > rej.t) rej = c; } else if (!acc || c.t > acc.t) acc = c;
+    }
+    if (!rej) return acc;
+    return !acc || rej.t >= acc.t ? rej : acc;
+  }
+  function stored() { var win = winner(); return win ? win.c : null; }
+  function writeHostCookie(v) {
+    try {
+      d.cookie = HOST_KEY + '=' + encodeURIComponent(v) + '; Path=/; Max-Age=' + (60 * 60 * 24 * 180) + '; SameSite=Lax; Secure';
+    } catch (e) { /* cookies blocked: local storage still records it */ }
+  }
+  // Removes every legacy <storageKey> cookie this page can address: host-only or Domain-scoped (this host and each parent
+  // domain), at Path=/ and at each prefix of this page's path. Called only once the host cookie holds the winner.
+  function dropLegacy() {
+    try {
+      var sec = w.location.protocol === 'https:' ? '; Secure' : '';
+      var labels = String(w.location.hostname || '').split('.'), domains = [''];
+      for (var i = 0; i < labels.length - 1; i++) domains.push('; Domain=' + labels.slice(i).join('.'));
+      var segs = String(w.location.pathname || '/').split('/'), paths = ['/'];
+      for (var j = 2; j <= segs.length; j++) { var pth = segs.slice(0, j).join('/'); if (pth && pth !== '/') { paths.push(pth); paths.push(pth + '/'); } }
+      for (var a = 0; a < domains.length; a++) for (var b = 0; b < paths.length; b++) {
+        d.cookie = KEY + '=; Path=' + paths[b] + '; Max-Age=0' + domains[a] + sec;
+      }
+    } catch (e) { /* blocked */ }
+  }
+  // Rule 5 / review R2-2: a legacy cookie is never removed before it is reconciled. The winning choice across local
+  // storage, the host cookie and every visible legacy value (a legacy value counts only as a reject; host-only, Domain
+  // and path-scoped alike) is written to the host cookie first; the legacy cookies are removed only once the host cookie
+  // reads back exactly that winner (or when there is nothing to keep: no winner, so no legacy reject either).
+  function migrate() {
+    if (!readCookies(KEY).length) return;
+    var win = winner(), host = cookieChoice(HOST_KEY);
+    if (win && !(host && host.c === win.c && host.t === win.t)) writeHostCookie(VERSION + '.' + win.c + '.' + win.t);
+    host = cookieChoice(HOST_KEY);
+    if (!win || (host && host.c === win.c && host.t === win.t)) dropLegacy();
   }
   function save(choice) {
     var v = VERSION + '.' + choice + '.' + Date.now();
-    try { w.localStorage.setItem(KEY, v); } catch (e) { /* cookie below still records it */ }
-    try {
-      d.cookie = KEY + '=' + encodeURIComponent(v) + '; Path=/; Max-Age=' + (60 * 60 * 24 * 180) + '; SameSite=Lax' +
-        (w.location.protocol === 'https:' ? '; Secure' : '');
-    } catch (e) { /* cookies blocked: local storage above still records it */ }
+    try { w.localStorage.setItem(KEY, v); } catch (e) {
+      // F3: a reject must not leave an older accept behind in local storage; the cookie below records the choice.
+      try { w.localStorage.removeItem(KEY); } catch (e2) { /* storage blocked entirely: nothing stale to read either */ }
+    }
+    writeHostCookie(v); // rule 5: the host-only cookie; the legacy name is never written again
+    // An explicit choice made now is the newest; legacy values go only once the host cookie reads it back.
+    var h = cookieChoice(HOST_KEY);
+    if (h && h.c === choice && String(h.t) === v.split('.')[2]) dropLegacy();
   }
-  // The effective state: 'gpc' | 'accept' | 'reject' | null (no choice yet).
-  function state() { return gpcOn() ? 'gpc' : stored(); }
+  // Rule 12: the default-on region only on the site's flag and an unambiguous host-only signal. No flag, no cookie, or
+  // any visible __Host-consent_region that is not exactly "default" (malformed, "ask", a disagreeing duplicate), is
+  // ask-first.
+  // Review round 3 (2026-10-14), fail closed: the value is "default.<epoch seconds>", the time the edge decided it for a
+  // document, and it counts only if it is at most REGION_WINDOW_S old at this page load and no more than
+  // REGION_FUTURE_S ahead of this clock (Mark 2026-10-15, round-4 R4-2: a later timestamp fails closed).
+  // A document that skipped the edge refresh (any path, any reason) finds an older value and asks first. The decision
+  // is taken ONCE, when this file starts on a page load, and kept for the life of the page: the request guard asks
+  // allowed() on every vendor request, and a page open longer than the window must not stop itself. A client-side route
+  // change is not a page load and does not re-read it; the next full document load re-reads a value the edge has just
+  // refreshed. A device whose clock is off by more than that is asked first (the safe direction). The accepted residual
+  // (a recent value reused by a document that skipped the refresh, within the window) is recorded in
+  // CONSENT-GEO-1014.md §8 (Mark, 2026-10-15).
+  var REGION_WINDOW_S = 10, REGION_FUTURE_S = 2;
+  var REGION_DEFAULT = (function () {
+    if (C.regionalDefault !== true) return false; // F2: only a site that set up the edge step can be default-on
+    var r = readCookies('__Host-consent_region');
+    if (!r.length) return false;
+    var now = Date.now() / 1000;
+    for (var i = 0; i < r.length; i++) {
+      var m = /^default\.([0-9]{1,12})$/.exec(r[i] || '');
+      if (!m) return false;
+      var age = now - Number(m[1]);
+      if (!(age <= REGION_WINDOW_S && age >= -REGION_FUTURE_S)) return false;
+    }
+    return true;
+  })();
+  function regionDefault() { return REGION_DEFAULT; }
+  // The effective state: 'gpc' | 'accept' | 'reject' | 'default' (default-on region, no choice yet) | null (ask-first
+  // region, no choice yet).
+  function state() {
+    if (gpcOn()) return 'gpc';
+    var s = stored();
+    if (s) return s;
+    return regionDefault() ? 'default' : null;
+  }
+  // Analytics on by the visitor's choice or by region, ignoring GPC: what a reject would withdraw (rule 3).
+  function onWithoutGpc() { var s = stored(); return s === 'accept' || (s === null && regionDefault()); }
   var quiet = false; // set by a withdrawal; nothing runs again on this page
   function privatePage() { return PRIVATE.test(w.location.pathname); }
   // Rule 7, the one answer. Narrowing is attempted only once a run is otherwise allowed.
   function allowed() {
-    if (quiet || state() !== 'accept' || privatePage()) return false;
+    var s = state();
+    if (quiet || (s !== 'accept' && s !== 'default') || privatePage()) return false;
     narrowReferrer();
     return d.referrer === cleanReferrer();
   }
@@ -337,7 +456,7 @@
   })();
   // Only a withdrawal quiets the page: a first-choice reject leaves nothing running and nothing to stop.
   function quiesce() {
-    if (quiet || !(started || stored() === 'accept')) return;
+    if (quiet || !(started || onWithoutGpc())) return;
     quiet = true;
     if (C.ga4) w['ga-disable-' + C.ga4] = true;
   }
@@ -387,7 +506,7 @@
   function set(choice) {
     if (choice !== 'accept' && choice !== 'reject') return;
     // A withdrawal is any reject that replaces an accept, whether or not this file loaded anything on this page.
-    var withdrawing = choice === 'reject' && (started || stored() === 'accept');
+    var withdrawing = choice === 'reject' && (started || onWithoutGpc());
     if (choice === 'reject') quiesce(); else quiet = false; // an explicit Allow is a new choice on this page
     save(choice);
     removeBar();
@@ -400,10 +519,33 @@
     if (withdrawing) w.location.reload();
   }
 
-  var bar = null;
-  function removeBar() { if (bar && bar.parentNode) bar.parentNode.removeChild(bar); bar = null; }
+  var bar = null, opener = null;
+  function removeBar() {
+    if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+    bar = null;
+    var o = opener; opener = null;
+    try { if (o && o.focus && d.contains(o)) o.focus(); } catch (e) { /* focus is a courtesy */ }
+  }
+  // The bar shown on first visit in the ask-first region (unchanged), and only there.
   function showBar() {
     if (bar || state() !== null || !d.body) return;
+    renderBar(false);
+  }
+  // Rule 13: the same choice, re-opened on request, in any region and after any choice. Under GPC there is nothing to
+  // choose (the signal wins), so it returns false and the caller lets the link reach the privacy notice instead.
+  function openChoices(from) {
+    if (gpcOn() || !d.body) return false;
+    if (bar && !bar.hasAttribute('data-consent-reopened')) { focusBar(); return true; } // the first-visit bar is already up
+    removeBar();
+    opener = from || null;
+    renderBar(true);
+    focusBar();
+    return true;
+  }
+  // The re-opened choice has already been scrolled into view (renderBar); focusing must not start a second scroll that
+  // interrupts it (measured in WebKit: the bar stopped part-way below the fold on a short page).
+  function focusBar() { try { var b = bar && bar.querySelector('button'); if (b) b.focus(bar.hasAttribute('data-consent-reopened') ? { preventScroll: true } : undefined); } catch (e) { /* courtesy */ } }
+  function renderBar(reopen) {
     bar = d.createElement('div');
     bar.setAttribute('role', 'region');
     bar.setAttribute('aria-label', 'Analytics choice');
@@ -413,33 +555,64 @@
       'border-bottom:1px solid rgba(239,231,216,.25)';
     var p = d.createElement('p');
     p.style.cssText = 'margin:0;flex:1 1 22rem';
-    var text = C.barText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') +
-      ') only if you allow it. Nothing is sent until you choose.');
+    // Ask-first wording (unchanged) everywhere except a re-opened bar in the default-on region, where "only if you allow
+    // it" would be untrue; that one says analytics are on and can be turned off (optOutText overrides it per site).
+    var optOut = reopen && regionDefault();
+    var text = optOut
+      ? (C.optOutText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') +
+        ') to understand how this site is used. You can turn them off here at any time.'))
+      : (C.barText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') +
+        ') only if you allow it. Nothing is sent until you choose.'));
     p.appendChild(d.createTextNode(text + (/\s$/.test(text) ? '' : ' ')));
     var a = d.createElement('a');
     a.href = C.privacyHref || '/privacy'; a.textContent = 'Privacy notice'; a.style.color = 'inherit';
     p.appendChild(a);
     bar.appendChild(p);
+    var now = reopen ? state() : null;
     [['accept', C.acceptLabel || 'Allow analytics'], ['reject', C.rejectLabel || 'No analytics']].forEach(function (b) {
       var btn = d.createElement('button');
       btn.type = 'button'; btn.textContent = b[1]; btn.setAttribute('data-consent', b[0]);
       btn.style.cssText = 'font:inherit;min-height:44px;padding:.5rem 1rem;cursor:pointer;border:1px solid #efe7d8;' +
         'border-radius:2px;background:' + (b[0] === 'accept' ? '#efe7d8;color:#1d1a15' : 'transparent;color:#efe7d8');
+      if (reopen) btn.setAttribute('aria-pressed', String(b[0] === 'accept' ? (now === 'accept' || now === 'default') : now === 'reject'));
       btn.addEventListener('click', function () { set(b[0]); });
       bar.appendChild(btn);
     });
-    d.body.insertBefore(bar, d.body.firstChild);
+    if (!reopen) { d.body.insertBefore(bar, d.body.firstChild); return; }
+    // Re-opened from a footer link: in the page flow at the end of <body>, so it covers nothing (review F5: pinned to
+    // the viewport it sat over footer links), scrolled into view, with a Close that changes nothing, and Escape the same.
+    bar.setAttribute('data-consent-reopened', '');
+    bar.style.borderBottom = '0'; bar.style.borderTop = '1px solid rgba(239,231,216,.25)';
+    var close = d.createElement('button');
+    close.type = 'button'; close.textContent = C.closeLabel || 'Close'; close.setAttribute('data-consent-close', '');
+    close.style.cssText = 'font:inherit;min-height:44px;padding:.5rem 1rem;cursor:pointer;border:0;background:transparent;' +
+      'color:#efe7d8;text-decoration:underline';
+    close.addEventListener('click', removeBar);
+    bar.appendChild(close);
+    bar.addEventListener('keydown', function (e) { if (e.key === 'Escape') removeBar(); });
+    d.body.appendChild(bar);
+    try { bar.scrollIntoView({ block: 'center' }); } catch (e) { /* scrolling is a courtesy; focus follows */ }
   }
+  // Rule 13: a click on any data-consent-open element re-opens the choice instead of following the link (capture
+  // phase, so a client-side router never sees it). Under GPC, openChoices() is false and the link is followed.
+  w.addEventListener('click', function (e) {
+    var t = e.target, el = t && t.closest ? t.closest('[data-consent-open]') : null;
+    if (!el || e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (openChoices(el)) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
 
   w.SiteConsent = {
     version: VERSION,
-    state: state,           // 'gpc' | 'accept' | 'reject' | null
+    state: state,           // 'gpc' | 'accept' | 'reject' | 'default' (default-on region, no choice) | null
     allowed: allowed,       // THE answer to "may any vendor run on this page now" (rule 7)
     set: set,               // 'accept' | 'reject' (reject after accept = withdraw)
     subscribe: function (fn) { subs.push(fn); return function () { subs = subs.filter(function (f) { return f !== fn; }); }; },
-    mountBar: showBar,      // shows the bar if no choice has been made (no-op under GPC or after a choice)
+    mountBar: showBar,      // shows the bar if no choice has been made (no-op under GPC, after a choice, or default-on)
+    openChoices: function (from) { return openChoices(from); }, // rule 13; false under GPC
+    region: function () { return regionDefault() ? 'default' : 'ask'; },
   };
 
+  migrate();
   start();
   emit();
   if (C.autoBar === false) return;

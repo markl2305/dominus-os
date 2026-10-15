@@ -50,6 +50,10 @@ const LAYOUT_ROUTES = (process.env.CONSENT_LAYOUT_ROUTES || ALL_ROUTES.join(',')
 // This site has no form anywhere, so the upstream round-7 /evaluate form check does not apply and was removed
 // below rather than merely gated by SKIP (there is nothing it could meaningfully run against).
 const SKIP = new Set((process.env.CONSENT_SKIP || '').split(',').filter(Boolean));
+// Region (Mark 2026-10-14): every request of every state carries x-vercel-ip-country: CONSENT_COUNTRY, as Vercel's edge
+// would. Unset (the default) is the missing-header case. This whole matrix is the ASK-FIRST matrix: run it unset and
+// with an ask-first country (e.g. DE); tests/consent/geo-matrix.mjs covers the default-on region.
+const COUNTRY = process.env.CONSENT_COUNTRY || '';
 // Off-origin hosts a page may legitimately ask for that are NOT analytics. Still aborted and still in the ledger; just
 // not "unknown". dominusos's, measured 2026-10-12/13 (round 1 and sync-round source inventory, unchanged): the
 // LocateFaith verified badge (footer image) and the Google Fonts stylesheet, on every page. An empty value means none.
@@ -117,10 +121,17 @@ async function fresh(browser, opts = {}) {
   const { gpcSignal = false, gpcHeader = false, js = true, seedCookie = null, seedStorage = null, viewport = null } = opts;
   const context = await browser.newContext({
     javaScriptEnabled: js, userAgent: UA, serviceWorkers: 'block',
-    ...(viewport ? { viewport } : {}), extraHTTPHeaders: gpcHeader ? { 'Sec-GPC': '1' } : {},
+    ...(viewport ? { viewport } : {}), extraHTTPHeaders: { ...(gpcHeader ? { 'Sec-GPC': '1' } : {}), ...(COUNTRY ? { 'x-vercel-ip-country': COUNTRY } : {}) },
   });
   await context.addInitScript(() => { Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false, configurable: true }); });
-  if (seedCookie) await context.addCookies([{ name: KEY, value: seedCookie, url: ORIGIN }]);
+  // This host's own choice cookie is the Secure __Host-<storageKey> (consent.js rule 5). The cookie API cannot set a
+  // __Host- cookie for an http origin, so it is planted once per context through document.cookie on this origin
+  // (Chromium treats localhost as secure); a plain marker cookie keeps it to once.
+  if (seedCookie) await context.addInitScript(([origin, k, v]) => {
+    if (location.origin !== origin || /(^|; )seed_choice_done=1/.test(document.cookie)) return;
+    document.cookie = '__Host-' + k + '=' + v + '; Path=/; Max-Age=15552000; SameSite=Lax; Secure';
+    document.cookie = 'seed_choice_done=1; Path=/';
+  }, [ORIGIN, KEY, seedCookie]);
   if (seedStorage) await context.addInitScript(({ k, v }) => { try { if (!localStorage.getItem(k)) localStorage.setItem(k, v); } catch (e) { /* none */ } }, { k: KEY, v: seedStorage });
   if (gpcSignal) await context.addInitScript(() => { Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', { get: () => true, configurable: true }); });
   const m = MUTANTS[SELFTEST];
@@ -146,7 +157,11 @@ async function fresh(browser, opts = {}) {
       addEventListener('DOMContentLoaded', () => {
         const host = document.createElement('div'); host.id = 'consent-overlay-mutant';
         const root = host.attachShadow({ mode: 'open' });
-        root.innerHTML = '<button type="button" style="position:fixed;top:8px;left:8px;width:120px;height:32px;z-index:1">mutant</button>';
+        // Two placements, both under the bar where it can render: top-left for an in-flow bar at the top of the page
+        // (the gate's own default, sibling sites), and bottom-centre for a site that floats the strip at the viewport
+        // bottom (hiresabina's 2026-10-14 redesign; the top-left one alone was never under that strip).
+        root.innerHTML = '<button type="button" style="position:fixed;top:8px;left:8px;width:120px;height:32px;z-index:1">mutant</button>' +
+          '<button type="button" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:120px;height:32px;z-index:1">mutant</button>';
         document.documentElement.appendChild(host);
       });
     }, ORIGIN);
@@ -219,7 +234,8 @@ async function overlap(page) {
     for (const el of controls) {
       if (inBar(el)) continue;
       const r = el.getBoundingClientRect(); const st = getComputedStyle(el);
-      if (r.width < 1 || r.height < 1 || st.visibility === 'hidden' || st.display === 'none') continue;
+      // pointer-events: none (inherited, so a closed popover's links) cannot take a click, so nothing can block one.
+      if (r.width < 1 || r.height < 1 || st.visibility === 'hidden' || st.display === 'none' || st.pointerEvents === 'none') continue;
       const ix = Math.max(r.left, br.left), iy = Math.max(r.top, br.top), ax = Math.min(r.right, br.right), ay = Math.min(r.bottom, br.bottom);
       if (ax - ix < 1 || ay - iy < 1) continue;
       const pts = [[(ix + ax) / 2, (iy + ay) / 2], [r.left + r.width / 2, r.top + r.height / 2]];
@@ -236,7 +252,7 @@ async function overlap(page) {
 
 async function main() {
   const browser = await chromium.launch();
-  const matrix = { label: LABEL, origin: ORIGIN, selftest: SELFTEST || null, block_loaders: BLOCK_LOADERS, measured_at: new Date().toISOString(), pages: PAGES, states: {} };
+  const matrix = { label: LABEL, origin: ORIGIN, selftest: SELFTEST || null, country: COUNTRY || null, block_loaders: BLOCK_LOADERS, measured_at: new Date().toISOString(), pages: PAGES, states: {} };
   try {
     // 1 initial: no choice made
     { const { context, page, rec } = await fresh(browser);
@@ -472,21 +488,56 @@ async function main() {
     }
 
     // 10 the bar covers no control and is not itself covered, including controls inside open shadow roots
-    // (anvil 1c-R2 F1), at both widths, at the top and the bottom of every route.
-    for (const viewport of [{ width: 390, height: 844 }, { width: 1280, height: 720 }]) {
+    // (anvil 1c-R2 F1), at the top and the bottom of every route; five widths (review F5, 2026-10-14: 320, 390, 768,
+    // 1280, 1440). The page is measured once the bar has mounted (it mounts after hydration), not after a fixed wait.
+    const VIEWPORTS = (process.env.CONSENT_LAYOUT_VIEWPORTS || '320x844,390x844,768x900,1280x720,1440x900').split(',').map((v) => { const [width, height] = v.split('x').map(Number); return { width, height }; });
+    const settle = async (page, sel) => { await page.waitForSelector(sel, { timeout: 8000 }).catch(() => {}); await page.waitForTimeout(150); };
+    // Waits until the page has stopped scrolling (smooth scroll is on for in-page moves), at most 2 s.
+    const still = (page) => page.evaluate(() => new Promise((res) => { let y = scrollY, n = 0; const t = setInterval(() => { if (scrollY === y) { if (++n >= 3) { clearInterval(t); res(); } } else { y = scrollY; n = 0; } }, 60); setTimeout(() => { clearInterval(t); res(); }, 2000); }));
+    for (const viewport of VIEWPORTS) {
       const name = `layout_${viewport.width}x${viewport.height}`;
       const { context, page, rec } = await fresh(browser, { viewport });
       const rows = {};
       for (const p of LAYOUT_ROUTES) {
-        await visit(page, p);
+        await page.goto(ORIGIN + p, { waitUntil: 'load' }); await settle(page, '[data-consent-bar]');
         for (const where of ['top', 'bottom']) {
-          await page.evaluate((w) => window.scrollTo(0, w === 'top' ? 0 : document.documentElement.scrollHeight), where);
-          await page.waitForTimeout(400);
+          await page.evaluate((w) => window.scrollTo({ top: w === 'top' ? 0 : document.documentElement.scrollHeight, behavior: 'instant' }), where);
+          await still(page);
           const o = await overlap(page);
           rows[`${p} ${where}`] = o;
           if (!o.bar) { ok(false, `${name} ${p} ${where}: the bar is rendered`); continue; }
           ok(o.covered.length === 0 && o.obscured.length === 0 && o.overflowX <= 0, `${name} ${p} ${where}: bar covers no control and is not covered (${o.controls} controls, ${o.shadowRoots} shadow roots; covered ${o.covered.join(', ') || 'none'}; obscured ${o.obscured.join(', ') || 'none'}; overflowX ${o.overflowX})`);
         }
+      }
+      finish(matrix, name, rec, { viewport, rows });
+      await context.close();
+    }
+
+    // 11 the choice re-opened from "Your privacy choices" (review F5): on every route and width, with a stored choice so
+    // no first-visit bar is up. Measured where the page leaves the visitor after the click, and at the bottom of the
+    // page; then Close removes it and leaves no overflow. Hit tests, as in 10.
+    for (const viewport of VIEWPORTS) {
+      const name = `reopen_${viewport.width}x${viewport.height}`;
+      const { context, page, rec } = await fresh(browser, { viewport, seedCookie: `1.reject.${Date.now()}` });
+      const rows = {};
+      for (const p of LAYOUT_ROUTES) {
+        await page.goto(ORIGIN + p, { waitUntil: 'load' }); await page.waitForTimeout(300);
+        const link = page.locator('footer [data-consent-open]').first();
+        if (!(await link.count())) { ok(false, `${name} ${p}: a "Your privacy choices" link exists`); continue; }
+        await link.scrollIntoViewIfNeeded(); await link.click();
+        await settle(page, '[data-consent-reopened]'); await still(page); // the in-page scroll may be smooth
+        for (const where of ['open', 'bottom']) {
+          if (where === 'bottom') { await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await still(page); }
+          const o = await overlap(page);
+          rows[`${p} ${where}`] = o;
+          if (!o.bar) { ok(false, `${name} ${p} ${where}: the re-opened choice is rendered`); continue; }
+          const inView = o.bar.top >= 0 && o.bar.bottom <= viewport.height + 1;
+          ok(o.covered.length === 0 && o.obscured.length === 0 && o.overflowX <= 0 && (where !== 'open' || inView), `${name} ${p} ${where}: re-opened choice${where === 'open' ? ' in view,' : ''} covers no control and is not covered (${o.controls} controls; covered ${o.covered.join(', ') || 'none'}; obscured ${o.obscured.join(', ') || 'none'}; overflowX ${o.overflowX}; bar ${Math.round(o.bar.top)}-${Math.round(o.bar.bottom)})`);
+        }
+        await page.locator('[data-consent-reopened] [data-consent-close]').click(); await page.waitForTimeout(300);
+        const after = await page.evaluate(() => ({ bars: document.querySelectorAll('[data-consent-bar]').length, overflowX: document.documentElement.scrollWidth - innerWidth, pad: getComputedStyle(document.body).paddingBottom }));
+        rows[`${p} closed`] = after;
+        ok(after.bars === 0 && after.overflowX <= 0, `${name} ${p}: Close removes it, no overflow left (${JSON.stringify(after)})`);
       }
       finish(matrix, name, rec, { viewport, rows });
       await context.close();

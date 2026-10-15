@@ -34,14 +34,17 @@
 })();
 </script>
   <link rel="stylesheet" href="/styles.css?v=20261015n">
-<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
-     Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
-     Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
-     byte-for-byte copy of hiresabina.ai's gate (commit 90cd8fd) and creates every analytics tag itself, in the
-     browser, after that check; no tag is written into this HTML, so with JavaScript off nothing is sent.
+<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12; by region, Mark 2026-10-14/15, shared memory 77550c45).
+     In the EU/EEA, UK, Switzerland (+11 related territories) and when the country is unknown, Google Analytics 4
+     (G-Z0BTF1J29X) and Vercel Web Analytics load ONLY after a visitor presses "Allow analytics". Elsewhere they are
+     on by default (regionalDefault: true, which needs the __Host-consent_region cookie that /middleware.js sets on
+     every document). "No analytics", withdrawing on /privacy or via "Your privacy choices", and Global Privacy
+     Control always mean nothing loads. /consent/consent.js is a byte-for-byte copy of hiresabina.ai's gate (main
+     f8ee005, sha256 8118b74e...) and creates every analytics tag itself, in the browser, after that check; no tag
+     is written into this HTML, so with JavaScript off nothing is sent.
      privatePaths keeps the old Vercel beforeSend filter's list. The gate strips query string and fragment from
      both GA4 and Vercel events. Static site, no build step: the GA id is hardcoded here, as before. -->
-<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
+<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)', regionalDefault: true };</script>
 <script src="/consent/consent.js"></script>
 </head>
 <body class="page-index">
@@ -434,7 +437,7 @@
         <p>DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
       </div>
     </div>
-    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="num" href="tel:+15055201433">(505) 520-1433</a><br><a class="u" href="/privacy">Privacy notice</a></p>
+    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="num" href="tel:+15055201433">(505) 520-1433</a><br><a class="u" href="/privacy">Privacy notice</a><br><a class="u" href="/privacy#choice" data-consent-open>Your privacy choices</a></p>
     <nav class="foot-pages" aria-label="Pages">
       <a href="/" aria-current="page">DominusOS</a>
       <a href="/whitepaper">White Paper (March 2026, historical)</a>
@@ -448,6 +451,6 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=20261014a"></script>
+<script src="/assets/site.js?v=20261015a"></script>
 </body>
 </html>

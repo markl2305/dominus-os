@@ -100,8 +100,10 @@
     }
     // The live gate draws its bar as the first child of <body>, in flow. While
     // any of it is on screen the fixed nav sits just below it, never over it.
+    // The choice re-opened from "Your privacy choices" sits at the END of <body>
+    // (data-consent-reopened) and must not move the nav.
     function barOffset() {
-      var bar = document.querySelector('body > [data-consent-bar]');
+      var bar = document.querySelector('body > [data-consent-bar]:not([data-consent-reopened])');
       var off = bar ? Math.max(0, Math.round(bar.getBoundingClientRect().bottom)) : 0;
       root.style.setProperty('--bar-off', off + 'px');
     }

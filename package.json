@@ -1,0 +1,9 @@
+{
+  "name": "dominus-os-site",
+  "private": true,
+  "type": "module",
+  "description": "dominusos.ai static site. The only dependency is for middleware.js (Vercel Routing Middleware: consent region and GPC cookies).",
+  "dependencies": {
+    "@vercel/functions": "3.9.9"
+  }
+}

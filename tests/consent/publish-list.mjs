@@ -28,6 +28,7 @@ const dropped = files.filter((f) => gitOnly.ignores(f));
 const cliPublished = files.filter((f) => !cli.ignores(f));
 const localPaths = published.filter((f) => { try { return readFileSync(`${root}/${f}`, 'latin1').includes('/Users/'); } catch (e) { return false; } });
 const needed = ['index.html', 'whitepaper.html', 'privacy.html', 'consent/consent.js', 'styles.css', 'vercel.json', 'sitemap.xml', 'robots.txt',
+  'middleware.js', 'consent-region.mjs', 'package.json', 'package-lock.json', // the edge step (Vercel Routing Middleware) and its one dependency
   'scripts/check-formal-verification-receipt.mjs', 'docs/Dominus_OS_White_Paper_v1_1_Addendum.md', 'docs/formal-verification-receipt.json'];
 const missing = needed.filter((f) => !published.includes(f));
 const tests = published.filter((f) => f.startsWith('tests/'));

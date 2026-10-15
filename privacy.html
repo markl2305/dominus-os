@@ -32,14 +32,17 @@
 })();
 </script>
   <link rel="stylesheet" href="/styles.css?v=20261015n">
-<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12). Google Analytics 4 (G-Z0BTF1J29X) and Vercel
-     Web Analytics load ONLY after a visitor presses "Allow analytics"; "No analytics", withdrawing on /privacy and
-     Global Privacy Control (navigator.globalPrivacyControl) all mean nothing loads. /consent/consent.js is a
-     byte-for-byte copy of hiresabina.ai's gate (commit 90cd8fd) and creates every analytics tag itself, in the
-     browser, after that check; no tag is written into this HTML, so with JavaScript off nothing is sent.
+<!-- Analytics consent gate (compliance P1-1h, Mark 2026-10-12; by region, Mark 2026-10-14/15, shared memory 77550c45).
+     In the EU/EEA, UK, Switzerland (+11 related territories) and when the country is unknown, Google Analytics 4
+     (G-Z0BTF1J29X) and Vercel Web Analytics load ONLY after a visitor presses "Allow analytics". Elsewhere they are
+     on by default (regionalDefault: true, which needs the __Host-consent_region cookie that /middleware.js sets on
+     every document). "No analytics", withdrawing on /privacy or via "Your privacy choices", and Global Privacy
+     Control always mean nothing loads. /consent/consent.js is a byte-for-byte copy of hiresabina.ai's gate (main
+     f8ee005, sha256 8118b74e...) and creates every analytics tag itself, in the browser, after that check; no tag
+     is written into this HTML, so with JavaScript off nothing is sent.
      privatePaths keeps the old Vercel beforeSend filter's list. The gate strips query string and fragment from
      both GA4 and Vercel events. Static site, no build step: the GA id is hardcoded here, as before. -->
-<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)' };</script>
+<script>window.CONSENT_CONFIG = { storageKey: 'dos-consent', privacyHref: '/privacy', ga4: 'G-Z0BTF1J29X', linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)', regionalDefault: true };</script>
 <script src="/consent/consent.js"></script>
 </head>
 <body class="page-privacy">
@@ -98,7 +101,7 @@
   <div class="wrap">
     <p class="eyebrow">dominusos.ai</p>
     <h1 class="display" id="p-title">Privacy notice</h1>
-    <p class="doc-meta">Published by Dominus Foundry LLC &mdash; Last updated October 13, 2026</p>
+    <p class="doc-meta">Published by Dominus Foundry LLC &mdash; Last updated October 15, 2026</p>
   </div>
 </section>
 
@@ -107,7 +110,7 @@
     <nav class="toc" aria-label="Sections of this notice">
       <ol>
         <li><a href="#covers">What this notice covers</a></li>
-        <li><a href="#analytics">Analytics: only if you allow it</a></li>
+        <li><a href="#analytics">Analytics</a></li>
         <li><a href="#choice">Your analytics choice</a></li>
         <li><a href="#gpc">Global Privacy Control</a></li>
         <li><a href="#stored">What is stored in your browser</a></li>
@@ -122,11 +125,11 @@
       <h2 class="h3" id="covers" data-name="What this notice covers">What this notice covers</h2>
       <p>This notice covers the dominusos.ai website: this page, the home page and the white paper page. Dominus Foundry LLC publishes the site and is responsible for it. The site has no forms and no accounts. You can read every page without giving us anything.</p>
 
-      <h2 class="h3" id="analytics" data-name="Analytics">Analytics: only if you allow it</h2>
-      <p>The site can use two analytics services, and only after you choose &ldquo;Allow analytics&rdquo;. Nothing is sent until you choose. If you choose &ldquo;No analytics&rdquo;, or make no choice, neither service is loaded.</p>
+      <h2 class="h3" id="analytics" data-name="Analytics">Analytics</h2>
+      <p>The site can use two analytics services. In the European Union, the wider EEA, the United Kingdom and Switzerland, only after you choose &ldquo;Allow analytics&rdquo;: nothing is sent until you choose, and if you choose &ldquo;No analytics&rdquo;, or make no choice, neither service is loaded. Elsewhere they are on unless you turn them off with Your privacy choices or your browser sends a Global Privacy Control signal.</p>
       <ul>
-        <li><strong>Google Analytics</strong> (Google LLC). If you allow it, your browser loads Google&rsquo;s script and sends page views. These include the page address without any query string or fragment, the page title, and the previous page&rsquo;s address without its query string. Google sets the cookies <code>_ga</code> and <code>_ga_Z0BTF1J29X</code> to recognise a returning browser. Google also receives your IP address, as any website you contact does.</li>
-        <li><strong>Vercel Web Analytics</strong>. If you allow it, your browser sends page views to an address on this site. They also carry no query string or fragment. It sets no cookie.</li>
+        <li><strong>Google Analytics</strong> (Google LLC). When analytics are on, your browser loads Google&rsquo;s script and sends page views. These include the page address without any query string or fragment, the page title, and the previous page&rsquo;s address without its query string. Google sets the cookies <code>_ga</code> and <code>_ga_Z0BTF1J29X</code> to recognise a returning browser. Google also receives your IP address, as any website you contact does.</li>
+        <li><strong>Vercel Web Analytics</strong>. When analytics are on, your browser sends page views to an address on this site. They also carry no query string or fragment. It sets no cookie.</li>
       </ul>
       <p>We do not use advertising tags, we do not sell information about visitors, and we do not share it for cross-context behavioural advertising.</p>
 
@@ -138,19 +141,21 @@
           <button type="button" class="btn btn-ghost" data-consent-allow hidden>Allow analytics</button>
         </div>
       </div>
-      <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, in two places: a cookie and a copy in browser storage. Both are honored for 180 days from when you chose, and the site reads the storage copy first. After 180 days, your choice expires and is treated as if you had not chosen: analytics stays off and you are asked again. Because the storage copy stays valid for those same 180 days, clearing your cookies alone does not bring the question back before then.</p>
+      <p>You can change your mind here at any time. Choosing &ldquo;No analytics&rdquo; after allowing it stops both services. It also clears the Google Analytics cookies this site can clear, and reloads the page so no script that had already loaded keeps running. Your choice is kept in this browser only, in two places: a cookie and a copy in browser storage. Both are honored for 180 days from when you chose, and if they disagree the more recent choice is used (a &ldquo;No&rdquo; wins a tie). After 180 days, your choice expires and is treated as if you had not chosen: in the EU, EEA, UK and Switzerland analytics stays off and you are asked again; elsewhere analytics are on again unless you turn them off. Because the storage copy stays valid for those same 180 days, clearing your cookies alone does not bring the question back before then.</p>
+      <p>Use Your privacy choices at the foot of any page to allow analytics or turn them off at any time.</p>
 
       <h2 class="h3" id="gpc" data-name="Global Privacy Control">Global Privacy Control</h2>
-      <p>If your browser sends a Global Privacy Control signal, we treat it as &ldquo;No analytics&rdquo;. You are not asked, and the signal overrides an earlier &ldquo;Allow&rdquo; for as long as it is on.</p>
+      <p>If your browser sends a Global Privacy Control signal, we treat it as &ldquo;No analytics&rdquo;. You are not asked, and the signal overrides an earlier &ldquo;Allow&rdquo; for as long as it is on. Outside the EU, EEA, UK and Switzerland, where analytics are otherwise on, the signal turns them off in the same way.</p>
       <p>The site reads the signal the way your browser offers it to the page (<code>navigator.globalPrivacyControl</code>). That part is tested.</p>
       <p>The site is also set up to answer the <code>Sec-GPC</code> request header: when a page request carries it, our hosting is configured to set a short-lived <code>consent_gpc</code> cookie that the page treats the same way. That part has not yet been confirmed on the live site. If your browser sends only the header and not the page signal, choose &ldquo;No analytics&rdquo; above to be sure.</p>
 
       <h2 class="h3" id="stored" data-name="What is stored">What is stored in your browser</h2>
       <ul>
-        <li><code>dos-consent</code>: your analytics choice. It is always set once you choose, because without it we could not respect the choice. Both the cookie and the browser-storage copy are honored for 180 days from when you chose, then the choice expires and you are asked again.</li>
+        <li><code>dos-consent</code> (browser storage) and <code>__Host-dos-consent</code> (cookie): your analytics choice. It is always set once you choose, because without it we could not respect the choice. Both the cookie and the browser-storage copy are honored for 180 days from when you chose, then the choice expires and is treated as if you had not chosen (see above).</li>
         <li><code>consent_gpc</code> (cookie, one day): meant to be set when your browser sends a Global Privacy Control header and cleared when it stops (not yet confirmed on the live site, see above). It means &ldquo;No analytics&rdquo;.</li>
+        <li><code>__Host-consent_region</code> (cookie, one day): set by our hosting on each page you open. It records only whether your connection appears to come from the EU, EEA, UK or Switzerland, and when that was decided, so the page knows whether to ask before analytics. If it cannot tell where you are, you are asked first. It is not analytics.</li>
         <li><code>dos-theme</code> (browser storage): light or dark theme, if you switch it.</li>
-        <li><code>_ga</code> and <code>_ga_Z0BTF1J29X</code>: only if you allow analytics (see above). Google sets them to last up to two years unless you clear them or choose &ldquo;No analytics&rdquo;.</li>
+        <li><code>_ga</code> and <code>_ga_Z0BTF1J29X</code>: only when analytics are on (see above). Google sets them to last up to two years unless you clear them or choose &ldquo;No analytics&rdquo;.</li>
       </ul>
 
       <h2 class="h3" id="other" data-name="Other services">Other services your browser contacts</h2>
@@ -186,7 +191,7 @@
         <p>DominusOS is the authority and execution-control layer Dominus Foundry built for Sabina.</p>
       </div>
     </div>
-    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="u" href="/privacy">Privacy notice</a></p>
+    <p class="foot-note">&copy; 2026 Dominus Foundry. All rights reserved.<br><a class="u" href="/privacy">Privacy notice</a><br><a class="u" href="/privacy#choice" data-consent-open>Your privacy choices</a></p>
     <nav class="foot-pages" aria-label="Pages">
       <a href="/">DominusOS</a>
       <a href="/#problem">The Problem</a>
@@ -215,7 +220,9 @@
         gpc: 'Your browser is sending a Global Privacy Control signal, so analytics are off and you are not asked. Turn the signal off in your browser to choose here.',
         accept: 'You have allowed analytics in this browser.',
         reject: 'You have chosen no analytics in this browser.',
-        none: 'You have not chosen yet, so no analytics are loaded.'
+        none: 'You have not chosen yet, so no analytics are loaded.',
+        // Outside the EU/EEA, UK and Switzerland, before any choice: analytics run unless turned off (consent.js rule 12).
+        default: 'Analytics are on for this browser because you have not turned them off. Choose No analytics to stop them.'
       };
       function render(s) {
         status.textContent = TEXT[s || 'none'] || TEXT.none;
@@ -233,6 +240,6 @@
       ready();
     })();
   </script>
-<script src="/assets/site.js?v=20261014a"></script>
+<script src="/assets/site.js?v=20261015a"></script>
 </body>
 </html>

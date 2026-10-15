@@ -33,7 +33,7 @@ const GATE_FILE = process.env.CONSENT_GATE_FILE || '';
 const GATE = readFileSync(GATE_FILE || new URL(process.env.CONSENT_GATE_PATH || 'consent/consent.js', ROOT), 'utf8');
 const V1 = execFileSync('git', ['show', `${process.env.CONSENT_V1_REF || '7639942d9f54298e668a3321d6a564b6e778b0ca'}:${process.env.CONSENT_GATE_PATH || 'consent/consent.js'}`], { cwd: ROOT, encoding: 'utf8' });
 const OUT = process.env.CONSENT_OUT || '';
-const SITE = 'http://inputs.test';
+const SITE = 'https://inputs.test'; // https: the choice cookie is the Secure __Host- one (consent.js rule 5)
 const REF = 'http://inputs-ref.test';
 const KEY = 'ic-consent';
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36';
@@ -50,7 +50,8 @@ ${gated ? `<script>window.CONSENT_CONFIG=${JSON.stringify({ storageKey: KEY, pri
 
 async function fresh(browser, gate, { cookies = [], local = null, gpc = false, lock = false, path = '/p' } = {}) {
   const context = await browser.newContext({ userAgent: UA, serviceWorkers: 'block' });
-  if (cookies.length) await context.addCookies(cookies.map(([name, value, p]) => ({ name, value, domain: new URL(SITE).hostname, path: p || '/' })));
+  // A Path=/ choice cookie is this host's own (__Host-); a path-scoped one can only be the legacy name.
+  if (cookies.length) await context.addCookies(cookies.map(([name, value, p]) => ({ name: name === KEY && !p ? `__Host-${KEY}` : name, value, domain: new URL(SITE).hostname, path: p || '/', secure: name === KEY && !p })));
   await context.addInitScript(({ site, local, gpc, lock, key }) => {
     if (location.origin !== site) return;
     if (local !== null && !sessionStorage.getItem('seeded')) { localStorage.setItem(key, local); sessionStorage.setItem('seeded', '1'); }
@@ -221,7 +222,9 @@ async function cookieRules(browser, gate, label) {
     ['dup %-then-accept', [[KEY, '%', '/p'], [KEY, A, '/']], null, null],
     ['dup accept-then-reject', [[KEY, A, '/p'], [KEY, R, '/']], null, 'reject'],
     ['dup reject-then-accept', [[KEY, R, '/p'], [KEY, A, '/']], null, 'reject'],
-    ['dup accept-then-accept', [[KEY, A, '/p'], [KEY, `1.accept.${now - 1000}`, '/']], null, 'accept'],
+    // Legacy-name cookies (path-scoped duplicates cannot be the __Host- one): an Allow there is never trusted, since it may
+    // come from another subdomain (consent.js rule 5, 2026-10-14). Was 'accept' before the host-only choice cookie.
+    ['dup accept-then-accept (legacy name: not trusted)', [[KEY, A, '/p'], [KEY, `1.accept.${now - 1000}`, '/']], null, null],
     ['dup accept-then-extra-field', [[KEY, A, '/p'], [KEY, `${A}.extra`, '/']], null, null],
     ['extra field', [[KEY, `${A}.extra`]], null, null],
     ['encoded NUL', [[KEY, `${A}%00`]], null, null],
