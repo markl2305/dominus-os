@@ -56,8 +56,8 @@ const SKIP = new Set((process.env.CONSENT_SKIP || '').split(',').filter(Boolean)
 const COUNTRY = process.env.CONSENT_COUNTRY || '';
 // Off-origin hosts a page may legitimately ask for that are NOT analytics. Still aborted and still in the ledger; just
 // not "unknown". dominusos's, measured 2026-10-12/13 (round 1 and sync-round source inventory, unchanged): the
-// LocateFaith verified badge (footer image) and the Google Fonts stylesheet, on every page. An empty value means none.
-const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'locatefaith.com,fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
+// Google Fonts stylesheet and font files, on every page. An empty value means none.
+const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
 // SENTINEL / ANALYTICS_KEYS (upstream's form-leak check inputs): unused here, this site has no form (section 7, removed).
 // Vercel's loader stays silent in an automated browser (navigator.webdriver or "Headless" in the UA); every context
 // presents as an ordinary Chrome so its real collection request is produced and inspected.

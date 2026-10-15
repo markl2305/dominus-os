@@ -48,7 +48,7 @@ const privateFixtureHtml = () => `<!doctype html><html lang="en"><head><meta cha
 <script>window.CONSENT_CONFIG=${JSON.stringify({ storageKey: KEY, privacyHref: '/privacy', ga4: GA_ID, linkedin: null, vercel: true, privatePaths: '^/(api|chat|login|graph|command|transcribe)(/|$)', regionalDefault: true })};</script>
 <script src="/consent/consent.js"></script></head><body><main><h1>Consent gate fixture</h1></main></body></html>`;
 const CHOICES_HREF = process.env.CONSENT_CHOICES_HREF || '/privacy#choice';
-const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'locatefaith.com,fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
+const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36';
 const GA_HOST = /(^|\.)(google-analytics\.com|analytics\.google\.com)$/;
 const fixture = (f) => readFileSync(new URL(`./fixtures/${f}`, import.meta.url), 'utf8');

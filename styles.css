@@ -507,15 +507,17 @@ details.more:last-child { border-bottom: 1px solid var(--hair); }
 .badge-slot { grid-column: 1 / -1; display: flex; justify-content: center; padding-top: 28px; border-top: 1px solid var(--hair); }
 .badge-slot a { display: inline-block; max-width: 100%; }
 .badge-slot img { display: block; max-width: 100%; height: auto; }
-/* NVIDIA Inception badge: official artwork, unmodified; full colour on light and dark per NVIDIA.
-   93x40: the framed box renders ~30px, NVIDIA's minimum, and stays smaller than the 52px crest. */
+/* NVIDIA Inception badge: the only footer badge, centred. Official artwork, unmodified (CSS size only); full colour
+   on light and dark per NVIDIA. The SVG carries its own clear space around the frame (25 of 216 units each side).
+   104px tall at desktop (frame ~80px); 72px on the narrowest phones (frame ~55px). NVIDIA's minimum is a ~30px frame,
+   i.e. a 40px-tall image; the clamp never goes below 72px. */
 .badge-slot { align-items: center; flex-wrap: wrap; gap: 20px 36px; }
 .badge-slot .nv-badge { border-radius: 2px; transition: opacity 150ms ease; }
-.badge-slot .nv-badge img { width:93px; height:40px; }
+.badge-slot .nv-badge img { width: auto; height: clamp(72px, 22vw, 104px); max-width: 100%; }
 .badge-slot .nv-badge:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 4px; }
 @media (hover: hover) and (pointer: fine) { .badge-slot .nv-badge:hover { opacity: 0.86; } }
 @media (prefers-reduced-motion: reduce) { .badge-slot .nv-badge { transition: none; } }
-.nv-legal { grid-column: 1 / -1; margin: 0; text-align: center; font: 400 0.6rem/1.7 var(--mono); letter-spacing: 0.06em; color: var(--ink-3); text-wrap: balance; }
+.nv-legal { grid-column: 1 / -1; margin: 0; text-align: center; font: 400 0.7rem/1.7 var(--mono); letter-spacing: 0.06em; color: var(--ink-3); text-wrap: balance; }
 @media (max-width: 640px) {
   .foot-grid { grid-template-columns: minmax(0, 1fr); }
   .foot-brand { align-items: flex-start; }

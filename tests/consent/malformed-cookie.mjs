@@ -9,7 +9,7 @@
  *     malformed tail) in the configured consent cookie AND in consent_gpc, with no valid choice anywhere: the gate
  *     loads without a page error, state() is null, allowed() is false; listed-family vendor requests stay refused;
  *     the site's own chat POST (fetch), assessment POST (XHR), a first-party beacon and image, and off-origin
- *     font / badge requests all work through fetch, sendBeacon, XHR and image .src with no exception.
+ *     font / ordinary third-party requests all work through fetch, sendBeacon, XHR and image .src with no exception.
  * M2  Precedence and GPC are preserved: a valid local-storage Accept still wins over a malformed cookie; a valid
  *     cookie Accept still counts; consent_gpc=1 (header-derived, as the server sets it) and the navigator signal
  *     still mean GPC even with a malformed consent cookie; a percent-encoded valid value still decodes.
@@ -27,7 +27,7 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 const BAD = ['%', '%E0%A4', '%E0%A4%A', '%C3%28', '%FF%FE', '1.accept.%'];
 const TRANSPORTS = ['fetch', 'beacon', 'xhr', 'image'];
 const VENDOR = [['ga', 'https://region1.google-analytics.com/g/collect'], ['aud', 'https://www.google.de/ads/ga-audiences'], ['li', 'https://px.ads.linkedin.com/collect']];
-const OTHER = [['fonts', 'https://fonts.googleapis.com/css2'], ['badge', 'https://locatefaith.com/brand/badge.svg']];
+const OTHER = [['fonts', 'https://fonts.googleapis.com/css2'], ['third-party', 'https://ordinary-host.test/brand/image.svg']];
 
 let failures = 0; const results = [];
 function ok(cond, label, detail) { results.push({ ok: !!cond, label, detail }); if (cond) console.log(`  ok   ${label}`); else { failures += 1; console.error(`  FAIL ${label}${detail !== undefined ? ' — ' + JSON.stringify(detail).slice(0, 500) : ''}`); } }
@@ -99,7 +99,7 @@ async function main() {
         ok(threw.length === 0, `${name}: no transport throws (${Object.keys(fp).length + Object.keys(vend).length} calls)`, threw);
         const missing = [...FIRST_PARTY, ...OTHER].flatMap(([id]) => TRANSPORTS.filter((t) => !reached(seen, name, id).some((s) => s.t === t)).map((t) => `${id}/${t}`));
         ok(missing.length === 0 && fp['chat/fetch'] === 'status 200' && fp['assess/xhr'] === 'sent' && fp['chat/beacon'] === true,
-          `${name}: chat POST (fetch 200), assessment POST (XHR), first-party beacon and image, fonts and badge all reach their sinks through all 4 transports`, { missing, chat: fp['chat/fetch'], assess: fp['assess/xhr'], beacon: fp['chat/beacon'] });
+          `${name}: chat POST (fetch 200), assessment POST (XHR), first-party beacon and image, fonts and an ordinary third-party host all reach their sinks through all 4 transports`, { missing, chat: fp['chat/fetch'], assess: fp['assess/xhr'], beacon: fp['chat/beacon'] });
         const leaked = VENDOR.flatMap(([id]) => reached(seen, name, id).map((s) => `${id}/${s.t}`));
         ok(leaked.length === 0, `${name}: listed-family vendor requests stay refused (${VENDOR.length} x 4)`, leaked);
         await context.close();

@@ -100,12 +100,12 @@ for (const vp of VIEWPORTS) {
       ok(reopened && s2.bar.top >= 0 && s2.bar.bottom <= s2.vh + 1 && p.url() === SITE + route, `${tag}: the footer link re-opens the choice in place, in view (${JSON.stringify(s2.bar)}, url ${p.url()})`);
       ok(reopened && s2.navTop === 0, `${tag}: the fixed nav stays at the top while the re-opened choice is up (nav top ${s2.navTop})`);
       ok(reopened && s2.under.length === 0 && s2.obscured.length === 0 && s2.overflowX <= 0, `${tag}: re-opened choice covers no control, is not covered, no overflow (${s2.under && s2.under.join('; ')}; obscured ${s2.obscured && s2.obscured.join('; ')}; ${s2.overflowX})`);
-      // Review DOS-1: the footer's NVIDIA badge, NVIDIA trademark line and LocateFaith badge must not be under the
+      // Review DOS-1: the footer's NVIDIA badge, NVIDIA trademark line must not be under the
       // re-opened choice, where it leaves the visitor and at the very bottom of the page.
       const footerItems = () => p.evaluate(() => {
         const bar = document.querySelector('[data-consent-reopened]'); if (!bar) return { bar: false };
         const br = bar.getBoundingClientRect();
-        const items = { nvBadge: document.querySelector('footer .nv-badge'), nvLegal: document.querySelector('footer .nv-legal'), lfBadge: document.querySelector('footer .badge-slot a[href*="locatefaith"]') };
+        const items = { nvBadge: document.querySelector('footer .nv-badge'), nvLegal: document.querySelector('footer .nv-legal') };
         const out = { bar: true };
         for (const [k, el] of Object.entries(items)) {
           if (!el) { out[k] = 'missing'; continue; }
@@ -121,8 +121,8 @@ for (const vp of VIEWPORTS) {
       const fOpen = await footerItems();
       await p.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await still(p);
       const fBottom = await footerItems();
-      const fine = (f) => f.bar && ['nvBadge', 'nvLegal', 'lfBadge'].every((k) => f[k] && f[k] !== 'missing' && !f[k].overlapBar && f[k].hitSelf !== false);
-      ok(fine(fOpen) && fine(fBottom), `${tag}: NVIDIA badge, NVIDIA trademark line and LocateFaith badge present and not under the re-opened choice (open ${JSON.stringify(fOpen)}; bottom ${JSON.stringify(fBottom)})`);
+      const fine = (f) => f.bar && ['nvBadge', 'nvLegal'].every((k) => f[k] && f[k] !== 'missing' && !f[k].overlapBar && f[k].hitSelf !== false);
+      ok(fine(fOpen) && fine(fBottom), `${tag}: NVIDIA badge, NVIDIA trademark line present and not under the re-opened choice (open ${JSON.stringify(fOpen)}; bottom ${JSON.stringify(fBottom)})`);
       await p.screenshot({ path: `${shot}-reopened.png` });
       if (reopened) {
         await p.locator('[data-consent-reopened] [data-consent-close]').click(); await p.waitForTimeout(250);

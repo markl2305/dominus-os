@@ -13,7 +13,7 @@
  *     reject event, before the reload, and after it). Control: after a valid accept every one reaches the sink.
  * H2  first-party and ordinary third-party traffic is untouched in every denied state: site /api calls (assessment
  *     POST, visitor chat), Next /_next and RSC fetches, /_vercel/insights-help (not the analytics segment), Google
- *     Fonts, the LocateFaith badge. The analytics segment /_vercel/insights/view is refused.
+ *     Fonts, an ordinary third-party host. The analytics segment /_vercel/insights/view is refused.
  * H3  a request to an UNLISTED off-origin host made from a vendor's own script (served at a LinkedIn / gtag.js /
  *     Vercel loader URL) is refused while denied; the same code from a first-party script is not; after accept it is
  *     sent.
@@ -69,7 +69,7 @@ const H2 = [
   ['relative', '/api/evaluate/site'],
   ['fonts', 'https://fonts.googleapis.com/css2'],
   ['gstatic', 'https://fonts.gstatic.com/font.woff2'],
-  ['badge', 'https://locatefaith.com/brand/badge.svg'],
+  ['third-party', 'https://ordinary-host.test/brand/image.svg'],
 ];
 const TRANSPORTS = ['fetch', 'beacon', 'xhr', 'image'];
 
@@ -198,7 +198,7 @@ async function main() {
       'stats.g.doubleclick.net', 'www.googleadservices.com', 'pagead2.googlesyndication.com', 'www.googletagservices.com',
       'app-measurement.com', 'px.ads.linkedin.com', 'www.linkedin.com', 'snap.licdn.com', 'vitals.vercel-insights.com', 'va.vercel-scripts.com'];
     const LOOKALIKES = ['google-analytics.com.evil.invalid', 'notgoogle.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'evil-licdn.com',
-      'linkedin.com.evil.test', 'xgoogle.co.uk', 'google.co.uk.evil.test', 'googlelinkedin.test', 'locatefaith.com', 'vercel.app', 'mygoogle.de'];
+      'linkedin.com.evil.test', 'xgoogle.co.uk', 'google.co.uk.evil.test', 'googlelinkedin.test', 'ordinary-host.test', 'vercel.app', 'mygoogle.de'];
     const fullwidth = (h) => h.replace(/[a-z]/, (c) => String.fromCharCode(c.charCodeAt(0) + 0xFEE0));
     const spell = (h) => [h, h.toUpperCase(), h.split('').map((c, i) => (i % 2 ? c.toUpperCase() : c)).join(''), h + '.', h.toUpperCase() + '.',
       `${h}:8443`, `${h}.:444`, `a.b.${h}`, fullwidth(h)];

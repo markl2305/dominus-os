@@ -37,7 +37,7 @@ const LOADERS = {
 };
 let GTAG = null; try { GTAG = fx(`gtag-js-${GA_ID}.js`); } catch (e) { /* no fixture: the GA loader is answered 204 */ }
 // Off-origin hosts that are not analytics (same list and env as tracking-matrix.mjs): aborted, recorded, not unknown.
-const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'locatefaith.com,fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
+const ALLOWED_HOSTS = new Set((process.env.CONSENT_ALLOWED_HOSTS ?? 'fonts.googleapis.com,fonts.gstatic.com').split(',').filter(Boolean));
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36';
 const TARGETS = (process.env.CONSENT_REFUSAL_TARGETS || 'static:/privacy').split(',').map((x) => x.split(':'));
 
