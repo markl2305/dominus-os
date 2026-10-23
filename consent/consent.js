@@ -43,18 +43,23 @@
  *      loads, document.referrer is narrowed to origin + path for this page, so every loader (GA4, LinkedIn,
  *      Vercel, and Vercel's React <Analytics />, which reads document.referrer itself and outside beforeSend)
  *      sees the same clean value. If the browser refuses the narrowing, nothing may run (rule 7).
- *   7. ONE ANSWER. SiteConsent.allowed() is the only "may any vendor run on this page now" answer: true only for
- *      a stored accept, no GPC, not a private path, not withdrawn on this page, and the referrer narrowed. state()
+ *   7. ONE ANSWER. SiteConsent.allowed() is the only "may analytics run on this page" answer, i.e. whether consent
+ *      PERMITS them: true only for a stored accept (or the default-on region), no GPC, not a private path, not
+ *      withdrawn on this page, and the referrer narrowed. Mount, load or call analytics only when it is true. state()
  *      is the visitor's CHOICE, for display only; never mount or call analytics on state() === 'accept'. The
  *      'siteconsent' event carries the state; a consumer re-reads allowed() when it fires.
+ *      allowed() is permission, not delivery: while the privacy choice is open (rule 14) the guard below also refuses,
+ *      and SiteConsent.paused() is true. That pause never changes allowed() and fires no event: a consumer that is
+ *      allowed stays mounted, its sends are dropped, and rule 14's Allow recovery restores what the pause interrupted.
  *      Safe by construction: from the moment this file runs, every fetch, sendBeacon, XMLHttpRequest and image
- *      request to an analytics host (or this site's /_vercel/insights) is refused while allowed() is false, so an
- *      analytics script mounted outside this file (React's <Analytics />, a tag a later change adds) cannot send
- *      either. Load this file before any analytics code: synchronously on a static page; on a Next page, any
- *      analytics component renders only when allowed() is true, which cannot be before this file ran.
+ *      request to an analytics host (or this site's /_vercel/insights) is refused while allowed() is false or
+ *      paused() is true, so an analytics script mounted outside this file (React's <Analytics />, a tag a later
+ *      change adds) cannot send either. Load this file before any analytics code: synchronously on a static page; on
+ *      a Next page, any analytics component renders only when allowed() is true, which cannot be before this file ran.
  *   8. What counts as a vendor request (rule 7's guard): a host in a vendor's registrable-domain family, normalised
  *      (case, IDNA, port, trailing dot), including every regional google.<cc>; the /_vercel/insights path segment on
- *      any origin; and, while allowed() is false, ANY off-origin request made from a vendor's own script. Same-origin
+ *      any origin; and, while allowed() is false or paused() is true, ANY off-origin request made from a vendor's own
+ *      script. Same-origin
  *      requests (relative URLs resolve against document.baseURI) are first-party and untouched, except that segment.
  *      Boundaries, by design: the guard wraps fetch, sendBeacon, XMLHttpRequest and image .src. A function a script
  *      captured before this file ran, a <script>/<iframe> src, and img.setAttribute('src') are not covered, which is
@@ -103,9 +108,15 @@
  *      press (pointerdown, mousedown, Enter or Space) outside the privacy controls: LinkedIn sends its report a moment
  *      AFTER the press, by which time the click has already closed the choice, so a release at close would let the
  *      Close press itself out. Allow releases at once: it is the visitor's consent, and what it starts (a first page
- *      view after a stored No) must not wait for another press. No is a withdrawal (rule 3), which keeps them refused
- *      through the reload. A press that does not end in the choice opening (abandoned, or a link opened elsewhere)
- *      keeps them refused on this page until the next full load.
+ *      view after a stored No) must not wait for another press. If analytics had already started on this page and the
+ *      pause refused any of their requests (a loader still initialising when the choice opened loses its page view and
+ *      set-up calls that way; the opening press's own report is one too), Allow saves the choice and RELOADS once, with
+ *      requests still refused until the page goes: the fresh load starts analytics with consent, and nothing refused is
+ *      replayed (a privacy-control press is never reported). Close/Escape keeps the visitor's existing choice and does
+ *      not reload: analytics the pause interrupted stay interrupted until the next full load (fail closed; analytics
+ *      loss only). No is a withdrawal (rule 3), which keeps them refused through the reload. A press that does not end
+ *      in the choice opening (abandoned, or a link opened elsewhere) keeps them refused on this page until the next
+ *      full load.
  * Bump VERSION to ask everyone again (an old stored choice is then treated as no choice).
  */
 (function (w, d) {
@@ -279,6 +290,7 @@
   function onWithoutGpc() { var s = stored(); return s === 'accept' || (s === null && regionDefault()); }
   var quiet = false; // set by a withdrawal; nothing runs again on this page
   var held = false; // rule 14: true while the privacy choice is open; 'closed' until the next press outside it
+  var heldDrops = 0; // rule 14: vendor requests refused only because of the pause (allowed() was true)
   function privatePage() { return PRIVATE.test(w.location.pathname); }
   // Rule 7, the one answer. Narrowing is attempted only once a run is otherwise allowed.
   function allowed() {
@@ -399,9 +411,11 @@
     var vendor = VERCEL_PATH.test(x.pathname) || (x.origin !== w.location.origin && vendorHost(x.hostname));
     if (!vendor && x.origin === w.location.origin) return false; // first-party: never consults consent
     try {
-      if (!held && allowed()) return false;
-      if (vendor) return true;
-      return fromVendorCode();
+      var ok = allowed();
+      if (ok && !held) return false;
+      var refuse = vendor || fromVendorCode();
+      if (refuse && ok) heldDrops += 1; // rule 14: refused only by the pause; Allow recovers it
+      return refuse;
     } catch (e) {
       return vendor;
     }
@@ -528,7 +542,12 @@
     if (choice === 'reject') quiesce(); else quiet = false; // an explicit Allow is a new choice on this page
     save(choice);
     removeBar();
-    if (choice === 'accept') { held = false; start(); emit(); return; } // rule 14: Allow releases at once
+    if (choice === 'accept') {
+      // Rule 14: the pause interrupted analytics that had started here; a consented fresh load recovers them. The pause
+      // stays on until the page goes, so nothing refused (and no privacy-control press) is sent from this page.
+      if (started && heldDrops > 0) { emit(); w.location.reload(); return; }
+      held = false; start(); emit(); return; // rule 14: Allow releases at once
+    }
     if (C.ga4) w['ga-disable-' + C.ga4] = true;
     clearAnalyticsCookies();
     emit();
@@ -624,7 +643,8 @@
   w.SiteConsent = {
     version: VERSION,
     state: state,           // 'gpc' | 'accept' | 'reject' | 'default' (default-on region, no choice) | null
-    allowed: allowed,       // THE answer to "may any vendor run on this page now" (rule 7)
+    allowed: allowed,       // THE answer to "may analytics run on this page" (rule 7): consent permits them
+    paused: function () { return !!held; }, // rule 14: the privacy choice is open; vendor sends are refused meanwhile
     set: set,               // 'accept' | 'reject' (reject after accept = withdraw)
     subscribe: function (fn) { subs.push(fn); return function () { subs = subs.filter(function (f) { return f !== fn; }); }; },
     mountBar: showBar,      // shows the bar if no choice has been made (no-op under GPC, after a choice, or default-on)
