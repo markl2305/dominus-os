@@ -99,12 +99,13 @@
  *      (mousedown on document, capture), so pressing "Your privacy choices" on the way to "No analytics" was itself
  *      reported to LinkedIn. From the first pointerdown, mousedown or Enter on a data-consent-open element that will open
  *      the choice (primary button, no modifier key, no GPC), and whenever openChoices() opens it from code, the guard
- *      (rule 7) refuses every vendor request while the choice is open, and after Allow or Close/Escape until the
- *      visitor's next press (pointerdown, mousedown, Enter or Space) outside the privacy controls: LinkedIn sends its
- *      report a moment AFTER the press, by which time the click has already closed the choice, so a release at close
- *      would let the Close or Allow press itself out. No is a withdrawal (rule 3), which keeps them refused through the
- *      reload. A press that does not end in the choice opening (abandoned, or a link opened elsewhere) keeps them
- *      refused on this page until the next full load.
+ *      (rule 7) refuses every vendor request while the choice is open, and after Close/Escape until the visitor's next
+ *      press (pointerdown, mousedown, Enter or Space) outside the privacy controls: LinkedIn sends its report a moment
+ *      AFTER the press, by which time the click has already closed the choice, so a release at close would let the
+ *      Close press itself out. Allow releases at once: it is the visitor's consent, and what it starts (a first page
+ *      view after a stored No) must not wait for another press. No is a withdrawal (rule 3), which keeps them refused
+ *      through the reload. A press that does not end in the choice opening (abandoned, or a link opened elsewhere)
+ *      keeps them refused on this page until the next full load.
  * Bump VERSION to ask everyone again (an old stored choice is then treated as no choice).
  */
 (function (w, d) {
@@ -527,7 +528,7 @@
     if (choice === 'reject') quiesce(); else quiet = false; // an explicit Allow is a new choice on this page
     save(choice);
     removeBar();
-    if (choice === 'accept') { start(); emit(); return; }
+    if (choice === 'accept') { held = false; start(); emit(); return; } // rule 14: Allow releases at once
     if (C.ga4) w['ga-disable-' + C.ga4] = true;
     clearAnalyticsCookies();
     emit();
