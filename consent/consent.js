@@ -95,6 +95,16 @@
  *      content, review F5), scrolled into view with focus on it. It is an ordinary link to the privacy notice, so with
  *      JavaScript off, before this file loads, or under GPC (nothing to choose: the signal is the choice) it simply
  *      navigates there. SiteConsent.openChoices() does the same from code and returns false under GPC.
+ *  14. Opening the choice sends nothing (B-02 gap 1, 2026-10-23). LinkedIn's tag reports the element a visitor presses
+ *      (mousedown on document, capture), so pressing "Your privacy choices" on the way to "No analytics" was itself
+ *      reported to LinkedIn. From the first pointerdown, mousedown or Enter on a data-consent-open element that will open
+ *      the choice (primary button, no modifier key, no GPC), and whenever openChoices() opens it from code, the guard
+ *      (rule 7) refuses every vendor request while the choice is open, and after Allow or Close/Escape until the
+ *      visitor's next press (pointerdown, mousedown, Enter or Space) outside the privacy controls: LinkedIn sends its
+ *      report a moment AFTER the press, by which time the click has already closed the choice, so a release at close
+ *      would let the Close or Allow press itself out. No is a withdrawal (rule 3), which keeps them refused through the
+ *      reload. A press that does not end in the choice opening (abandoned, or a link opened elsewhere) keeps them
+ *      refused on this page until the next full load.
  * Bump VERSION to ask everyone again (an old stored choice is then treated as no choice).
  */
 (function (w, d) {
@@ -267,6 +277,7 @@
   // Analytics on by the visitor's choice or by region, ignoring GPC: what a reject would withdraw (rule 3).
   function onWithoutGpc() { var s = stored(); return s === 'accept' || (s === null && regionDefault()); }
   var quiet = false; // set by a withdrawal; nothing runs again on this page
+  var held = false; // rule 14: true while the privacy choice is open; 'closed' until the next press outside it
   function privatePage() { return PRIVATE.test(w.location.pathname); }
   // Rule 7, the one answer. Narrowing is attempted only once a run is otherwise allowed.
   function allowed() {
@@ -387,7 +398,7 @@
     var vendor = VERCEL_PATH.test(x.pathname) || (x.origin !== w.location.origin && vendorHost(x.hostname));
     if (!vendor && x.origin === w.location.origin) return false; // first-party: never consults consent
     try {
-      if (allowed()) return false;
+      if (!held && allowed()) return false;
       if (vendor) return true;
       return fromVendorCode();
     } catch (e) {
@@ -465,7 +476,13 @@
     w.addEventListener(type, function (e) {
       if (type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
       var t = e.target;
-      if (t && t.closest && t.closest('[data-consent-withdraw],[data-consent="reject"]')) quiesce();
+      if (!t || !t.closest) return;
+      if (held === 'closed' && !t.closest('[data-consent-bar],[data-consent-open],[data-consent-withdraw],[data-consent-allow],[data-consent-choice]')) held = false;
+      if (t.closest('[data-consent-withdraw],[data-consent="reject"]')) quiesce();
+      // Rule 14: a press that will open the choice holds every vendor request from this moment, ahead of a tag's own
+      // listener (LinkedIn reports the press on mousedown). Same conditions as the opener below.
+      else if (t.closest('[data-consent-open]') && !(e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) &&
+        (type !== 'keydown' || e.key === 'Enter') && !gpcOn()) held = true;
     }, true);
   });
 
@@ -521,6 +538,7 @@
 
   var bar = null, opener = null;
   function removeBar() {
+    if (held) held = 'closed'; // rule 14: still refused until the next press outside the privacy controls
     if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
     bar = null;
     var o = opener; opener = null;
@@ -535,8 +553,9 @@
   // choose (the signal wins), so it returns false and the caller lets the link reach the privacy notice instead.
   function openChoices(from) {
     if (gpcOn() || !d.body) return false;
-    if (bar && !bar.hasAttribute('data-consent-reopened')) { focusBar(); return true; } // the first-visit bar is already up
+    if (bar && !bar.hasAttribute('data-consent-reopened')) { held = true; focusBar(); return true; } // the first-visit bar is already up
     removeBar();
+    held = true; // rule 14
     opener = from || null;
     renderBar(true);
     focusBar();
