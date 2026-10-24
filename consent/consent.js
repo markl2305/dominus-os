@@ -112,7 +112,10 @@
  *      pause refused any of their requests (a loader still initialising when the choice opened loses its page view and
  *      set-up calls that way; the opening press's own report is one too), Allow saves the choice and RELOADS once, with
  *      requests still refused until the page goes: the fresh load starts analytics with consent, and nothing refused is
- *      replayed (a privacy-control press is never reported). Close/Escape keeps the visitor's existing choice and does
+ *      replayed (a privacy-control press is never reported). That refusal is a separate RECOVERY LATCH, set before the
+ *      reload is requested and never cleared in this document: no outside press, bar operation or second Allow releases
+ *      it while the old page waits for the new one (a slow response would otherwise let the old page send again).
+ *      A No while it is set is still a withdrawal and reloads; requests stay refused either way. Close/Escape keeps the visitor's existing choice and does
  *      not reload: analytics the pause interrupted stay interrupted until the next full load (fail closed; analytics
  *      loss only). No is a withdrawal (rule 3), which keeps them refused through the reload. A press that does not end
  *      in the choice opening (abandoned, or a link opened elsewhere) keeps them refused on this page until the next
@@ -291,6 +294,7 @@
   var quiet = false; // set by a withdrawal; nothing runs again on this page
   var held = false; // rule 14: true while the privacy choice is open; 'closed' until the next press outside it
   var heldDrops = 0; // rule 14: vendor requests refused only because of the pause (allowed() was true)
+  var recovering = false; // rule 14: Allow's recovery reload is pending; latched, never cleared in this document
   function privatePage() { return PRIVATE.test(w.location.pathname); }
   // Rule 7, the one answer. Narrowing is attempted only once a run is otherwise allowed.
   function allowed() {
@@ -357,7 +361,7 @@
   // sub-domain spellings are covered: every google.<tld> and google.<sld>.<cc> (www.google.co.uk/ads/ga-audiences is in
   // the real GA runtime), and the ads/analytics domains below. The Vercel insights namespace counts on ANY origin, as a
   // path segment. A same-origin request is first-party (never touched) unless it is that namespace.
-  var VENDOR_DOMAIN = /(^|\.)(google-analytics\.com|googletagmanager\.com|googletagservices\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|app-measurement\.com|licdn\.com|linkedin\.com|vercel-insights\.com|vercel-scripts\.com)$/;
+  var VENDOR_DOMAIN = /(^|\.)(google-analytics\.com|googletagmanager\.com|googletagservices\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|app-measurement\.com|licdn\.com|linkedin\.com|vercel-insights\.com|vercel-scripts\.com|heycatch\.ai)$/;
   var GOOGLE_DOMAIN = /(^|\.)google\.([a-z]{2,3}|(co|com|org|net|ac|ad|edu|gob|gov|ne|nic|or)\.[a-z]{2})$/;
   var VERCEL_PATH = /^\/_vercel\/insights(\/|$)/;
   // F5: the platform's own constructors and transports, saved before any other script can replace them. Every
@@ -412,9 +416,9 @@
     if (!vendor && x.origin === w.location.origin) return false; // first-party: never consults consent
     try {
       var ok = allowed();
-      if (ok && !held) return false;
+      if (ok && !held && !recovering) return false;
       var refuse = vendor || fromVendorCode();
-      if (refuse && ok) heldDrops += 1; // rule 14: refused only by the pause; Allow recovers it
+      if (refuse && ok && !recovering) heldDrops += 1; // rule 14: refused only by the pause; Allow recovers it
       return refuse;
     } catch (e) {
       return vendor;
@@ -537,6 +541,7 @@
 
   function set(choice) {
     if (choice !== 'accept' && choice !== 'reject') return;
+    if (recovering && choice === 'accept') return; // rule 14: a second Allow while the recovery reload is pending
     // A withdrawal is any reject that replaces an accept, whether or not this file loaded anything on this page.
     var withdrawing = choice === 'reject' && (started || onWithoutGpc());
     if (choice === 'reject') quiesce(); else quiet = false; // an explicit Allow is a new choice on this page
@@ -545,7 +550,7 @@
     if (choice === 'accept') {
       // Rule 14: the pause interrupted analytics that had started here; a consented fresh load recovers them. The pause
       // stays on until the page goes, so nothing refused (and no privacy-control press) is sent from this page.
-      if (started && heldDrops > 0) { emit(); w.location.reload(); return; }
+      if (started && heldDrops > 0) { recovering = true; emit(); w.location.reload(); return; } // latch, then reload
       held = false; start(); emit(); return; // rule 14: Allow releases at once
     }
     if (C.ga4) w['ga-disable-' + C.ga4] = true;
@@ -598,9 +603,9 @@
     // it" would be untrue; that one says analytics are on and can be turned off (optOutText overrides it per site).
     var optOut = reopen && regionDefault();
     var text = optOut
-      ? (C.optOutText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') +
+      ? (C.optOutText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') + (C.heycatch ? ', HeyCatch' : '') +
         ') to understand how this site is used. You can turn them off here at any time.'))
-      : (C.barText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') +
+      : (C.barText || ('We use analytics (Google Analytics, Vercel Web Analytics' + (C.linkedin ? ', LinkedIn' : '') + (C.heycatch ? ', HeyCatch' : '') +
         ') only if you allow it. Nothing is sent until you choose.'));
     p.appendChild(d.createTextNode(text + (/\s$/.test(text) ? '' : ' ')));
     var a = d.createElement('a');
@@ -644,7 +649,7 @@
     version: VERSION,
     state: state,           // 'gpc' | 'accept' | 'reject' | 'default' (default-on region, no choice) | null
     allowed: allowed,       // THE answer to "may analytics run on this page" (rule 7): consent permits them
-    paused: function () { return !!held; }, // rule 14: the privacy choice is open; vendor sends are refused meanwhile
+    paused: function () { return !!(held || recovering); }, // rule 14: choice open, closed-until-next-press, or recovery reload pending
     set: set,               // 'accept' | 'reject' (reject after accept = withdraw)
     subscribe: function (fn) { subs.push(fn); return function () { subs = subs.filter(function (f) { return f !== fn; }); }; },
     mountBar: showBar,      // shows the bar if no choice has been made (no-op under GPC, after a choice, or default-on)
