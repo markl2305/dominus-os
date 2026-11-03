@@ -1224,3 +1224,116 @@ details.more > summary:active .plus { transform: scale(0.97); }
    ===================================================================== */
 .table-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
 .table-scroll:focus-visible { outline: 2px solid var(--ember); outline-offset: -2px; }
+
+/* =====================================================================
+   ROUND 4 — Motion v2 + interaction motion (Mark, 2026-11-03; FAMILY-SPEC rules 11 and 12).
+   Native scrolling is untouched. Only transform and opacity animate; every motion has a
+   reduced-motion answer (instant), and print shows everything. No words change.
+   --spring is a critically damped spring (no overshoot) sampled as a linear() easing.
+   ===================================================================== */
+:root {
+  --spring: linear(0, 0.075, 0.228, 0.391, 0.537, 0.657, 0.751, 0.822, 0.874, 0.912, 0.939, 0.958, 0.971, 0.98, 0.987, 0.991, 0.994, 0.996, 0.997, 0.998, 1);
+  --apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ---- rule 11: one-time entrances. The hidden start state exists only once site.js has run
+   (html[data-motion-ready]), so content is visible without JS. 700ms, 20px (12px on phones),
+   Apple ease; site.js staggers a batch by at most 100ms, so every entrance ends within 800ms. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  html[data-motion-ready] { --reveal-y: 20px; }
+  html[data-motion-ready] [data-reveal]:not([data-revealed]) { opacity: 0; transform: translateY(var(--reveal-y)); }
+  html[data-motion-ready] [data-reveal][data-revealed] {
+    opacity: 1; transform: none;
+    transition: opacity 700ms var(--apple) var(--reveal-delay, 0ms), transform 700ms var(--apple) var(--reveal-delay, 0ms);
+  }
+  html[data-motion-ready] [data-reveal][data-reveal-instant] { transition: none; }
+}
+@media screen and (prefers-reduced-motion: no-preference) and (max-width: 760px) { html[data-motion-ready] { --reveal-y: 12px; } }
+/* Keyboard focus never waits for an entrance. */
+[data-reveal]:focus-within { opacity: 1 !important; transform: none !important; }
+
+/* ---- rule 12: in-page anchor jumps scroll natively and smoothly. site.js sets data-smooth-scroll after load, so a
+   deep link still lands at once; off under reduced motion (below) and without JS. */
+html[data-smooth-scroll] { scroll-behavior: smooth; }
+
+/* ---- rule 12: press. scale(.97) on pointer-down in 100ms ease-out; released with the spring (~250ms).
+   Only transform animates: state tints and borders change at once. */
+.pill, .btn, .where, .seg button, .flow-step { transition: transform 250ms var(--spring); }
+.pill:active, .btn:active, .where:active, .seg button:active, .flow-step:active { transform: scale(0.97); transition: transform 100ms ease-out; }
+details.more > summary .plus, .g-more .plus { transition: transform 250ms var(--spring); }
+details.more > summary:active .plus, .g-more > summary:active .plus { transform: scale(0.97); transition: transform 100ms ease-out; }
+.consent-choice .btn:disabled:active { transform: none; }
+
+/* ---- rule 12: hover, pointer devices only. Buttons keep their tint and arrow nudge; header and footer
+   page links get an underline that grows from its origin (left). */
+.nav-link, .foot-pages a { position: relative; }
+.nav-link::after, .foot-pages a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: calc(50% - 0.95em); height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left; pointer-events: none;
+  transition: transform 200ms ease-out;
+}
+.nav-link::after { left: 6px; right: 6px; }
+@media (hover: hover) and (pointer: fine) { .nav-link:hover::after, .foot-pages a:hover::after { transform: scaleX(1); } }
+
+/* ---- rule 12: the section index opens from its trigger (scale .96 -> 1 with opacity; the material's blur
+   arrives with it), ~220ms with the spring, and closes along the same path in 150ms. Open and closed are two
+   CSS states, so reopening mid-close continues from the current value. inert (site.js) takes the closed panel
+   out of the tab order and the accessibility tree, so visibility no longer has to switch. */
+.index {
+  visibility: visible;
+  transform-origin: var(--origin-x, 50%) -8px;
+  opacity: 0; transform: scale(0.96);
+  transition: opacity 150ms var(--exit), transform 150ms var(--exit);
+}
+.index.open { opacity: 1; transform: none; transition: opacity 220ms ease-out, transform 220ms var(--spring); }
+.where svg { transition: transform 220ms var(--spring); }
+.where[aria-expanded="false"] svg { transition-duration: 150ms; }
+.index-scrim { display: none; }
+/* Phones: a sheet that drops from the header's edge with the spring, over a dimming scrim. Tap the scrim or
+   swipe the sheet up to dismiss; it leaves along the same path. */
+@media (max-width: 760px) {
+  .index { transform-origin: 50% 0; transform: translateY(-16px); }
+  .index.open { transform: none; transition: opacity 200ms ease-out, transform 320ms var(--spring); }
+  .index-scrim {
+    display: block; position: fixed; inset: 0; z-index: 98;
+    background: rgba(4, 7, 10, 0.45); opacity: 0; pointer-events: none;
+    transition: opacity 150ms var(--exit);
+  }
+  .index-scrim.on { opacity: 1; pointer-events: auto; transition: opacity 220ms ease-out; }
+}
+
+/* ---- rule 12: disclosures. The chevron/plus turns with the spring (~250ms) and the content fades and
+   settles 6px as it opens. Height is not animated (rule 12 forbids animating layout properties). */
+details.more > summary .plus::after, .g-more .plus::after { transition: transform 250ms var(--spring); }
+@supports (interpolate-size: allow-keywords) {
+  details.more::details-content { height: auto; opacity: 1; transition: none; }
+}
+@keyframes disclose { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: disclose 250ms var(--ease-out); }
+
+/* ---- rule 12: segmented controls and steps. The selected indicator slides with the spring (~250ms). */
+.seg::before { transition: transform 250ms var(--spring); }
+.fs-chev { transition: transform 250ms var(--spring); }
+.fs-n { transition: none; }
+
+/* ---- rule 12: images still loading fade in from the page colour in 300ms (site.js marks them). */
+@media (prefers-reduced-motion: no-preference) {
+  img { transition: opacity 300ms ease-out; }
+  img[data-loading] { opacity: 0 !important; }
+}
+
+/* ---- reduced motion: every change is instant, and nothing waits for an entrance. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .index, .index.open { transform: none !important; transition: none !important; }
+  .pill:active, .btn:active, .where:active, .seg button:active, .flow-step:active,
+  details.more > summary:active .plus, .g-more > summary:active .plus { transform: none; }
+}
+
+/* ---- print: everything visible and in place. */
+@media print {
+  [data-reveal], img[data-loading] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .index-scrim { display: none !important; }
+}
