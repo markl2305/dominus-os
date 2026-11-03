@@ -308,6 +308,32 @@
       entries.forEach(function (e) { if (e.isIntersecting && pending.indexOf(e.target) !== -1) { showNow(e.target); done(e.target); } });
     }, { threshold: 0 });
     waiting.forEach(function (el) { io.observe(el); jump.observe(el); });
+    // Backstop: an IntersectionObserver can miss an item a fast flick carries past, and at the bottom of a
+    // short page the last items can never cross the 15% line. Whenever scrolling ends (scrollend, or a
+    // debounced scroll where scrollend is missing), on resize, and once a second after load, every pending
+    // item whose top is above the viewport's bottom edge (passed or on screen) is revealed. Nothing above
+    // the fold line is ever left hidden. This only reads positions after scrolling stops; it never follows it.
+    // Items carried past (now above the viewport) show at once; items on screen start their normal entrance now,
+    // so it still ends within 800ms. The sweep waits a frame so the observer, when it does fire, goes first.
+    function sweepNow() {
+      if (!pending.length) return;
+      var bottom = window.innerHeight, onScreen = [];
+      pending.slice().forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top >= bottom) return;
+        done(el);
+        if (r.bottom <= 0) showNow(el); else onScreen.push(el);
+      });
+      var step = onScreen.length > 1 ? Math.min(STAGGER, WINDOW / (onScreen.length - 1)) : 0;
+      onScreen.forEach(function (el, i) { show(el, Math.round(i * step)); });
+    }
+    function sweep() { requestAnimationFrame(sweepNow); }
+    var settleTimer = 0;
+    window.addEventListener('scrollend', sweep, { passive: true });
+    window.addEventListener('scroll', function () { clearTimeout(settleTimer); settleTimer = setTimeout(sweep, 150); }, { passive: true });
+    window.addEventListener('resize', sweep);
+    var safety = function () { setTimeout(sweep, 1000); };
+    if (document.readyState === 'complete') safety(); else window.addEventListener('load', safety, { once: true });
     reduceMQ.addEventListener('change', function () { if (reduced()) { pending.slice().forEach(function (el) { showNow(el); done(el); }); } });
     // Printing shows everything (styles.css also forces it).
     window.addEventListener('beforeprint', function () { pending.slice().forEach(function (el) { showNow(el); done(el); }); });
