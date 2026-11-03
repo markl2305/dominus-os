@@ -146,16 +146,6 @@
     });
   })();
 
-  /* ---------------------------------------------------------- reveal, once */
-  (function reveal() {
-    var els = $$('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
-    var io = new IntersectionObserver(function (ents) {
-      ents.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -6% 0px' });
-    els.forEach(function (el) { io.observe(el); });
-  })();
-
   /* ---------------------------------------------------------- How it works: the action path
      A segmented control picks one of the three outcomes the paragraph names;
      the diagram lights that path and the paragraph marks the sentence that

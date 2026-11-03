@@ -993,3 +993,74 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--band-h) + var(--bar-off, 0p
   .wp-hero .actions { gap: 8px; }
   .wp-hero .actions .btn { min-height: 44px; font-size: 0.92rem; }
 }
+
+/* =====================================================================
+   ROUND 3 — Apple polish (Mark, 2026-11-02/03; FAMILY-SPEC rules 1–4, 8–11).
+   Design and motion only: no words change. Follows every rule above, so it wins.
+   ===================================================================== */
+
+/* ---- rule 11: no scroll-driven reveals. Content is visible and in place from the
+   first paint and moves 1:1 with the scroll. (site.js no longer adds .in; the
+   scroll-linked springs in assets/scroll-motion.* are gone.) */
+.js .reveal, .js .reveal.in { opacity: 1; transform: none; transition: none; }
+
+/* Kept from the retired assets/scroll-motion.css: the non-scroll parts. */
+.page-index .g-tile, .page-index .pair-tile { transition: border-color 180ms ease, box-shadow 220ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  .page-index .g-tile:hover, .page-index .pair-tile:hover { border-color: var(--hair-2); box-shadow: 0 14px 36px -24px var(--glow); }
+}
+.page-index .index { max-height: calc(100svh - var(--nav-h) - var(--band-h) - var(--bar-off, 0px) - 24px - env(safe-area-inset-top)); }
+.page-index .chap-head > *, .page-index .cta2-in > *, .page-index .foot-brand > div { min-width: 0; max-width: 100%; }
+.page-index .big, .page-index .foot-brand .brand-name { overflow-wrap: anywhere; }
+.page-index .cta2 .pill { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
+
+/* ---- rule 8: press feedback — scale(.97), 100ms ease-out, critically damped (no overshoot). */
+.pill, .btn, .where, .seg button, .flow-step {
+  transition-property: transform, background-color, border-color, color, box-shadow;
+  transition-duration: 100ms, 200ms, 200ms, 200ms, 200ms;
+  transition-timing-function: ease-out, ease, ease, ease, ease;
+}
+.pill:active, .btn:active, .where:active, .seg button:active, .flow-step:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) {
+  .pill:active, .btn:active, .where:active, .seg button:active, .flow-step:active { transform: none; }
+}
+
+/* ---- rule 1 + H-2: display tracking and leading; the hero breaks to two lines at 1440. */
+.mega { line-height: 1.05; letter-spacing: -0.025em; }
+@media (min-width: 761px) { .mega { max-width: min(900px, 100%); } }
+@media (max-width: 760px) { .mega { letter-spacing: -0.02em; line-height: 1.05; } }
+.big { line-height: 1.05; letter-spacing: -0.025em; }
+.display, .stage.wp-hero .display { line-height: 1.05; letter-spacing: -0.025em; }
+@media (max-width: 760px) { .big, .display, .stage.wp-hero .display { letter-spacing: -0.02em; } }
+.h2 { letter-spacing: -0.02em; }
+.h3 { letter-spacing: -0.01em; }
+.mega, .big, .display, .h2, .h3, h1, h2, h3 { text-wrap: balance; }
+
+/* ---- M-1: the phone hero sizes to its content plus 64px; no empty band. */
+@media (max-width: 760px) {
+  .hero2 { min-height: 0; padding-bottom: 64px; }
+}
+
+/* ---- rule 2 + M-2: a 12px floor, and letter-spaced labels at 0.08em at most. */
+.kicker, .eyebrow, .g-ix, .flow-cap-k, .fp-k, .mono-label, .arch2-copy .hint, details.more > summary,
+.detail-list .k, .pt-arrow, .pair-div span, .seg .count, .st, .ba-act span, .foot-brand p, .foot-note,
+.foot-pages a, .nv-legal, .band, .chips li, .eras thead th, .evidence a, .doc-meta, .skip, .index h2,
+.where .n, .index a .n {
+  font-size: 0.75rem; letter-spacing: 0.08em;
+}
+.titling, .g-t, .fs-t, .brand-name { letter-spacing: 0.08em; }
+.hero2 .kicker, .wp-hero .eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; max-width: none; }
+@media (max-width: 560px) { .pair-div span { letter-spacing: 0.08em; } }
+
+/* ---- rule 3: hit areas of 44px or more (the visual size of the text is unchanged). */
+.skip { display: inline-flex; align-items: center; min-height: 44px; padding-block: 0; }
+
+/* ---- rule 4 + H-1: the appearance control lives in the footer, labels shown.
+   Unselected labels use --ink-2: on the control's own fill, light #3a4a51 = 6.42:1, dark #bdb8aa = 8.69:1
+   (was #959990 on #efe7d8 = 2.36:1 in the header). */
+.foot-appearance { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.foot-appearance h2 { margin: 0; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.foot-appearance .seg .lbl { display: inline; }
+.foot-appearance .seg button { padding: 0 14px; color: var(--ink-2); }
+.foot-appearance .seg button[aria-checked="true"] { color: var(--ink); }
+.arch2-copy .hint { letter-spacing: 0.03em; }
