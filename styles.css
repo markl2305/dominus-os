@@ -1216,3 +1216,11 @@ details.more > summary:active .plus { transform: scale(0.97); }
 @media (min-width: 601px) { @container (max-width: 25.5em) { #pathSeg::before { transition: none; } } }
 @container (max-width: 15em) { #ledgerSeg::before { transition: none; } }
 @container (max-width: 16.5em) { .foot-appearance .seg::before { transition: none; } }
+
+/* =====================================================================
+   ROUND 3f — review r5 B10 (2026-11-03): a wide table scrolls inside its own region
+   (focusable, labelled with the table's existing name), so the page never scrolls
+   sideways. At normal text the table fits and nothing moves.
+   ===================================================================== */
+.table-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.table-scroll:focus-visible { outline: 2px solid var(--ember); outline-offset: -2px; }
