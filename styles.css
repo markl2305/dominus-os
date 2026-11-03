@@ -1164,3 +1164,37 @@ details.more > summary:active .plus { transform: scale(0.97); }
   .foot-appearance .seg::before { width: calc(100% - 4px); height: calc((100% - 4px) / var(--n)); border-radius: 20px; transform: translateY(calc(var(--i) * 100%)); }
   .foot-appearance .seg button { white-space: normal; border-radius: 20px; }
 }
+
+/* =====================================================================
+   ROUND 3d — review r3 B8 (2026-11-03): nothing overflows or clips at 320/390 with 200%
+   text. Each rule only takes effect when the content no longer fits; at normal text the
+   layout is unchanged (verified by a 1x geometry diff on every route).
+   ===================================================================== */
+/* Header: the section button's label wraps instead of ellipsizing; the row grows only when it wraps. */
+.nav-in { height: auto; min-height: var(--nav-h); }
+.nav-mid { min-width: 0; }
+.where { white-space: normal; text-align: left; min-height: 44px; padding-block: 4px; }
+.where .name { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+/* Footer brand: the wordmark and its line move under the crest when they no longer fit beside it
+   (crest + gap + wordmark ≈ 11.5em; em follows the text size). */
+.foot-grid { container-type: inline-size; }
+@container (max-width: 12em) {
+  .foot-brand { flex-wrap: wrap; }
+  .foot-brand > div { flex: 1 1 100%; min-width: 0; }
+}
+.foot-brand > div { min-width: 0; }
+.foot-brand .brand-name, .foot-brand p { overflow-wrap: anywhere; }
+/* Long single words in headings, eyebrows, the index sheet, status chips and evidence links may break. */
+.h2, .h3, .display, .eyebrow, .index a, .index h2, .evidence a { overflow-wrap: anywhere; min-width: 0; }
+.st { white-space: normal; height: auto; min-height: 26px; padding-block: 4px; text-align: left; }
+/* Phone era cards: label above value once the two columns no longer fit (em, so it follows text size). */
+@media (max-width: 700px) {
+  .eras tr { container-type: inline-size; }
+  .eras td { min-width: 0; overflow-wrap: anywhere; }
+  @container (max-width: 11em) { .eras td { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+}
+/* Home hero: its single column may not grow past the viewport. */
+.hero2 { grid-template-columns: minmax(0, 1fr); }
+.hero2-in { min-width: 0; }
+.hero2 .kicker, .mega { overflow-wrap: anywhere; }
+.titling { overflow-wrap: anywhere; }
