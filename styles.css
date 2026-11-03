@@ -1122,3 +1122,45 @@ details.more > summary:active .plus { transform: scale(0.97); }
   details.more > summary:active .plus { transform: none; }
   .fs-chev, details.more > summary .plus { transition: none; }
 }
+
+/* =====================================================================
+   ROUND 3c — review r2 B7 (2026-11-03): segmented filters reflow instead of overlapping
+   when their labels no longer fit (200% text on phones). Each wrapper is a size container;
+   the thresholds are in em, so they follow the text size, and they sit just above each
+   control's measured one-line width (outcome 13.92em short labels / 24.76em long; ledger
+   25.6em; appearance 17.48em, whose padding absorbs the last em, so it stacks below 16.5em;
+   1em = the wrapper's font size). At normal text on phones the outcome and appearance
+   controls are unchanged; the ledger labels may wrap inside their segments.
+   Labels, counts and 44px targets are unchanged.
+   ===================================================================== */
+.path-tools, .ledger2-tools, .foot-appearance { container-type: inline-size; }
+
+/* Stacked: one segment per row, the selection thumb slides vertically. */
+@container (max-width: 14.5em) {
+  #pathSeg { width: 100%; grid-auto-flow: row; grid-auto-columns: auto; grid-auto-rows: 1fr; border-radius: 22px; }
+  #pathSeg::before { width: calc(100% - 4px); height: calc((100% - 4px) / var(--n)); border-radius: 20px; transform: translateY(calc(var(--i) * 100%)); }
+  #pathSeg button { white-space: normal; text-align: center; border-radius: 20px; }
+}
+@media (min-width: 601px) {
+  @container (max-width: 25.5em) {
+    #pathSeg { width: 100%; grid-auto-flow: row; grid-auto-columns: auto; grid-auto-rows: 1fr; border-radius: 22px; }
+    #pathSeg::before { width: calc(100% - 4px); height: calc((100% - 4px) / var(--n)); border-radius: 20px; transform: translateY(calc(var(--i) * 100%)); }
+    #pathSeg button { white-space: normal; text-align: center; border-radius: 20px; }
+  }
+}
+/* Ledger: labels wrap inside their segments first … */
+@container (max-width: 26em) {
+  #ledgerSeg { width: 100%; }
+  #ledgerSeg button { white-space: normal; text-align: center; line-height: 1.2; padding-block: 4px; }
+}
+/* … and stack when even a wrapped word would not fit. */
+@container (max-width: 15em) {
+  #ledgerSeg { grid-auto-flow: row; grid-auto-columns: auto; grid-auto-rows: 1fr; border-radius: 22px; }
+  #ledgerSeg::before { width: calc(100% - 4px); height: calc((100% - 4px) / var(--n)); border-radius: 20px; transform: translateY(calc(var(--i) * 100%)); }
+  #ledgerSeg button { border-radius: 20px; }
+}
+@container (max-width: 16.5em) {
+  .foot-appearance .seg { width: 100%; grid-auto-flow: row; grid-auto-columns: auto; grid-auto-rows: 1fr; border-radius: 22px; }
+  .foot-appearance .seg::before { width: calc(100% - 4px); height: calc((100% - 4px) / var(--n)); border-radius: 20px; transform: translateY(calc(var(--i) * 100%)); }
+  .foot-appearance .seg button { white-space: normal; border-radius: 20px; }
+}
