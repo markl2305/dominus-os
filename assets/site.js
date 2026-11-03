@@ -66,7 +66,7 @@
   /* ---------------------------------------------------------- nav: where am I */
   var sections = $$('[data-name]');
   (function nav() {
-    var nav = $('#nav'), btn = $('#where'), idx = $('#index'), list = $('#indexList'), prog = $('#progress');
+    var nav = $('#nav'), btn = $('#where'), idx = $('#index'), list = $('#indexList');
     if (!nav) return;
     if (list && sections.length) {
       list.innerHTML = sections.map(function (s) {
@@ -87,7 +87,6 @@
       requestAnimationFrame(function () {
         ticking = false;
         var y = window.scrollY, max = root.scrollHeight - window.innerHeight;
-        if (prog) prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
         nav.classList.toggle('scrolled', y > 4);
         barOffset();
         var stage = document.getElementById('top');
@@ -181,20 +180,23 @@
       if (next) next.disabled = cur === tabs.length - 1;
       if (focus) tabs[cur].focus();
     }
+    // The panel swap animates only after the visitor picks a step; the first panel is in place from first paint.
+    var flowEl = tabs[0].closest('.flow');
+    function choose(i, focus) { if (flowEl) flowEl.setAttribute('data-touched', ''); select(i, focus); }
     // On phones the panel sits under the stack: bring it into view after a tap.
     function reveal() {
       var pan = document.querySelector('.flow-panels');
       if (window.matchMedia('(max-width: 860px)').matches) pan.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' });
     }
     tabs.forEach(function (t, j) {
-      t.addEventListener('click', function () { select(j); reveal(); });
+      t.addEventListener('click', function () { choose(j); reveal(); });
       t.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { select(cur + 1, true); e.preventDefault(); }
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { select(cur - 1, true); e.preventDefault(); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { choose(cur + 1, true); e.preventDefault(); }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { choose(cur - 1, true); e.preventDefault(); }
       });
     });
-    if (prev) prev.addEventListener('click', function () { select(cur - 1); });
-    if (next) next.addEventListener('click', function () { select(cur + 1); });
+    if (prev) prev.addEventListener('click', function () { choose(cur - 1); });
+    if (next) next.addEventListener('click', function () { choose(cur + 1); });
     select(0);
   })();
 

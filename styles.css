@@ -1045,7 +1045,7 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--band-h) + var(--bar-off, 0p
 .kicker, .eyebrow, .g-ix, .flow-cap-k, .fp-k, .mono-label, .arch2-copy .hint, details.more > summary,
 .detail-list .k, .pt-arrow, .pair-div span, .seg .count, .st, .ba-act span, .foot-brand p, .foot-note,
 .foot-pages a, .nv-legal, .band, .chips li, .eras thead th, .evidence a, .doc-meta, .skip, .index h2,
-.where .n, .index a .n {
+.where .n, .index a .n, .nav-link {
   font-size: 0.75rem; letter-spacing: 0.08em;
 }
 .titling, .g-t, .fs-t, .brand-name { letter-spacing: 0.08em; }
@@ -1064,3 +1064,61 @@ html { scroll-padding-top: calc(var(--nav-h) + var(--band-h) + var(--bar-off, 0p
 .foot-appearance .seg button { padding: 0 14px; color: var(--ink-2); }
 .foot-appearance .seg button[aria-checked="true"] { color: var(--ink); }
 .arch2-copy .hint { letter-spacing: 0.03em; }
+
+/* =====================================================================
+   ROUND 3b — review r1 fixes (B1–B6 and the low notes), 2026-11-03.
+   ===================================================================== */
+
+/* B2 / rule 11: the first flow panel is in place from first paint; the swap
+   animates only after the visitor picks a step (site.js sets data-touched). */
+.js .flow:not([data-touched]) .flow-panel.on { animation: none; }
+
+/* B3 / rule 2: the phone era cards' generated labels, and the action-path diagram's
+   text at its displayed scale (SVG text scales with the viewBox; sizes below keep it
+   at 12px or more on screen at every width the figure is shown). */
+@media (max-width: 700px) { .eras td::before { font-size: 0.75rem; letter-spacing: 0.08em; } }
+.prail text { font-size: 15px; letter-spacing: 0.06em; }
+.path-wide .pnode .s { font-size: 15px; }
+.path-wide .pnode .t { font-size: 17px; }
+.path-tall .pnode .s, .path-tall .prail text { font-size: 16px; }
+.path-tall .prail text { letter-spacing: 0; }
+.path-tall .pnode .t { font-size: 17px; }
+
+/* B4 / rule 9: unselected segment labels and counts use --ink-2 (light ≥ 6:1 on the fill);
+   diagram nodes off the chosen path keep full-strength text, and are told apart by a
+   dashed, dimmed outline instead of group opacity. */
+.seg button, .path-tools .seg button, .seg .count { color: var(--ink-2); }
+.seg button[aria-checked="true"], .path-tools .seg button[aria-checked="true"] { color: var(--ink); }
+.path-fig[data-scn] .pnode:not(.on) { opacity: 1; }
+.path-fig[data-scn] .pnode:not(.on) rect { stroke-dasharray: 4 4; }
+.pnode rect, .pedge { transition: opacity 200ms ease; }
+
+/* B5 / rule 6: paragraphs longer than two lines read left-aligned (eyebrows and CTAs stay centred). */
+.hero2-lead, .chap-lead, .chap-note, .arch2-copy, .arch2-copy p, .statement2, .cta2 .chap-lead, .nv-legal { text-align: left; }
+.hero2-lead { justify-self: center; }
+.nv-legal { text-wrap: pretty; }
+
+/* B6 / rule 7: one header height everywhere. The white paper's historical line now
+   opens its hero (same words), so the fixed header is the same 64px row on every route. */
+.wp-hero .band { min-height: 0; margin: 0 0 16px; padding: 0; border-top: 0; flex-wrap: wrap; line-height: 1.5; }
+
+/* Low notes: display tracking on the remaining display classes; motion on transform/opacity only. */
+.fp-t, .pt-t, .ba-t { letter-spacing: -0.02em; }
+.pill, .btn, .where, .seg button, .flow-step { transition: transform 100ms ease-out; }
+/* Rule 11: the header's material switches state when it leaves the hero; it no longer fades on scroll. */
+.nav::before, .nav::after { transition: none; }
+/* Rule 8 / rule 11: only transform and opacity animate. State colours (hover, the current
+   section in the index and contents list, the highlighted sentence) change at once, so
+   nothing fades as the page scrolls. Disclosures fade their content; they no longer animate height. */
+.prose a:not(.btn), .link, .nav-link, .index a, .toc a, .foot-note a, .hero2-note a, .prose .scn,
+details.more > summary, .page-index .g-tile, .page-index .pair-tile { transition: none; }
+.fs-chev { transition: transform 200ms var(--ease-out); }
+details.more > summary .plus { transition: transform 100ms ease-out; }
+details.more > summary:active .plus { transform: scale(0.97); }
+@supports (interpolate-size: allow-keywords) {
+  details.more::details-content { transition: opacity 200ms var(--ease-out), content-visibility 200ms allow-discrete; }
+}
+@media (prefers-reduced-motion: reduce) {
+  details.more > summary:active .plus { transform: none; }
+  .fs-chev, details.more > summary .plus { transition: none; }
+}
