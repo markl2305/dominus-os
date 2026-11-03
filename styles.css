@@ -1337,3 +1337,28 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
   [data-reveal], img[data-loading] { opacity: 1 !important; transform: none !important; transition: none !important; }
   .index-scrim { display: none !important; }
 }
+
+/* =====================================================================
+   ROUND 4b — review r7 B12/B13 (2026-11-03).
+   ===================================================================== */
+/* B12: under reduced motion an anchor jump is instant, whatever site.js has set (this outranks
+   html[data-smooth-scroll]; site.js also no longer sets it under reduced motion). */
+@media (prefers-reduced-motion: reduce) { html, html[data-smooth-scroll] { scroll-behavior: auto; } }
+
+/* B13 / rule 12: the header is one constant translucent material with an always-shown 1px hairline.
+   It no longer goes clear over the hero or changes when the page scrolls: its tokens are the page's
+   own (not the hero stage's) at every scroll position. Height, labels, links and the consent-bar
+   offset are unchanged. */
+.nav:not(.solid) {
+  --ground: inherit; --ground-2: inherit; --shield: inherit; --ink: inherit; --ink-2: inherit; --ink-3: inherit;
+  --hair: inherit; --hair-2: inherit; --gold: inherit; --ember: inherit; --ember-hi: inherit; --on-accent: inherit;
+  --panel: inherit; --panel-2: inherit; --panel-edge: inherit; --mark: inherit;
+}
+.nav::before, .nav.solid::before { opacity: 1; }
+.nav::after, .nav.solid::after {
+  display: block; opacity: 1; top: auto; bottom: 0; height: 1px; background: var(--hair-2);
+}
+/* The header link shown at ≥1600px takes the header's ink: gold on the constant material falls to 2.7:1 over the
+   dark hero (light scheme). Hover marks it with an underline instead of a colour. */
+.nav .nav-link, .nav .nav-link[aria-current="page"] { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .nav .nav-link:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; } }

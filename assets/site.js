@@ -127,7 +127,14 @@
     idx.parentNode.insertBefore(scrim, idx);
     // The scrim belongs to the menu: tapping it closes the sheet and returns focus to the trigger.
     scrim.addEventListener('pointerdown', function (e) { e.preventDefault(); open(false); btn.focus({ preventScroll: true }); });
+    // While the panel is still on its way out (outside tap, scrim, swipe), Escape must still bring focus
+    // back to the trigger: the exit is part of the menu, not a finished dismissal.
+    var closing = false, closingTimer = null;
+    function endClosing() { closing = false; clearTimeout(closingTimer); }
+    idx.addEventListener('transitionend', function (e) { if (e.target === idx && e.propertyName === 'opacity' && !idx.classList.contains('open')) endClosing(); });
     function open(v) {
+      if (v) endClosing();
+      else if (idx.classList.contains('open')) { closing = !reduced(); clearTimeout(closingTimer); if (closing) closingTimer = setTimeout(endClosing, 400); }
       if (v) {
         // The panel grows out of the trigger: its transform origin sits on the trigger's centre.
         var b = btn.getBoundingClientRect();
@@ -169,7 +176,9 @@
       if (idx.classList.contains('open') && !idx.contains(e.target) && !btn.contains(e.target)) open(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && idx.classList.contains('open')) { open(false); btn.focus(); }
+      if (e.key !== 'Escape') return;
+      if (idx.classList.contains('open')) { open(false); btn.focus(); }
+      else if (closing) { endClosing(); btn.focus({ preventScroll: true }); }
     });
     idx.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
@@ -307,7 +316,11 @@
   /* ---------------------------------------------------------- smooth anchor jumps (family rule 12)
      Turned on only after load, so the browser's own jump to a deep link's target stays instant. */
   (function smoothAnchors() {
-    var on = function () { setTimeout(function () { root.setAttribute('data-smooth-scroll', ''); }, 0); };
+    // Never under reduced motion, and it follows the preference if it changes after load.
+    var ready = false;
+    var sync = function () { if (ready && !reduced()) root.setAttribute('data-smooth-scroll', ''); else root.removeAttribute('data-smooth-scroll'); };
+    var on = function () { setTimeout(function () { ready = true; sync(); }, 0); };
+    reduceMQ.addEventListener('change', sync);
     if (document.readyState === 'complete') on(); else window.addEventListener('load', on, { once: true });
   })();
 
