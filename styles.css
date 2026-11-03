@@ -1198,3 +1198,21 @@ details.more > summary:active .plus { transform: scale(0.97); }
 .hero2-in { min-width: 0; }
 .hero2 .kicker, .mega { overflow-wrap: anywhere; }
 .titling { overflow-wrap: anywhere; }
+
+/* =====================================================================
+   ROUND 3e — review r4 B9 (2026-11-03): the index sheet opens below the header as
+   rendered (site.js publishes --nav-real), so a header that grows with enlarged text is
+   never covered and its controls stay hittable. At normal text --nav-real equals the old
+   64px + safe-area value, so nothing moves.
+   ===================================================================== */
+.index, .page-index .index {
+  top: calc(var(--nav-real, calc(env(safe-area-inset-top) + var(--nav-h))) + var(--band-h) + var(--bar-off, 0px) + 8px);
+  max-height: calc(100svh - var(--nav-real, calc(env(safe-area-inset-top) + var(--nav-h))) - var(--band-h) - var(--bar-off, 0px) - 24px);
+}
+/* The selection thumb of a stacked segmented control does not slide. Entering the stacked
+   layout would otherwise animate it from its sideways position, far outside the control,
+   which widened the phone layout viewport (668px at 390) and moved the whole header. */
+@container (max-width: 14.5em) { #pathSeg::before { transition: none; } }
+@media (min-width: 601px) { @container (max-width: 25.5em) { #pathSeg::before { transition: none; } } }
+@container (max-width: 15em) { #ledgerSeg::before { transition: none; } }
+@container (max-width: 16.5em) { .foot-appearance .seg::before { transition: none; } }

@@ -68,6 +68,13 @@
   (function nav() {
     var nav = $('#nav'), btn = $('#where'), idx = $('#index'), list = $('#indexList');
     if (!nav) return;
+    // The index sheet opens below the header as rendered. With enlarged text the section
+    // label wraps and the header grows past 64px, so its real height is published here.
+    // Measured only from the observer (its first callback follows the first layout): reading
+    // layout here, during setup, would let the diagram's initial selection animate on load.
+    function navHeight() { root.style.setProperty('--nav-real', nav.getBoundingClientRect().height + 'px'); }
+    if ('ResizeObserver' in window) new ResizeObserver(navHeight).observe(nav);
+    else window.addEventListener('resize', navHeight);
     if (list && sections.length) {
       list.innerHTML = sections.map(function (s) {
         return '<li><a href="#' + s.id + '" data-id="' + s.id + '"><span class="n">' + (s.getAttribute('data-n') || '') + '</span>' + s.getAttribute('data-name') + '</a></li>';
