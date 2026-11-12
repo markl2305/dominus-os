@@ -1557,3 +1557,32 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
   font: 400 13px/1.4 var(--sans); letter-spacing: 0; text-transform: none; text-align: left; color: var(--ink-3);
 }
 .foot-endorse img { width: 16px; height: 16px; flex: none; }
+
+/* =====================================================================
+   FAMILY V2 follow-up C (peer recheck, 2026-11-12): in the light scheme the header over the dark hero
+   was taupe (the B13 page tokens). While it sits on the hero (.nav:not(.solid), set by site.js from the
+   hero's own bottom edge) it now takes the hero's dark tokens and the dark glass; past the hero it is the
+   page's light glass, as before. The swap is a state change with no transition (rule 12: nothing animates
+   with scroll). Dark scheme: unchanged. The section index is outside the header and keeps the page glass.
+   ===================================================================== */
+:root[data-theme="light"] .nav:not(.solid) {
+  --ground: #0a1013; --ground-2: #0e171c; --shield: #142229;
+  --ink: #ece3d2; --ink-2: #c3beb0; --ink-3: #959990;
+  --hair: rgba(236, 227, 210, 0.12); --hair-2: rgba(236, 227, 210, 0.2);
+  --gold: #d2b27a; --ember: #e8893c; --ember-hi: #f2a25e; --on-accent: #0d1418;
+  --panel: rgba(236, 227, 210, 0.04); --panel-2: rgba(236, 227, 210, 0.08); --panel-edge: rgba(236, 227, 210, 0.1);
+  --mark: rgba(232, 137, 60, 0.2);
+  --g-bar: rgb(10 16 19 / 0.62); --g-bar-rim: rgb(236 227 210 / 0.10); --g-bar-shade: rgb(0 0 0 / 0.32);
+  --g-where: rgb(20 34 41 / 0.55); --g-where-edge: rgb(236 227 210 / 0.16); --g-where-rim: rgb(236 227 210 / 0.14); --g-where-shade: rgb(0 0 0 / 0.30);
+  --g-cta: rgb(232 137 60 / 0.92); --g-cta-hover: rgb(242 162 94 / 0.94); --g-cta-edge: rgb(255 255 255 / 0.26);
+  --g-sheen: rgb(255 255 255 / 0.16); --g-cta-inner: rgb(255 214 170 / 0.34); --g-cta-glow: rgb(232 137 60 / 0.32);
+  color: var(--ink);
+}
+@media screen {
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root[data-theme="light"] .nav:not(.solid) { --g-bar: rgb(10 16 19 / 0.96); --g-where: rgb(20 34 41 / 0.95); --g-cta: rgb(232 137 60); --g-cta-hover: rgb(242 162 94); }
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    :root[data-theme="light"] .nav:not(.solid) { --g-bar: #0a1013; --g-where: #142229; --g-sheen: transparent; --g-cta: #e8893c; --g-cta-hover: #f2a25e; }
+  }
+}
