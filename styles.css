@@ -1586,3 +1586,12 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
     :root[data-theme="light"] .nav:not(.solid) { --g-bar: #0a1013; --g-where: #142229; --g-sheen: transparent; --g-cta: #e8893c; --g-cta-hover: #f2a25e; }
   }
 }
+
+/* =====================================================================
+   HERO SEAL (Mark, 2026-11-12 18:06Z; FAMILY-SPEC site-only exception to rules 12/13): a decorative
+   guilloche canvas drawn by assets/hero-seal.js behind the home hero. aria-hidden, no pointer events,
+   reduced motion = one still frame, paused off screen and in hidden tabs, DPR capped at 2.
+   Absolutely positioned, so it never takes layout space (no shift). Print never shows it.
+   ===================================================================== */
+.hero2-seal { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+@media print { .hero2-seal { display: none !important; } }
