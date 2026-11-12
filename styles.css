@@ -1534,3 +1534,26 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
 }
 
 } /* end @media screen: print shows no glass */
+
+/* =====================================================================
+   FAMILY V2, item 4 (Mark, 2026-11-12): one primary/secondary button spec across the family sites, and one
+   endorsement line as the last row of the footer. Geometry and type only: the ember accent, the glass material
+   (inner light, glow, fallbacks) and the press motion (scale .97, 100ms ease-out, spring release) are unchanged.
+   The header's Contact pill stays compact (44px, already the hit area).
+   ===================================================================== */
+.hero2-actions .pill, .wp-hero .actions .btn, .sec.contact .actions .btn {
+  min-height: 48px; padding: 0 24px; border-radius: 999px; gap: 8px;
+  font: 600 17px/1.2 var(--sans); letter-spacing: -0.01em;
+}
+/* Phones: at 17px two pills no longer fit one 390px row, so each takes its own row (size and position only). */
+@media (max-width: 560px) {
+  .hero2-actions .pill, .cta2 .hero2-actions .pill { flex: 1 1 100%; padding: 0 24px; gap: 8px; font-size: 17px; min-height: 48px; }
+  .wp-hero .actions .btn { min-height: 48px; font-size: 17px; }
+}
+@media (max-width: 760px) { .wp-hero .actions .btn, .sec.contact .actions .btn { white-space: normal; } }
+
+.foot-endorse {
+  grid-column: 1 / -1; justify-self: start; display: flex; align-items: center; gap: 8px; margin: 0;
+  font: 400 13px/1.4 var(--sans); letter-spacing: 0; text-transform: none; text-align: left; color: var(--ink-3);
+}
+.foot-endorse img { width: 16px; height: 16px; flex: none; }
