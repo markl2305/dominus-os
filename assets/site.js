@@ -24,9 +24,18 @@
       var i = 0;
       btns.forEach(function (b, j) { if (b.getAttribute('data-v') === v) i = j; });
       btns.forEach(function (b, j) { b.setAttribute('aria-checked', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
+      // The indicator slides only when a person changes the selection. A layout change (a resize or rotation that
+      // moves the control between its row and stacked layouts, or a re-layout during a full-page capture) must not
+      // replay the slide from the old layout's position, so the transition is switched on only for this move.
+      if (fire && String(i) !== el.style.getPropertyValue('--i') && !reduced()) {
+        el.setAttribute('data-seg-moving', '');
+        clearTimeout(el._segMoveT);
+        el._segMoveT = setTimeout(function () { el.removeAttribute('data-seg-moving'); }, 400);
+      }
       el.style.setProperty('--i', i);
       if (fire) onChange(btns[i].getAttribute('data-v'));
     }
+    el.addEventListener('transitionend', function (e) { if (e.target === el && e.pseudoElement === '::before') { clearTimeout(el._segMoveT); el.removeAttribute('data-seg-moving'); } });
     el.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b && el.contains(b)) set(b.getAttribute('data-v'), true); });
     el.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;

@@ -1595,3 +1595,16 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
    ===================================================================== */
 .hero2-seal { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 @media print { .hero2-seal { display: none !important; } }
+
+/* =====================================================================
+   FINAL 2 (2026-11-12): the segmented-control indicator moves only when a person changes the selection.
+   Root cause of the detached pill reported at 390/430: the indicator's transform transitioned on EVERY change,
+   including a layout change. When a re-layout (a resize or rotation across the stacked/row layouts, or the
+   re-layout of a full-page/element capture) briefly matched the stacked rules, the indicator slid back from
+   the stacked position (translateY) and was caught part-way, ~20px below and ~50px left of the selected tab.
+   site.js now sets [data-seg-moving] for the one move a selection makes; otherwise there is no transition.
+   The indicator stays pinned to the control's own box (the control is position: relative; the indicator is
+   absolutely positioned and inset 2px from it).
+   ===================================================================== */
+.seg::before, .foot-appearance .seg::before { transition: none; }
+.seg[data-seg-moving]::before { transition: transform 250ms var(--spring); }
