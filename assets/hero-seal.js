@@ -1,7 +1,7 @@
 /* DominusOS hero "Seal": an engraved guilloche ring around the hero statement.
    Decorative only (aria-hidden canvas, pointer-events none). Calm pace. Honors reduced motion
    (one still frame), pauses when the hero is off screen or the tab is hidden, DPR capped at 2,
-   drawn at 30fps. No dependencies. (dominusos.ai copy: the strand loop uses precomputed tables and 300 + 1.2R points per strand instead of 360 + 1.6R, 2026-11-12, to meet a 2ms frame budget at 4x CPU; visually the same.) Remove the script tag and the page is exactly as before. */
+   drawn at 30fps. No dependencies. (dominusos.ai copy, 2026-11-12, for a per-frame budget at 4x CPU, same look: precomputed tables; 300 + 1.2R points per strand instead of 360 + 1.6R; no per-frame allocation of colours or gradients; strand and tick paths cached and rebuilt a third per frame.) Remove the script tag and the page is exactly as before. */
 (function () {
   var hero = document.querySelector('.hero2');
   if (!hero || !window.requestAnimationFrame) return;
@@ -40,7 +40,7 @@
     cx = W / 2; cy = box.y + box.h / 2;
     // the ring clears the statement on wide screens and is cut by the hero edges on narrow ones
     R0 = Math.max(Math.min(box.w / 2 + 70, W * 0.34), Math.min(W, H) * 0.50, 230);
-    tables();
+    tables(); fades();
   }
 
   // Per-band lookup tables (built on resize): cos/sin of the base angle and of the two lobe frequencies, so a frame
@@ -63,67 +63,89 @@
     var i, rr, x, y, n = T.steps;
     var cp = Math.cos(ph), sp = Math.sin(ph), cq = Math.cos(-ph * 0.5), sq = Math.sin(-ph * 0.5), cr = Math.cos(rot), sr = Math.sin(rot);
     var A2 = A * 0.35, C = T.c, S = T.s, SK = T.sk, CK = T.ck, SH = T.sh, CH = T.ch;
-    g.beginPath();
+    var P = new Path2D();
     for (i = 0; i <= n; i++) {
       // R + A sin(k th + ph) + 0.35 A sin(k/2 th - ph/2), at angle th + rot
       rr = R + A * (SK[i] * cp + CK[i] * sp) + A2 * (SH[i] * cq + CH[i] * sq);
       x = cx + rr * (C[i] * cr - S[i] * sr); y = cy + rr * (S[i] * cr + C[i] * sr);
-      if (i) g.lineTo(x, y); else g.moveTo(x, y);
+      if (i) P.lineTo(x, y); else P.moveTo(x, y);
     }
-    g.closePath(); g.stroke();
+    P.closePath();
+    return P;
   }
 
-  function draw() {
-    var i, j, b, th;
+  // No per-frame allocation: stroke colours are precomputed strings, the 180 dial ticks use cos/sin tables (turned by
+  // the angle-addition identities), and the three mask gradients are built once per resize in fades().
+  var BSTYLE = BANDS.map(function (b) { return 'rgba(' + b.col + ',' + b.al + ')'; });
+  var TICK = 'rgba(' + GOLD + ',0.30)', SEG = 16, ESTYLE = [], DOT = 'rgba(242,162,94,0.9)';
+  for (var e = 0; e < SEG; e++) ESTYLE.push('rgba(' + EMBER + ',' + (0.55 * (1 - e / SEG)).toFixed(3) + ')');
+  var TC = new Float32Array(180), TS = new Float32Array(180), TL = new Float32Array(180);
+  for (var q = 0; q < 180; q++) { TC[q] = Math.cos(q * 0.034906585); TS[q] = Math.sin(q * 0.034906585); TL[q] = q % 15 === 0 ? 7 : 3; }
+  // Strand and tick paths are cached. A moving frame rebuilds a third of the strands (round robin) and, on one frame in
+  // three, the dial ticks, so each shape updates at 10Hz while the ring is drawn at 30fps. One update moves a strand by
+  // at most ~0.35px and the ticks by ~0.15px, below a device pixel. The ember mark still moves every frame. A full draw
+  // (first frame, resize, the reduced-motion still) rebuilds everything at the current time.
+  var PATHS = [], TICKS = null, flip = 0;
+  function draw(full) {
+    var i, j, b, k = 0;
     g.clearRect(0, 0, W, H);
     g.lineWidth = 0.8;
+    flip = (flip + 1) % 3;
     for (i = 0; i < BANDS.length; i++) {
       b = BANDS[i];
-      g.strokeStyle = 'rgba(' + b.col + ',' + b.al + ')';
-      for (j = 0; j < b.n; j++) {
-        strand(TAB[i], b.r * R0, b.a * R0, j * 6.283185307 / b.n + b.dir * t * 0.16, b.dir * t * 0.006);
+      g.strokeStyle = BSTYLE[i];
+      for (j = 0; j < b.n; j++, k++) {
+        if (full || !PATHS[k] || k % 3 === flip) PATHS[k] = strand(TAB[i], b.r * R0, b.a * R0, j * 6.283185307 / b.n + b.dir * t * 0.16, b.dir * t * 0.006);
+        g.stroke(PATHS[k]);
       }
     }
-    // dial ticks between the first two bands
+    // dial ticks between the first two bands (base angle i * 2deg, turned by t * 0.004)
     var rt = 1.085 * R0;
-    g.strokeStyle = 'rgba(' + GOLD + ',0.30)';
-    g.beginPath();
-    for (i = 0; i < 180; i++) {
-      th = i * 0.034906585 + t * 0.004;
-      var len = i % 15 === 0 ? 7 : 3;
-      g.moveTo(cx + (rt - len) * Math.cos(th), cy + (rt - len) * Math.sin(th));
-      g.lineTo(cx + rt * Math.cos(th), cy + rt * Math.sin(th));
+    if (full || !TICKS || flip === 0) {
+      var cr = Math.cos(t * 0.004), sr = Math.sin(t * 0.004), co, si, r1;
+      TICKS = new Path2D();
+      for (i = 0; i < 180; i++) {
+        co = TC[i] * cr - TS[i] * sr; si = TS[i] * cr + TC[i] * sr; r1 = rt - TL[i];
+        TICKS.moveTo(cx + r1 * co, cy + r1 * si);
+        TICKS.lineTo(cx + rt * co, cy + rt * si);
+      }
     }
-    g.stroke();
+    g.strokeStyle = TICK;
+    g.stroke(TICKS);
     // one ember mark travelling the dial: authority passing around the ring
-    var head = t * 0.085, seg = 16;
+    var head = t * 0.085;
     g.lineWidth = 1.6; g.lineCap = 'round';
-    for (i = 0; i < seg; i++) {
-      var a0 = head - i * 0.012, al = 0.55 * (1 - i / seg);
-      g.strokeStyle = 'rgba(' + EMBER + ',' + al.toFixed(3) + ')';
+    for (i = 0; i < SEG; i++) {
+      var a0 = head - i * 0.012;
+      g.strokeStyle = ESTYLE[i];
       g.beginPath(); g.arc(cx, cy, rt, a0 - 0.012, a0); g.stroke();
     }
-    g.fillStyle = 'rgba(242,162,94,0.9)';
+    g.fillStyle = DOT;
     g.beginPath(); g.arc(cx + (rt) * Math.cos(head), cy + (rt) * Math.sin(head), 2.2, 0, 6.3); g.fill();
 
-    // keep the statement calm: soft punch-out behind the words, then fade to the hero edges
+    // keep the statement calm: soft punch-out behind the words, then fade to the hero edges (gradients built in fades())
     g.save();
     g.globalCompositeOperation = 'destination-out';
-    var ex = box.w / 2 + 24, ey = box.h / 2 + 30;
-    g.translate(cx, cy); g.scale(ex, ey);
-    var m = g.createRadialGradient(0, 0, 0.72, 0, 0, 1.18);
-    m.addColorStop(0, 'rgba(0,0,0,1)'); m.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = m; g.beginPath(); g.arc(0, 0, 1.2, 0, 6.3); g.fill();
+    g.translate(cx, cy); g.scale(FX, FY);
+    g.fillStyle = GPUNCH; g.beginPath(); g.arc(0, 0, 1.2, 0, 6.3); g.fill();
     g.restore();
     g.save();
     g.globalCompositeOperation = 'destination-out';
-    var top = g.createLinearGradient(0, 0, 0, 150);
-    top.addColorStop(0, 'rgba(0,0,0,1)'); top.addColorStop(0.45, 'rgba(0,0,0,.85)'); top.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = top; g.fillRect(0, 0, W, 150);
-    var bot = g.createLinearGradient(0, H - 110, 0, H);
-    bot.addColorStop(0, 'rgba(0,0,0,0)'); bot.addColorStop(1, 'rgba(0,0,0,1)');
-    g.fillStyle = bot; g.fillRect(0, H - 110, W, 110);
+    g.fillStyle = GTOP; g.fillRect(0, 0, W, 150);
+    g.fillStyle = GBOT; g.fillRect(0, H - 110, W, 110);
     g.restore();
+  }
+
+  // the three mask gradients, built once per resize (they depend only on the hero's size and the statement's box)
+  var GPUNCH = null, GTOP = null, GBOT = null, FX = 1, FY = 1;
+  function fades() {
+    FX = box.w / 2 + 24; FY = box.h / 2 + 30;
+    GPUNCH = g.createRadialGradient(0, 0, 0.72, 0, 0, 1.18);
+    GPUNCH.addColorStop(0, 'rgba(0,0,0,1)'); GPUNCH.addColorStop(1, 'rgba(0,0,0,0)');
+    GTOP = g.createLinearGradient(0, 0, 0, 150);
+    GTOP.addColorStop(0, 'rgba(0,0,0,1)'); GTOP.addColorStop(0.45, 'rgba(0,0,0,.85)'); GTOP.addColorStop(1, 'rgba(0,0,0,0)');
+    GBOT = g.createLinearGradient(0, H - 110, 0, H);
+    GBOT.addColorStop(0, 'rgba(0,0,0,0)'); GBOT.addColorStop(1, 'rgba(0,0,0,1)');
   }
 
   function frame(now) {
@@ -137,10 +159,10 @@
     raf = requestAnimationFrame(frame);
   }
   function kick() {
-    if (rm.matches) { draw(); return; }
+    if (rm.matches) { draw(true); return; }
     if (!raf && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); }
   }
-  function relayout() { size(); draw(); kick(); }
+  function relayout() { size(); draw(true); kick(); }
 
   t = 40; // start mid-pattern so the still frame is a good one
   relayout();
