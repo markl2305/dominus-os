@@ -1362,3 +1362,175 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
    dark hero (light scheme). Hover marks it with an underline instead of a colour. */
 .nav .nav-link, .nav .nav-link[aria-current="page"] { color: var(--ink); }
 @media (hover: hover) and (pointer: fine) { .nav .nav-link:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; } }
+
+/* =====================================================================
+   ROUND 5 — Glass on the chrome layer (Mark, 2026-11-04; FAMILY-SPEC rule 13).
+   Screen only (print never sees it). Glass goes on the header bar, the header's Overview pill and Contact pill,
+   the section index (the Overview menu, a sheet on phones), and the CTA pills in the page heroes, the contact
+   stage and the white paper's closing actions. Never reading text, the page background or the content cards.
+   The material is constant: nothing here changes with scroll, and no transition is added (rules 11 and 12 stand).
+   Colours are the site's own: ember #e8893c / #a24e18, gold #d2b27a, shield navy. Colour fields are static radial
+   gradients (no filter, no animation, not fixed) that scroll with the page like any content.
+   Every state reads a token, so each fallback swaps the tokens and rest, hover, press and a retained touch-hover
+   all follow, whatever the selector specificity. Sections: tokens · fields · header · index · CTAs · fallbacks.
+   ===================================================================== */
+@media screen {
+
+/* ---- tokens. Dark is the base; light re-points them; the dark stage keeps its own in both themes. */
+:root {
+  --g-blur: 20px; --g-sat: 160%;
+  --g-bar: rgb(10 16 19 / 0.62); --g-bar-rim: rgb(236 227 210 / 0.10); --g-bar-shade: rgb(0 0 0 / 0.32);
+  --g-where: rgb(20 34 41 / 0.55); --g-where-edge: rgb(236 227 210 / 0.16); --g-where-rim: rgb(236 227 210 / 0.14); --g-where-shade: rgb(0 0 0 / 0.30);
+  --g-sheet: rgb(14 23 28 / 0.80); --g-sheet-edge: rgb(236 227 210 / 0.12); --g-sheet-rim: rgb(236 227 210 / 0.12); --g-sheet-shade: rgb(0 0 0 / 0.40);
+  --g-cta: rgb(232 137 60 / 0.92); --g-cta-hover: rgb(242 162 94 / 0.94); --g-cta-edge: rgb(255 255 255 / 0.26);
+  --g-sheen: rgb(255 255 255 / 0.16); --g-cta-inner: rgb(255 214 170 / 0.34); --g-cta-glow: rgb(232 137 60 / 0.32);
+  --g-ghost: rgb(236 227 210 / 0.06); --g-ghost-hover: rgb(236 227 210 / 0.11); --g-ghost-edge: rgb(236 227 210 / 0.20);
+  --g-ghost-rim: rgb(255 255 255 / 0.16); --g-ghost-shade: rgb(0 0 0 / 0.30); --g-lift: 0 10px 30px -12px rgb(0 0 0 / 0.55);
+  --g-field-ember: rgb(232 137 60 / 0.16); --g-field-gold: rgb(210 178 122 / 0.12); --g-field-navy: rgb(38 70 84 / 0.34);
+  /* index items: hover, current and pressed fills (resolved per theme, since --shield is re-pointed on :root) */
+  --g-item: color-mix(in srgb, var(--shield) 80%, transparent); --g-item-press: var(--shield);
+}
+:root[data-theme="light"] {
+  --g-bar: rgb(239 231 216 / 0.66); --g-bar-rim: rgb(255 255 255 / 0.55); --g-bar-shade: rgb(20 34 40 / 0.08);
+  --g-where: rgb(247 241 230 / 0.84); --g-where-edge: rgb(20 34 40 / 0.14); --g-where-rim: rgb(255 255 255 / 0.85); --g-where-shade: rgb(20 34 40 / 0.07);
+  --g-sheet: rgb(247 241 230 / 0.93); --g-sheet-edge: rgb(20 34 40 / 0.12); --g-sheet-rim: rgb(255 255 255 / 0.85); --g-sheet-shade: rgb(20 34 40 / 0.06);
+  --g-cta: rgb(162 78 24 / 0.96); --g-cta-hover: rgb(138 64 18 / 0.96); --g-cta-edge: rgb(255 255 255 / 0.22);
+  --g-sheen: rgb(255 255 255 / 0.04); --g-cta-inner: rgb(255 196 150 / 0.16); --g-cta-glow: rgb(162 78 24 / 0.26);
+  --g-ghost: rgb(255 255 255 / 0.55); --g-ghost-hover: rgb(255 255 255 / 0.78); --g-ghost-edge: rgb(20 34 40 / 0.16);
+  --g-ghost-rim: rgb(255 255 255 / 0.85); --g-ghost-shade: rgb(20 34 40 / 0.07); --g-lift: 0 10px 30px -12px rgb(70 45 10 / 0.24);
+  --g-field-ember: rgb(162 78 24 / 0.12); --g-field-gold: rgb(122 91 36 / 0.10); --g-field-navy: rgb(38 70 84 / 0.10);
+  /* current/hover highlight is solid and light: the gold numerals (#7a5b24) need 4.5:1 on it whatever is behind the sheet */
+  --g-item: #ebe2d0; --g-item-press: #e6dcc8;
+}
+.stage {
+  --g-cta: rgb(232 137 60 / 0.92); --g-cta-hover: rgb(242 162 94 / 0.94); --g-cta-edge: rgb(255 255 255 / 0.26);
+  --g-sheen: rgb(255 255 255 / 0.16); --g-cta-inner: rgb(255 214 170 / 0.34); --g-cta-glow: rgb(232 137 60 / 0.34);
+  --g-ghost: rgb(236 227 210 / 0.06); --g-ghost-hover: rgb(236 227 210 / 0.11); --g-ghost-edge: rgb(236 227 210 / 0.20);
+  --g-ghost-rim: rgb(255 255 255 / 0.16); --g-ghost-shade: rgb(0 0 0 / 0.30); --g-lift: 0 10px 30px -12px rgb(0 0 0 / 0.55);
+  --g-field-ember: rgb(232 137 60 / 0.16); --g-field-gold: rgb(210 178 122 / 0.12); --g-field-navy: rgb(38 70 84 / 0.34);
+}
+
+/* ---- colour fields: glass needs colour directly behind it. The heroes carry one along their top edge (behind the
+   header at rest), and each CTA row carries its own. A field inside a row that plays an entrance belongs to that row,
+   so the row's glass blurs it during the entrance too. */
+.hero2::before, .wp-hero::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 180px; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(30% 130px at 16% 0, var(--g-field-ember), transparent),
+    radial-gradient(28% 120px at 84% 0, var(--g-field-gold), transparent),
+    radial-gradient(42% 140px at 50% 0, var(--g-field-navy), transparent);
+}
+.hero2-actions, .wp-hero .actions, .sec.contact .actions { position: relative; isolation: isolate; }
+.hero2-actions::before, .wp-hero .actions::before, .sec.contact .actions::before {
+  content: ""; position: absolute; left: -48px; right: -48px; top: -18px; bottom: -18px; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(closest-side at 28% 50%, var(--g-field-ember), transparent),
+    radial-gradient(closest-side at 72% 50%, var(--g-field-navy), transparent),
+    radial-gradient(closest-side at 50% 50%, var(--g-field-gold), transparent);
+}
+/* Phones: the contact stage's four pills sit two per row. On live they share one 390px row (flex 1 1 0) and
+   "Start a Conversation" overflows its pill; a CTA whose text leaves its glass cannot meet rule 9.
+   Size and position only: the text, targets and order are unchanged. */
+@media (max-width: 560px) { .cta2 .hero2-actions .pill { flex: 1 1 calc(50% - 5px); } }
+/* Phones: the row fields stay inside the 16px page gutter, so they never widen the page. */
+@media (max-width: 760px) {
+  .hero2-actions::before, .wp-hero .actions::before, .sec.contact .actions::before { left: -10px; right: -10px; }
+}
+
+/* ---- header bar: one constant material with a bright top rim and a faint bottom shade; the 1px hairline
+   (.nav::after) stays on top of it, always shown. The material lives on ::before, so the header is not a
+   backdrop root for anything inside it. */
+.nav::before, .nav.solid::before {
+  background: var(--g-bar);
+  -webkit-backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+  box-shadow: inset 0 1px 0 var(--g-bar-rim), inset 0 -1px 0 var(--g-bar-shade);
+}
+/* The Overview pill and the Contact pill sit on the header's glass already: they take the glass look (tint, rim,
+   shade) without a blur of their own. Glass on glass costs a blur and adds nothing visible. */
+.nav .where {
+  background: var(--g-where); border-color: var(--g-where-edge);
+  box-shadow: inset 0 1px 0 var(--g-where-rim), inset 0 -1px 0 var(--g-where-shade);
+}
+
+/* ---- the section index (the Overview menu; a sheet on phones): a glass panel. Its open/close motion,
+   origin and scrim are unchanged; the blur arrives with its opacity. */
+.index, .page-index .index {
+  background: var(--g-sheet); border-color: var(--g-sheet-edge);
+  -webkit-backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+  box-shadow: inset 0 1px 0 var(--g-sheet-rim), inset 0 -1px 0 var(--g-sheet-shade), var(--shadow-lg);
+}
+.index a[aria-current="true"], .index a[aria-current="page"] { background: var(--g-item); }
+.index a:active { background: var(--g-item-press); }
+@media (hover: hover) and (pointer: fine) { .index a:hover { background: var(--g-item); } }
+
+/* ---- CTAs. Primary: an ember glass pill with a white sheen, a faint inner light and an ember glow.
+   Secondary: plain glass pills. Text, targets, size and press motion are unchanged. */
+.nav .nav-cta, .hero2-actions .pill-solid, .wp-hero .actions .btn-primary, .sec.contact .actions .btn-primary {
+  background: linear-gradient(180deg, var(--g-sheen), rgb(255 255 255 / 0) 50%), var(--g-cta);
+  border-color: var(--g-cta-edge);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 rgb(0 0 0 / 0.18), inset 0 0 16px var(--g-cta-inner),
+    0 0 24px var(--g-cta-glow), 0 6px 16px -6px var(--g-cta-glow);
+}
+.nav .nav-cta { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 rgb(0 0 0 / 0.18), inset 0 0 14px var(--g-cta-inner), 0 0 18px var(--g-cta-glow); }
+.hero2-actions .pill-ghost, .wp-hero .actions .btn-ghost, .sec.contact .actions .btn-ghost {
+  background: var(--g-ghost); border-color: var(--g-ghost-edge);
+  box-shadow: inset 0 1px 0 var(--g-ghost-rim), inset 0 -1px 0 var(--g-ghost-shade), var(--g-lift);
+}
+.hero2-actions .pill, .wp-hero .actions .btn, .sec.contact .actions .btn {
+  -webkit-backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+  backdrop-filter: blur(var(--g-blur)) saturate(var(--g-sat));
+}
+/* Hover, pointer devices only (touch keeps the resting fill after a tap). The ghost pills keep their gold ink and
+   edge on hover from the rules above. */
+@media (hover: hover) and (pointer: fine) {
+  .nav .nav-cta:hover, .hero2-actions .pill-solid:hover, .wp-hero .actions .btn-primary:hover, .sec.contact .actions .btn-primary:hover {
+    background: linear-gradient(180deg, var(--g-sheen), rgb(255 255 255 / 0) 50%), var(--g-cta-hover); border-color: var(--g-cta-edge);
+  }
+  .hero2-actions .pill-ghost:hover, .wp-hero .actions .btn-ghost:hover, .sec.contact .actions .btn-ghost:hover { background: var(--g-ghost-hover); }
+}
+
+/* ---- fallbacks. No backdrop-filter: near-opaque fills. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --g-bar: rgb(10 16 19 / 0.96); --g-where: rgb(20 34 41 / 0.95); --g-sheet: rgb(14 23 28 / 0.97);
+    --g-cta: rgb(232 137 60); --g-cta-hover: rgb(242 162 94); --g-ghost: rgb(20 27 30 / 0.94); --g-ghost-hover: rgb(28 37 41 / 0.95);
+  }
+  :root[data-theme="light"] {
+    --g-bar: rgb(239 231 216 / 0.96); --g-where: rgb(247 241 230 / 0.97); --g-sheet: rgb(247 241 230 / 0.97);
+    --g-cta: rgb(162 78 24); --g-cta-hover: rgb(138 64 18); --g-ghost: rgb(247 241 230 / 0.94); --g-ghost-hover: rgb(255 255 255 / 0.96);
+  }
+  .stage { --g-cta: rgb(232 137 60); --g-cta-hover: rgb(242 162 94); --g-ghost: rgb(20 27 30 / 0.94); --g-ghost-hover: rgb(28 37 41 / 0.95); }
+  :root { --g-item: var(--shield); } :root[data-theme="light"] { --g-item: #ebe2d0; }
+}
+
+/* Reduced transparency and increased contrast: no blur, opaque fills, a visible border, no sheen or glow,
+   no colour fields. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .hero2::before, .wp-hero::before, .hero2-actions::before, .wp-hero .actions::before, .sec.contact .actions::before { display: none; }
+  .nav::before, .nav.solid::before, .index, .page-index .index, .hero2-actions .pill, .wp-hero .actions .btn, .sec.contact .actions .btn {
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  :root {
+    --g-bar: #0a1013; --g-where: #142229; --g-sheet: #0e171c; --g-sheen: transparent;
+    --g-cta: #e8893c; --g-cta-hover: #f2a25e; --g-ghost: #141b1e; --g-ghost-hover: #1c2529;
+  }
+  :root[data-theme="light"] {
+    --g-bar: #efe7d8; --g-where: #f7f1e6; --g-sheet: #f7f1e6;
+    --g-cta: #a24e18; --g-cta-hover: #8a4012; --g-ghost: #f7f1e6; --g-ghost-hover: #ffffff;
+  }
+  :root { --g-item: var(--shield); } :root[data-theme="light"] { --g-item: #ebe2d0; }
+  .stage { --g-sheen: transparent; --g-cta: #e8893c; --g-cta-hover: #f2a25e; --g-ghost: #141b1e; --g-ghost-hover: #1c2529; }
+  .nav::before, .nav.solid::before { box-shadow: none; }
+  .nav .where { box-shadow: none; border-color: var(--hair-2); }
+  .index, .page-index .index { border-color: var(--hair-2); box-shadow: var(--shadow-lg); }
+  .nav .nav-cta, .hero2-actions .pill-solid, .wp-hero .actions .btn-primary, .sec.contact .actions .btn-primary { box-shadow: none; border-color: transparent; }
+  .hero2-actions .pill-ghost, .wp-hero .actions .btn-ghost, .sec.contact .actions .btn-ghost { box-shadow: none; border-color: var(--hair-2); }
+}
+@media (prefers-contrast: more) {
+  .nav .where, .index, .page-index .index, .hero2-actions .pill-ghost, .wp-hero .actions .btn-ghost, .sec.contact .actions .btn-ghost { border-color: var(--ink-3); }
+  .nav .nav-cta, .hero2-actions .pill-solid, .wp-hero .actions .btn-primary, .sec.contact .actions .btn-primary { border-color: var(--ink); }
+}
+
+} /* end @media screen: print shows no glass */
