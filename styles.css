@@ -1525,7 +1525,7 @@ details.more[open] > :not(summary), .g-more[open] > :not(summary) { animation: d
   .nav::before, .nav.solid::before { box-shadow: none; }
   .nav .where { box-shadow: none; border-color: var(--hair-2); }
   .index, .page-index .index { border-color: var(--hair-2); box-shadow: var(--shadow-lg); }
-  .nav .nav-cta, .hero2-actions .pill-solid, .wp-hero .actions .btn-primary, .sec.contact .actions .btn-primary { box-shadow: none; border-color: transparent; }
+  .nav .nav-cta, .hero2-actions .pill-solid, .wp-hero .actions .btn-primary, .sec.contact .actions .btn-primary { box-shadow: none; border-color: var(--ink); }
   .hero2-actions .pill-ghost, .wp-hero .actions .btn-ghost, .sec.contact .actions .btn-ghost { box-shadow: none; border-color: var(--hair-2); }
 }
 @media (prefers-contrast: more) {
