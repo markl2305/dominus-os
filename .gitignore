@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+# secret-shape sweep 2026-11-05: keep env files out of git
+.env
+.env.local
+.env.production
